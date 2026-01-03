@@ -25,17 +25,3 @@
     <priority>0.9</priority>
   </url>
 </urlset>
-```
-
-**Steps:**
-1. Create `sitemap.xml` in your root directory (same level as `index.html`)
-2. Add the content above
-3. Commit and push to GitHub
-4. Vercel will deploy it automatically
-5. Your sitemap should be accessible at `https://vanillasometh.in/sitemap.xml`
-
-You can also add it to your `robots.txt` file if you have one:
-```
-Sitemap: https://vanillasometh.in/sitemap.xml
-User-agent: *
-Allow: /
