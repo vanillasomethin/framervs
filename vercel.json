@@ -1,8 +1,21 @@
 {
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
-  ]
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "public": false
 }
+```
+
+Actually, the simpler solution is to **remove the `vercel.json` file entirely** and make sure your file structure is correct. Vercel should automatically serve:
+
+- `index.html` → `https://vanillasometh.in/`
+- `contact/page.html` → `https://vanillasometh.in/contact/page.html`
+
+But you want it to be accessible at `https://vanillasometh.in/contact` (without `/page.html`).
+
+**The fix is to rename your files:**
+
+Rename each `page.html` to `index.html` inside its folder:
+```
+/contact/index.html  (instead of contact/page.html)
+/estimator/index.html  (instead of estimator/page.html)
+/project-showcase/index.html  (instead of project-showcase/page.html)
