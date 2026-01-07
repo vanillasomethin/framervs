@@ -3,9 +3,13 @@ import { LegacyPage } from "@/components/legacy-page";
 
 export default function HomePage() {
   return (
-    <div className="home-page">
+    <>
       <LegacyPage sourcePath="index.html" />
       <EstimatorEmbed />
-    </div>
+    </>
   );
+import { LegacyPage } from "@/components/legacy-page";
+
+export default function HomePage() {
+  return <LegacyPage sourcePath="index.html" />;
 }
