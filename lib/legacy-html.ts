@@ -16,7 +16,7 @@ function extractTagContent(html: string, tag: string) {
 }
 
 export function loadLegacyPage(relativePath: string): LegacyPageContent {
-  const filePath = path.join(process.cwd(), relativePath);
+  const filePath = path.join(process.cwd(), "public", relativePath);
   const html = fs.readFileSync(filePath, "utf-8");
   const headContent = extractTagContent(html, "head");
   const bodyContent = extractTagContent(html, "body");
