@@ -27,8 +27,21 @@
 
 body {
   @apply bg-background text-foreground;
+  font-family: "Space Grotesk", sans-serif;
+  cursor: default;
 }
 
 .legacy-page {
   min-height: 100vh;
+}
+
+.estimator-embed,
+.estimator-embed * {
+  font-family: "Space Grotesk", sans-serif !important;
+  cursor: inherit;
+}
+
+.estimator-embed .framer-cursor-none,
+.estimator-embed .framer-cursor-none * {
+  cursor: inherit !important;
 }
