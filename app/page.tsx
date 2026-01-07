@@ -1,3 +1,7 @@
+import HomePage from "@/components/home-page";
+
+export default function Page() {
+  return <HomePage />;
 import { EstimatorEmbed } from "@/components/estimator-embed";
 import { LegacyPage } from "@/components/legacy-page";
 
