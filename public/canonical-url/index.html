@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Specify a Canonical URL for Duplicate Pages</title>
+    <meta
+      name="description"
+      content="Learn how to signal a preferred canonical URL to Google Search using redirects, rel=canonical, and sitemaps, plus best practices and examples."
+    >
+    <link rel="canonical" href="https://www.vanillasometh.in/canonical-url">
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        line-height: 1.6;
+      }
+
+      body {
+        margin: 0;
+        background: #0d0d0d;
+        color: #f5f5f5;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 48px 24px 96px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+      }
+
+      h1 {
+        font-size: 2.4rem;
+        margin-bottom: 16px;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+        margin-top: 40px;
+      }
+
+      h3 {
+        font-size: 1.35rem;
+        margin-top: 24px;
+      }
+
+      p {
+        margin: 16px 0;
+      }
+
+      ul,
+      ol {
+        padding-left: 20px;
+      }
+
+      li {
+        margin: 8px 0;
+      }
+
+      code,
+      pre {
+        font-family: "Fragment Mono", "SFMono-Regular", Consolas, monospace;
+      }
+
+      pre {
+        background: #1b1b1b;
+        color: #f5f5f5;
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 12px;
+        border: 1px solid #2f2f2f;
+        vertical-align: top;
+      }
+
+      th {
+        background: #1b1b1b;
+      }
+
+      .note {
+        background: #1b1b1b;
+        border-left: 4px solid #f5f5f5;
+        padding: 16px;
+        margin: 24px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Specify a Canonical URL for Duplicate or Similar Pages</h1>
+      <p>
+        To specify a canonical URL for duplicate or very similar pages to Google Search, you
+        can indicate your preference using a number of methods. These are, in order of how
+        strongly they can influence canonicalization:
+      </p>
+      <ol>
+        <li>
+          <strong>Redirects:</strong> A strong signal that the target of the redirect should
+          become canonical.
+        </li>
+        <li>
+          <strong>rel=&quot;canonical&quot; link annotations:</strong> A strong signal that
+          the specified URL should become canonical.
+        </li>
+        <li>
+          <strong>Sitemap inclusion:</strong> A weak signal that helps the URLs that are
+          included in a sitemap become canonical.
+        </li>
+      </ol>
+      <p>
+        Keep in mind that these methods can stack and thus become more effective when
+        combined. This means that when you use two or more of the methods, that will increase
+        the chance of your preferred canonical URL appearing in search results.
+      </p>
+      <p>
+        While we encourage you to use these methods, none of them are required; your site will
+        likely do just fine without specifying a canonical preference. That&apos;s because if
+        you don&apos;t specify a canonical URL, Google will identify which version of the URL
+        is objectively the best version to show to users in Search.
+      </p>
+      <p>
+        If you use a CMS, such as WordPress, Wix, or Blogger, you might not be able to edit
+        your HTML directly. Instead, your CMS might have a search engine settings page or some
+        other mechanism to tell search engines about the canonical URL. Search for
+        instructions about modifying the <code>&lt;head&gt;</code> of your page on your CMS
+        (for example, search for &quot;wordpress set the canonical element&quot;).
+      </p>
+
+      <h2>Reasons to specify a canonical URL</h2>
+      <p class="note">This resource may not be available in your region.</p>
+      <p>
+        While it&apos;s generally not critical to specify a canonical preference for your
+        URLs, there are a number of reasons why you would want to explicitly tell Google about
+        a canonical page in a set of duplicate or similar pages:
+      </p>
+      <ul>
+        <li>
+          To specify which URL that you want people to see in search results. You might prefer
+          people to reach your green dress product page through
+          <code>https://www.example.com/dresses/green/green-dress.html</code> rather than
+          <code>https://example.com/dresses/cocktail?gclid=ABCD</code>.
+        </li>
+        <li>
+          To consolidate signals for similar or duplicate pages. It helps search engines to
+          be able to consolidate the signals they have for the individual URLs (such as links
+          to them) into a single, preferred URL. This means that signals from other sites to
+          <code>https://example.com/dresses/cocktail?gclid=ABCD</code> get consolidated with
+          links to <code>https://www.example.com/dresses/green/green-dress.html</code> if the
+          latter becomes canonical.
+        </li>
+        <li>
+          To simplify tracking metrics for a piece of content. With a variety of URLs, it can
+          be more challenging for you to get consolidated metrics for a specific piece of
+          content.
+        </li>
+        <li>
+          To avoid spending crawling time on duplicate pages. You may want Googlebot to get
+          the most out of your site, so it&apos;s better for it to spend time crawling new (or
+          updated) pages on your site, rather than crawling duplicate versions of the same
+          content.
+        </li>
+      </ul>
+
+      <h2>Best practices</h2>
+      <p>For all canonicalization methods, follow these best practices:</p>
+      <ul>
+        <li>Don&apos;t use the robots.txt file for canonicalization purposes.</li>
+        <li>
+          Don&apos;t use the URL removal tool for canonicalization. It hides all versions of a
+          URL from Search.
+        </li>
+        <li>
+          Don&apos;t specify different URLs as canonical for the same page using different
+          canonicalization techniques (for example, don&apos;t specify one URL in a sitemap,
+          but a different URL for that same page using rel=&quot;canonical&quot;).
+        </li>
+        <li>Don&apos;t specify a URL fragment as canonical, as Google generally doesn&apos;t support URL fragments.</li>
+        <li>
+          We don&apos;t recommend using noindex to prevent selection of a canonical page within
+          a single site, because it will completely block the page from Search. rel=&quot;canonical&quot;
+          link annotations are the preferred solution.
+        </li>
+        <li>
+          If you&apos;re using hreflang elements, make sure to specify a canonical page in the
+          same language, or the best possible substitute language if a canonical page doesn&apos;t
+          exist for the same language.
+        </li>
+        <li>
+          When linking within your site, link to the canonical URL rather than a duplicate
+          URL. Linking consistently to the URL that you consider to be canonical helps Google
+          understand your preference.
+        </li>
+        <li>
+          If you&apos;re using client-side rendering with JavaScript, it&apos;s important to
+          make sure that the information about the canonical URL is as clear as possible. The
+          best way to do this is to specify the canonical URL in the HTML source code and make
+          sure that JavaScript doesn&apos;t change the canonical link element. If you can&apos;t
+          set the canonical URL in the HTML source code, leave it out and only set it with
+          JavaScript. This ensures that the information about the canonical URL is as clear as
+          possible.
+        </li>
+      </ul>
+
+      <h2>Comparison of canonicalization methods</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Description</th>
+            <th>Pros</th>
+            <th>Cons</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>rel=&quot;canonical&quot; link element</td>
+            <td>Add a link element in the code for all duplicate pages, pointing to the canonical page.</td>
+            <td>Can map an infinite number of duplicate pages.</td>
+            <td>
+              Can be complex to maintain the mapping on larger sites, or sites where the URLs
+              change often. Only works for HTML pages, not for files such as PDF. In such
+              cases, you can use the rel=&quot;canonical&quot; HTTP header.
+            </td>
+          </tr>
+          <tr>
+            <td>rel=&quot;canonical&quot; HTTP header</td>
+            <td>Send a rel=&quot;canonical&quot; header in your page response.</td>
+            <td>Doesn&apos;t increase page size. Can map an infinite number of duplicate pages.</td>
+            <td>Can be complex to maintain the mapping on larger sites, or sites where the URLs change often.</td>
+          </tr>
+          <tr>
+            <td>Sitemap</td>
+            <td>Specify your canonical pages in a sitemap.</td>
+            <td>Easy to do and maintain, especially on large sites.</td>
+            <td>
+              Google must still determine the associated duplicate for any canonicals that you
+              declare in the sitemap. Less powerful signal to Google than the rel=&quot;canonical&quot;
+              mapping technique.
+            </td>
+          </tr>
+          <tr>
+            <td>Redirects</td>
+            <td>
+              Use redirects to tell Googlebot that a redirected URL is a better version than a
+              given URL. Use this only when deprecating a duplicate page.
+            </td>
+            <td>Strongest signal that the target should be canonical.</td>
+            <td>Requires deprecating the duplicate page entirely.</td>
+          </tr>
+          <tr>
+            <td>AMP variant</td>
+            <td>If one of your variants is an AMP page, follow the AMP guidelines to indicate the canonical page and AMP variant.</td>
+            <td>Aligns AMP and canonical pages.</td>
+            <td>Requires AMP configuration and maintenance.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Use rel=&quot;canonical&quot; link annotations</h2>
+      <p>
+        Google supports explicit rel canonical link annotations as described in RFC 6596.
+        rel=&quot;canonical&quot; annotations that suggest alternate versions of a page are
+        ignored; specifically, rel=&quot;canonical&quot; annotations with hreflang, lang,
+        media, and type attributes are not used for canonicalization. Instead, use the
+        appropriate link annotations to specify alternate versions of a page; for example,
+        link rel=&quot;alternate&quot; hreflang for language and country annotations.
+      </p>
+
+      <h3>The rel=&quot;canonical&quot; link element</h3>
+      <p>
+        A rel=&quot;canonical&quot; link element (also known as a canonical element) is an
+        element used in the head section of HTML to indicate that another page is representative
+        of the content on the page.
+      </p>
+      <p>
+        Suppose you want <code>https://example.com/dresses/green-dresses</code> to be the
+        canonical URL, even though a variety of URLs can access this content. Indicate this URL
+        as canonical with these steps:
+      </p>
+      <ol>
+        <li>Add a link element with the attribute rel=&quot;canonical&quot; to the head section of duplicate pages.</li>
+      </ol>
+      <pre><code>&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Explore the world of dresses&lt;/title&gt;
+&lt;link rel=&quot;canonical&quot; href=&quot;https://example.com/dresses/green-dresses&quot; /&gt;
+&lt;!-- other elements --&gt;
+&lt;/head&gt;
+&lt;!-- rest of the HTML --&gt;
+&lt;/html&gt;</code></pre>
+      <p>
+        If the canonical page has a mobile variant on a separate URL, add a rel=&quot;alternate&quot;
+        link element to it, pointing to the mobile version of the page:
+      </p>
+      <pre><code>&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Explore the world of dresses&lt;/title&gt;
+&lt;link rel=&quot;alternate&quot; media=&quot;only screen and (max-width: 640px)&quot; href=&quot;https://m.example.com/dresses/green-dresses&quot;&gt;
+&lt;link rel=&quot;canonical&quot; href=&quot;https://example.com/dresses/green-dresses&quot; /&gt;
+&lt;!-- other elements --&gt;
+&lt;/head&gt;
+&lt;!-- rest of the HTML --&gt;
+&lt;/html&gt;</code></pre>
+      <p>
+        Use absolute paths rather than relative paths with the rel=&quot;canonical&quot; link
+        element. Even though relative paths are supported by Google, they can cause problems in
+        the long run (for example, if you unintentionally allow your testing site to be crawled)
+        and thus we don&apos;t recommend them.
+      </p>
+      <ul>
+        <li>Good example: <code>https://www.example.com/dresses/green/green-dress.html</code></li>
+        <li>Bad example: <code>/dresses/green/green-dress.html</code></li>
+      </ul>
+
+      <h3>The rel=&quot;canonical&quot; HTTP header</h3>
+      <p>
+        If you can change the configuration of your server, you can use a link HTTP response
+        header with a rel=&quot;canonical&quot; target attribute as defined by RFC5988 rather
+        than an HTML element to indicate the canonical URL for a document supported by Search,
+        including non-HTML documents such as PDF files.
+      </p>
+      <p>
+        If you publish content in many file formats, such as PDF or Microsoft Word, each on
+        their own URL, you can return a rel=&quot;canonical&quot; HTTP header to tell Googlebot
+        what is the canonical URL for the non-HTML files.
+      </p>
+      <pre><code>HTTP/1.1 200 OK
+Content-Length: 19
+...
+Link: &lt;https://www.example.com/downloads/white-paper.pdf&gt;; rel=&quot;canonical&quot;
+...</code></pre>
+
+      <h2>Use a sitemap</h2>
+      <p>
+        Pick a canonical URL for each of your pages and submit them in a sitemap. All pages
+        listed in a sitemap are suggested as canonicals; Google will decide which pages (if
+        any) are duplicates, based on similarity of content.
+      </p>
+      <p>
+        Supplying the preferred canonical URLs in the sitemaps is a simple way of defining
+        canonicals for a large site, and sitemaps are a useful way to tell Google which pages
+        you consider most important on your site.
+      </p>
+
+      <h2>Use redirects</h2>
+      <p>
+        Use this method when you want to get rid of existing duplicate pages. All redirection
+        methods — 301 and 302 redirects, meta-refresh, JavaScript redirects — have the same
+        effect on Google Search, however the time it takes for search engines to notice the
+        different redirect methods may differ.
+      </p>
+      <p>For the quickest effect, use 3xx HTTP (also known as server-side) redirects.</p>
+      <p>
+        Suppose your page can be reached in multiple ways:
+      </p>
+      <ul>
+        <li><code>https://example.com/home</code></li>
+        <li><code>https://home.example.com</code></li>
+        <li><code>https://www.example.com</code></li>
+      </ul>
+      <p>
+        Pick one of those URLs as your canonical URL, and use redirects to send traffic from
+        the other URLs to your preferred URL.
+      </p>
+
+      <h2>Other signals</h2>
+      <p>
+        Apart from explicitly provided methods, Google also uses a set of canonicalization
+        signals that are generally based on site setup: preferring HTTPS over HTTP, and URLs in
+        hreflang clusters.
+      </p>
+
+      <h3>Prefer HTTPS over HTTP for canonical URLs</h3>
+      <p>
+        Google prefers HTTPS pages over equivalent HTTP pages as canonical, except when there
+        are issues or conflicting signals such as the following:
+      </p>
+      <ul>
+        <li>The HTTPS page has an invalid SSL certificate.</li>
+        <li>The HTTPS page contains insecure dependencies (other than images).</li>
+        <li>The HTTPS page redirects users to or through an HTTP page.</li>
+        <li>The HTTPS page has a rel=&quot;canonical&quot; link to the HTTP page.</li>
+      </ul>
+      <p>
+        Although our systems prefer HTTPS pages over HTTP pages by default, you can ensure
+        this behavior by taking any of the following actions:
+      </p>
+      <ul>
+        <li>Add redirects from the HTTP page to the HTTPS page.</li>
+        <li>Add a rel=&quot;canonical&quot; link from the HTTP page to the HTTPS page.</li>
+        <li>Implement HSTS.</li>
+      </ul>
+      <p>To prevent Google from incorrectly making the HTTP page canonical, avoid the following practices:</p>
+      <ul>
+        <li>Avoid bad TLS/SSL certificates and HTTPS-to-HTTP redirects because they cause Google to prefer HTTP very strongly.</li>
+        <li>Don&apos;t include the HTTP version of your pages in your sitemap or hreflang annotations rather than the HTTPS version.</li>
+        <li>Ensure your SSL/TLS certificate matches your complete site URL, or use a wildcard certificate.</li>
+      </ul>
+
+      <h3>Prefer URLs in hreflang clusters</h3>
+      <p>
+        To help with sites&apos; localization efforts, for canonicalization purposes Google
+        prefers URLs that are part of hreflang clusters. For example, if
+        <code>https://example.com/de-de/cats</code> and
+        <code>https://example.com/de-ch/cats</code> reciprocally point to each other with
+        hreflang annotations, but not to <code>https://example.com/de-at/cats</code>, the
+        pages for de-de and de-ch will be preferred as canonicals instead of the /de-at/ page
+        that doesn&apos;t appear in the hreflang cluster.
+      </p>
+    </main>
+  </body>
+</html>
