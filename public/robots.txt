@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /cdn-cgi/
 
-Sitemap: https://vanillasometh.in/sitemap.xml
+Sitemap: https://www.vanillasometh.in/sitemap.xml
