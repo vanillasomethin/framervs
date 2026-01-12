@@ -30,7 +30,8 @@ export default function AdminPage() {
     loadContent();
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = async (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
     setStatus("Saving to GitHub...");
     setError(null);
 
@@ -56,8 +57,8 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <main className="min-h-screen bg-slate-950 text-slate-100 p-6">
+      <article className="max-w-5xl mx-auto space-y-6">
         <header className="space-y-2">
           <h1 className="text-3xl font-semibold">Content Admin</h1>
           <p className="text-slate-300">
@@ -66,54 +67,57 @@ export default function AdminPage() {
           </p>
         </header>
 
-        <section className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">
-            Commit message
-          </label>
-          <input
-            className="w-full rounded-md bg-slate-900 border border-slate-800 px-3 py-2 text-sm"
-            value={message}
-            onChange={(event) => setMessage(event.target.value)}
-          />
-        </section>
+        <form className="space-y-6" onSubmit={handleSave}>
+          <section className="space-y-2">
+            <label className="block text-sm font-medium text-slate-300" htmlFor="commit-message">
+              Commit message
+            </label>
+            <input
+              id="commit-message"
+              className="w-full rounded-md bg-slate-900 border border-slate-800 px-3 py-2 text-sm"
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+            />
+          </section>
 
-        <section className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">
-            JSON content
-          </label>
-          <textarea
-            className="w-full min-h-[520px] rounded-md bg-slate-900 border border-slate-800 p-4 font-mono text-xs"
-            value={content}
-            onChange={(event) => setContent(event.target.value)}
-          />
-        </section>
+          <section className="space-y-2">
+            <label className="block text-sm font-medium text-slate-300" htmlFor="json-content">
+              JSON content
+            </label>
+            <textarea
+              id="json-content"
+              className="w-full min-h-[520px] rounded-md bg-slate-900 border border-slate-800 p-4 font-mono text-xs"
+              value={content}
+              onChange={(event) => setContent(event.target.value)}
+            />
+          </section>
 
-        <div className="flex items-center gap-4">
-          <button
-            type="button"
-            onClick={handleSave}
-            className="rounded-md bg-slate-100 text-slate-900 px-4 py-2 text-sm font-medium hover:bg-white"
-          >
-            Save to GitHub
-          </button>
-          <span className="text-sm text-slate-400">{status}</span>
-        </div>
+          <section className="flex items-center gap-4" aria-live="polite">
+            <button
+              type="submit"
+              className="rounded-md bg-slate-100 text-slate-900 px-4 py-2 text-sm font-medium hover:bg-white"
+            >
+              Save to GitHub
+            </button>
+            <span className="text-sm text-slate-400">{status}</span>
+          </section>
+        </form>
 
         {error && (
-          <div className="rounded-md border border-red-400/50 bg-red-950/40 p-4 text-sm text-red-200">
+          <aside className="rounded-md border border-red-400/50 bg-red-950/40 p-4 text-sm text-red-200">
             {error}
-          </div>
+          </aside>
         )}
 
-        <section className="rounded-md border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-300">
+        <aside className="rounded-md border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-300">
           <p className="font-semibold text-slate-100">Setup notes</p>
           <ul className="list-disc pl-5 space-y-1">
             <li>Set <code>GITHUB_TOKEN</code> with repo write access.</li>
             <li>Set <code>GITHUB_REPO</code> as <code>owner/repo</code>.</li>
             <li>Optional: <code>GITHUB_BRANCH</code> (defaults to <code>main</code>).</li>
           </ul>
-        </section>
-      </div>
-    </div>
+        </aside>
+      </article>
+    </main>
   );
 }
