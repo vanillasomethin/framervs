@@ -2,25 +2,13 @@
   "redirects": [
     {
       "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "vanillasometh.in"
-        }
-      ],
+      "has": [{ "type": "host", "value": "vanillasometh.in" }],
       "destination": "https://www.vanillasometh.in/:path*",
       "permanent": true
     }
   ],
-  "outputDirectory": "public",
   "rewrites": [
-    {
-      "source": "/admin",
-      "destination": "/admin/index.html"
-    },
-    {
-      "source": "/admin/",
-      "destination": "/admin/index.html"
-    }
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/admin/", "destination": "/admin/index.html" }
   ]
 }
