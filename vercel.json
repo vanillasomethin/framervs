@@ -1,0 +1,20 @@
+{
+  "redirects": [
+    {
+      "source": "/admin.html",
+      "destination": "/admin/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "vanillasometh.in"
+        }
+      ],
+      "destination": "https://www.vanillasometh.in/:path*",
+      "permanent": true
+    }
+  ]
+}
