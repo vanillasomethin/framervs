@@ -120,10 +120,13 @@
     <div class="grid">
       <div>
         <label for="admin-password">Admin Password</label>
-        <input id="admin-password" type="password" placeholder="Enter password">
+        <input id="admin-password" type="password" placeholder="change-me">
       </div>
-      <button id="login-button">Unlock</button>
-      <p class="helper">This is a simple client-side lock. Change the password in admin.js.</p>
+      <button id="login-button" type="button">Unlock</button>
+      <p class="helper">
+        Default password is <strong>change-me</strong>. Update it in
+        <code>public/admin/admin.js</code>.
+      </p>
     </div>
   </section>
 
@@ -166,20 +169,6 @@
         <div>
           <label for="team-subtitle">Team Subtitle</label>
           <textarea id="team-subtitle"></textarea>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Team Page Text</h2>
-      <div class="grid">
-        <div>
-          <label for="team-page-title">Team Page Title</label>
-          <input id="team-page-title" type="text">
-        </div>
-        <div>
-          <label for="team-page-subtitle">Team Page Intro</label>
-          <textarea id="team-page-subtitle"></textarea>
         </div>
       </div>
     </section>
@@ -265,13 +254,13 @@
   <section class="card">
     <h2>Quick Setup Notes</h2>
     <ol class="helper">
-      <li>Put <strong>admin.html</strong> and <strong>admin.js</strong> in the <code>public/</code> folder.</li>
+      <li>Keep <strong>index.html</strong>, <strong>admin.js</strong>, and <strong>cms-loader.js</strong> in <code>public/admin/</code>.</li>
       <li>Create a GitHub Personal Access Token with <code>repo</code> scope.</li>
-      <li>Open <code>https://your-domain.com/admin.html</code> to access the panel.</li>
-      <li>Change the admin password inside <code>public/admin.js</code>.</li>
+      <li>Open <code>https://your-domain.com/admin</code> to access the panel.</li>
+      <li>Change the admin password inside <code>public/admin/admin.js</code>.</li>
     </ol>
   </section>
 
-  <script src="/admin.js"></script>
+  <script src="./admin.js"></script>
 </body>
 </html>
