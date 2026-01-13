@@ -11,5 +11,16 @@
       "destination": "https://www.vanillasometh.in/:path*",
       "permanent": true
     }
+  ],
+  "outputDirectory": "public",
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/admin/index.html"
+    }
   ]
 }
