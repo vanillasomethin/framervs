@@ -11,5 +11,11 @@
       "destination": "https://www.vanillasometh.in/:path*",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/public/:path*"
+    }
   ]
 }
