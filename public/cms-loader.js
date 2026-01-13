@@ -65,16 +65,6 @@
     element.textContent = value;
   };
 
-  const setLinkText = (link, value) => {
-    if (!link || value == null) return;
-    const textNodes = link.querySelectorAll(".framer-text");
-    if (textNodes.length) {
-      textNodes.forEach((node) => setText(node, value));
-      return;
-    }
-    link.textContent = value;
-  };
-
   const setSectionText = (section, selector, value) => {
     const target = section?.querySelector(selector);
     setText(target, value);
@@ -201,68 +191,6 @@
     `;
   };
 
-  const updateFooterContact = (contact) => {
-    if (!contact) return;
-    const phone = contact.phone || "";
-    const email = contact.email || "";
-    const locations = contact.locations || [];
-    const social = contact.social || [];
-
-    document.querySelectorAll('[data-framer-name="Contact Wrap"]').forEach((wrap) => {
-      wrap.querySelectorAll('a[href^="tel:"]').forEach((link) => {
-        if (phone) {
-          link.setAttribute("href", `tel:${phone}`);
-          setLinkText(link, phone);
-        }
-      });
-
-      wrap
-        .querySelectorAll('a[href^="mailto:"], a[href*="/cdn-cgi/l/email-protection"]')
-        .forEach((link) => {
-          if (email) {
-            link.setAttribute("href", `mailto:${email}`);
-            setLinkText(link, email);
-          }
-        });
-
-      wrap.querySelectorAll("span.__cf_email__").forEach((node) => {
-        if (email) {
-          node.textContent = email;
-        }
-      });
-
-      const locationLinks = wrap.querySelectorAll('[data-framer-name="Location"] a');
-      locationLinks.forEach((link, index) => {
-        if (locations[index]) {
-          setLinkText(link, locations[index]);
-        }
-      });
-
-      const socialLinks = wrap.querySelectorAll('[data-framer-name="Social"] a');
-      socialLinks.forEach((link, index) => {
-        const entry = social[index];
-        if (!entry) return;
-        if (entry.url) link.setAttribute("href", entry.url);
-        setLinkText(link, entry.label);
-      });
-    });
-  };
-
-  const updateTeamPage = (cms) => {
-    const teamSection = document.querySelector('[data-framer-name="Section - Team"]');
-    if (!teamSection) return;
-    const pageTitle = cms.teamPage?.title || cms.homepage?.team?.title;
-    const pageSubtitle = cms.teamPage?.subtitle || cms.homepage?.team?.subtitle;
-    setSectionTextByFramerName(teamSection, "TEAM", pageTitle);
-    setSectionTextByFramerName(teamSection, "Team intro", pageSubtitle);
-
-    const teamList = teamSection.querySelector('[data-framer-name="Team List"]');
-    if (teamList) {
-      teamList.innerHTML = "";
-      renderTeam(teamList, cms.team);
-    }
-  };
-
   const updateStaticText = (cms) => {
     const aboutSection = document.querySelector("#section-about");
     setSectionTextByFramerName(aboutSection, "About", cms.homepage?.about?.title);
@@ -305,8 +233,6 @@
       renderServices(document.querySelector("#section-awards"), data.cms.services);
       renderTeam(document.querySelector("#section-testimonials"), data.cms.team);
       renderContact(document.querySelector('[data-framer-name="Section - Contact"]'), data.cms.contact);
-      updateFooterContact(data.cms.contact);
-      updateTeamPage(data.cms);
     } catch (error) {
       console.warn("CMS loader failed", error);
     }

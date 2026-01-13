@@ -1,11 +1,6 @@
 {
   "redirects": [
     {
-      "source": "/admin.html",
-      "destination": "/admin/",
-      "permanent": true
-    },
-    {
       "source": "/:path*",
       "has": [
         {
