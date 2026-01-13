@@ -44,6 +44,8 @@ export async function POST(request: Request) {
   const headers = {
     Authorization: `Bearer ${token}`,
     Accept: "application/vnd.github+json",
+    "Content-Type": "application/json",
+    "X-GitHub-Api-Version": "2022-11-28",
   };
 
   const contentUrl = `${GITHUB_API_BASE}/repos/${repo}/contents/${CONTENT_PATH}?ref=${branch}`;
