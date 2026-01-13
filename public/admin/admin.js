@@ -1,5 +1,5 @@
 (() => {
-  const ADMIN_PASSWORD = "change-me";
+  const ADMIN_PASSWORD = "Somethin@22";
   const LOGIN_KEY = "cmsAdminLoggedIn";
   const CONTENT_PATH = "/content.json";
 
