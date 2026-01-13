@@ -11,15 +11,5 @@
       "destination": "https://www.vanillasometh.in/:path*",
       "permanent": true
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/admin",
-      "destination": "/admin.html"
-    },
-    {
-      "source": "/admin/",
-      "destination": "/admin.html"
-    }
   ]
 }

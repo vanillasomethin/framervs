@@ -25,7 +25,6 @@
     state.rawContent = data;
     state.cms = data.cms || {
       homepage: {},
-      teamPage: {},
       team: [],
       services: [],
       caseStudies: [],
@@ -137,8 +136,6 @@
     $("#works-subtitle").value = state.cms.homepage?.caseStudies?.subtitle || "";
     $("#team-title").value = state.cms.homepage?.team?.title || "";
     $("#team-subtitle").value = state.cms.homepage?.team?.subtitle || "";
-    $("#team-page-title").value = state.cms.teamPage?.title || "";
-    $("#team-page-subtitle").value = state.cms.teamPage?.subtitle || "";
 
     $("#contact-phone").value = state.cms.contact?.phone || "";
     $("#contact-email").value = state.cms.contact?.email || "";
@@ -180,11 +177,6 @@
         title: $("#team-title").value.trim(),
         subtitle: $("#team-subtitle").value.trim(),
       },
-    };
-
-    state.cms.teamPage = {
-      title: $("#team-page-title").value.trim(),
-      subtitle: $("#team-page-subtitle").value.trim(),
     };
 
     state.cms.team = collectList("#team-list .list-item", ["name", "role", "bio", "image"]);
