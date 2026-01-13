@@ -11,5 +11,6 @@
       "destination": "https://www.vanillasometh.in/:path*",
       "permanent": true
     }
-  ]
+  ],
+  "outputDirectory": "public"
 }
