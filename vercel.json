@@ -1,0 +1,36 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "vanillasometh.in"
+        }
+      ],
+      "destination": "https://www.vanillasometh.in/:path*",
+      "permanent": true
+    }
+  ],
+  "routes": [
+    {
+      "src": "/admin",
+      "dest": "/admin/index.html"
+    },
+    {
+      "src": "/admin/",
+      "dest": "/admin/index.html"
+    },
+    {
+      "src": "/admin.html",
+      "dest": "/admin/index.html"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

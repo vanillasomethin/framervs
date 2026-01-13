@@ -2609,5 +2609,162 @@
       ],
       "images": []
     }
+  },
+  "cms": {
+    "homepage": {
+      "hero": {
+        "headline": "PURE. PLAYFUL. PURPOSEFUL. ARCHITECTS. DESIGNERS. VISIONARIES."
+      },
+      "about": {
+        "title": "[ABOUT]",
+        "subtitle": "Where Functionality Meets Aesthetic, Your Architectural Journey Starts Here."
+      },
+      "services": {
+        "title": "[SERVICES]",
+        "subtitle": "Each service is an extension of our design ethos \u2014 thoughtful, future-ready, and driven by the pursuit of timeless spatial quality."
+      },
+      "caseStudies": {
+        "title": "[SELECTED WORKS]",
+        "subtitle": "These are the spaces that define us. Each project unfolds a new dialogue between vision and structure."
+      },
+      "team": {
+        "title": "MEET THE TEAM]",
+        "subtitle": "We\u2019re a collective of curious minds \u2014 architects, designers, and builders who thrive on collaboration and thoughtful design."
+      }
+    },
+    "team": [
+      {
+        "name": "Ar. Hisham Khalid",
+        "role": "Principal Architect / Creative Strategist",
+        "bio": "Good design begins by listening \u2014 to people, to place, and to purpose. Every line we draw should make life better, not just look beautiful.",
+        "image": "https://framerusercontent.com/images/B4xFhzEhd6G5mQnlYF6h0KEzxAo.png?lossless=1&width=1024&height=1024"
+      },
+      {
+        "name": "Ar. Zeba Ali Khan",
+        "role": "Principal Architect / Creative Director",
+        "bio": "Design is storytelling. Each project is a new chapter shaped by context, craft, and emotion \u2014 bridging ideas with real-world meaning.",
+        "image": "https://framerusercontent.com/images/ju0gSS3ymm8N5DMB9UWKr52GHzs.png?width=864&height=507"
+      }
+    ],
+    "services": [
+      {
+        "title": "Architectural Design",
+        "category": "Core",
+        "description": "Concept Development \u00b7 Schematic Design \u00b7 Design Development \u00b7 Construction Documentation \u00b7 Sustainable & Passive Design \u00b7 3D Visualization"
+      },
+      {
+        "title": "Interior Design",
+        "category": "Bespoke",
+        "description": "Space Planning \u00b7 Material & Finishes \u00b7 Furniture & Joinery \u00b7 Fit-out Drawings \u00b7 Styling & Staging"
+      },
+      {
+        "title": "Landscape Design",
+        "category": "Core",
+        "description": "Master Planning \u00b7 Hardscape Design \u00b7 Planting Plans \u00b7 Irrigation \u00b7 Lighting \u00b7 Maintenance Guidelines"
+      },
+      {
+        "title": "BIM & Digital Design",
+        "category": "Advanced",
+        "description": "BIM Modeling \u00b7 Clash Detection \u00b7 As-Built Models \u00b7 Parametric Design \u00b7 Digital Twin \u00b7 Automation"
+      },
+      {
+        "title": "Visualization & Communication",
+        "category": "Advanced",
+        "description": "3D Modeling \u00b7 Rendering \u00b7 VR Walkthroughs \u00b7 Animations \u00b7 Diagrams \u00b7 Presentations"
+      },
+      {
+        "title": "Project Management & Execution Support",
+        "category": "Core",
+        "description": "Design Supervision \u00b7 Consultant Coordination \u00b7 Site Inspections \u00b7 Tender Docs \u00b7 Post-Occupancy Evaluation"
+      }
+    ],
+    "caseStudies": [
+      {
+        "client": "John Salins",
+        "title": "Flute-Case",
+        "category": "Commercial - Office",
+        "url": "./project-showcase/flutecase",
+        "image": {
+          "src": "https://framerusercontent.com/images/B4xFhzEhd6G5mQnlYF6h0KEzxAo.png?lossless=1&width=1024&height=1024",
+          "alt": "Flute-Case project"
+        }
+      },
+      {
+        "client": "Sorbete",
+        "title": "Fair-Fly",
+        "category": "Commercial - Retail",
+        "url": "./project-showcase/fairfly",
+        "image": {
+          "src": "https://framerusercontent.com/images/ju0gSS3ymm8N5DMB9UWKr52GHzs.png?width=864&height=507",
+          "alt": "Fair-Fly project"
+        }
+      },
+      {
+        "client": "Mr. Sadath",
+        "title": "Nord Terra House",
+        "category": "Residential",
+        "url": "./project-showcase/nord-terra-house",
+        "image": {
+          "src": "https://framerusercontent.com/images/atHnzlC0bxos7mKbhByERKoYC0o.jpg?width=2000&height=1025",
+          "alt": "Nord Terra House"
+        }
+      },
+      {
+        "client": "MAK Builders",
+        "title": "MAK Park Square",
+        "category": "Residential - Apartment",
+        "url": "./project-showcase/mak-park-square",
+        "image": {
+          "src": "https://framerusercontent.com/images/oOgqrwl6b9KzDzwvQVDCzrzBd2Q.png?width=3840&height=1675",
+          "alt": "MAK Park Square"
+        }
+      },
+      {
+        "client": "Mr. Ashraf",
+        "title": "BNB House",
+        "category": "Residential - Interiors",
+        "url": "./project-showcase/bnb-house",
+        "image": {
+          "src": "https://framerusercontent.com/images/YD7oXldVe8icRp2bb27r8w9GIoc.jpg?width=2000&height=1414",
+          "alt": "BNB House"
+        }
+      },
+      {
+        "client": "Dip'N'Melt",
+        "title": "Coco Meltdown",
+        "category": "Commercial - Cafe",
+        "url": "./project-showcase/coco-meltdown",
+        "image": {
+          "src": "https://framerusercontent.com/images/iGACg6EJ6JWKeROxDsUB60pUqt8.jpg?width=2000&height=1414",
+          "alt": "Coco Meltdown"
+        }
+      }
+    ],
+    "contact": {
+      "phone": "+91 7411 34 9844",
+      "email": "hello@vanillasometh.in",
+      "locations": [
+        "MANGALORE, INDIA",
+        "RIYADH, SAUDI ARABIA"
+      ],
+      "social": [
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/vanillasometh.in/"
+        },
+        {
+          "label": "Pinterest",
+          "url": "https://www.pinterest.com/vanillaandsomethin"
+        },
+        {
+          "label": "LinkedIn",
+          "url": "https://www.linkedin.com/company/vanilla-and-somethin"
+        }
+      ]
+    },
+    "teamPage": {
+      "title": "TEAM",
+      "subtitle": "The architects shaping Vanilla & Somethin\u2019s thoughtful, human-centered spaces."
+    }
   }
 }

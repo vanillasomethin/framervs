@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CMS Admin</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: #0d0d0d;
+      color: #f5f5f5;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+    }
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .card {
+      background: #151515;
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+    .grid.two {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.7;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      background: #101010;
+      color: #f5f5f5;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    button {
+      cursor: pointer;
+      background: #f21d2f;
+      border: none;
+      font-weight: 600;
+    }
+    button.secondary {
+      background: #333;
+    }
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .row > * {
+      flex: 1 1 120px;
+    }
+    .list-item {
+      border: 1px solid #2b2b2b;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .hidden {
+      display: none;
+    }
+    .helper {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-top: 6px;
+    }
+    .action-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 16px;
+    }
+    .action-row button {
+      flex: 0 0 auto;
+      width: auto;
+      padding: 10px 18px;
+    }
+    @media (max-width: 640px) {
+      body {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CMS Admin Panel</h1>
+    <p class="helper">Edit your content.json data and push changes to GitHub.</p>
+  </header>
+
+  <section id="login-card" class="card">
+    <h2>Login</h2>
+    <div class="grid">
+      <div>
+        <label for="admin-password">Admin Password</label>
+        <input id="admin-password" type="password" placeholder="Enter password">
+      </div>
+      <button id="login-button">Unlock</button>
+      <p class="helper">This is a simple client-side lock. Change the password in admin.js.</p>
+    </div>
+  </section>
+
+  <main id="admin-app" class="hidden">
+    <section class="card">
+      <h2>Homepage Text</h2>
+      <div class="grid">
+        <div>
+          <label for="hero-headline">Hero Headline</label>
+          <input id="hero-headline" type="text">
+        </div>
+        <div>
+          <label for="about-title">About Title</label>
+          <input id="about-title" type="text">
+        </div>
+        <div>
+          <label for="about-subtitle">About Subtitle</label>
+          <textarea id="about-subtitle"></textarea>
+        </div>
+        <div>
+          <label for="services-title">Services Title</label>
+          <input id="services-title" type="text">
+        </div>
+        <div>
+          <label for="services-subtitle">Services Subtitle</label>
+          <textarea id="services-subtitle"></textarea>
+        </div>
+        <div>
+          <label for="works-title">Case Studies Title</label>
+          <input id="works-title" type="text">
+        </div>
+        <div>
+          <label for="works-subtitle">Case Studies Subtitle</label>
+          <textarea id="works-subtitle"></textarea>
+        </div>
+        <div>
+          <label for="team-title">Team Title</label>
+          <input id="team-title" type="text">
+        </div>
+        <div>
+          <label for="team-subtitle">Team Subtitle</label>
+          <textarea id="team-subtitle"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Team Page Text</h2>
+      <div class="grid">
+        <div>
+          <label for="team-page-title">Team Page Title</label>
+          <input id="team-page-title" type="text">
+        </div>
+        <div>
+          <label for="team-page-subtitle">Team Page Intro</label>
+          <textarea id="team-page-subtitle"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Team Members</h2>
+      <div id="team-list"></div>
+      <button id="add-team" class="secondary">Add Team Member</button>
+    </section>
+
+    <section class="card">
+      <h2>Services</h2>
+      <div id="services-list"></div>
+      <button id="add-service" class="secondary">Add Service</button>
+    </section>
+
+    <section class="card">
+      <h2>Case Studies</h2>
+      <div id="cases-list"></div>
+      <button id="add-case" class="secondary">Add Case Study</button>
+    </section>
+
+    <section class="card">
+      <h2>Contact Info</h2>
+      <div class="grid two">
+        <div>
+          <label for="contact-phone">Phone</label>
+          <input id="contact-phone" type="text">
+        </div>
+        <div>
+          <label for="contact-email">Email</label>
+          <input id="contact-email" type="email">
+        </div>
+      </div>
+      <div class="grid">
+        <div>
+          <label for="contact-locations">Locations (one per line)</label>
+          <textarea id="contact-locations"></textarea>
+        </div>
+        <div>
+          <label for="contact-social">Social Links (Label | URL per line)</label>
+          <textarea id="contact-social"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Save to GitHub</h2>
+      <div class="grid two">
+        <div>
+          <label for="repo-owner">Repo Owner</label>
+          <input id="repo-owner" type="text" placeholder="your-username">
+        </div>
+        <div>
+          <label for="repo-name">Repo Name</label>
+          <input id="repo-name" type="text" placeholder="your-repo">
+        </div>
+        <div>
+          <label for="repo-branch">Branch</label>
+          <input id="repo-branch" type="text" placeholder="main">
+        </div>
+        <div>
+          <label for="repo-path">File Path</label>
+          <input id="repo-path" type="text" value="public/content.json">
+        </div>
+        <div>
+          <label for="github-token">GitHub Personal Access Token</label>
+          <input id="github-token" type="password" placeholder="ghp_...">
+        </div>
+        <div>
+          <label for="commit-message">Commit Message</label>
+          <input id="commit-message" type="text" value="Update site content">
+        </div>
+      </div>
+      <div class="action-row">
+        <button id="save-button">Save + Commit</button>
+        <span id="save-status" class="helper"></span>
+      </div>
+      <p class="helper">Tip: store the token in a password manager and never commit it to Git.</p>
+    </section>
+  </main>
+
+  <section class="card">
+    <h2>Quick Setup Notes</h2>
+    <ol class="helper">
+      <li>Put <strong>admin.html</strong> and <strong>admin.js</strong> in the <code>public/</code> folder.</li>
+      <li>Create a GitHub Personal Access Token with <code>repo</code> scope.</li>
+      <li>Open <code>https://your-domain.com/admin.html</code> to access the panel.</li>
+      <li>Change the admin password inside <code>public/admin.js</code>.</li>
+    </ol>
+  </section>
+
+  <script src="/admin.js"></script>
+</body>
+</html>
