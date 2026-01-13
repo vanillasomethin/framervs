@@ -12,5 +12,10 @@
       "permanent": true
     }
   ],
-  "outputDirectory": "public"
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/public/:path*"
+    }
+  ]
 }
