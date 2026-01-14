@@ -16,6 +16,17 @@
     
     
     <script>try{if(localStorage.get("__framer_force_showing_editorbar_since")){const n=document.createElement("link");n.rel = "modulepreload";n.href="https://framer.com/edit/init.mjs";document.head.appendChild(n)}}catch(e){}</script>
+
+    <script>
+(function () {
+  try {
+    const saved = localStorage.getItem("theme"); // "dark" or "light"
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const theme = saved || (prefersDark ? "dark" : "light");
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  } catch (e) {}
+})();
+</script>
     
     
     <meta name="google-site-verification" content="Dc3HD5PGuQdlUcUpi1k7au0prYod32IgIsYlGcUy6vA">
