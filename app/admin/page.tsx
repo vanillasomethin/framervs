@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const DEFAULT_MESSAGE = "Update content.json from admin panel";
 
@@ -9,10 +9,30 @@ export default function AdminPage() {
   const [status, setStatus] = useState("Idle");
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState(DEFAULT_MESSAGE);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const validationError = useMemo(() => {
+    if (!hasLoaded) {
+      return null;
+    }
+
+    if (!content.trim()) {
+      return "Content cannot be empty.";
+    }
+
+    try {
+      JSON.parse(content);
+      return null;
+    } catch (err) {
+      return "Content must be valid JSON.";
+    }
+  }, [content, hasLoaded]);
 
   useEffect(() => {
     const loadContent = async () => {
       setStatus("Loading content.json...");
+      setError(null);
       try {
         const response = await fetch("/content.json", { cache: "no-store" });
         if (!response.ok) {
@@ -24,6 +44,8 @@ export default function AdminPage() {
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
         setStatus("Error");
+      } finally {
+        setHasLoaded(true);
       }
     };
 
@@ -32,8 +54,16 @@ export default function AdminPage() {
 
   const handleSave = async (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
+
+    if (validationError) {
+      setError(validationError);
+      setStatus("Error");
+      return;
+    }
+
     setStatus("Saving to GitHub...");
     setError(null);
+    setIsSaving(true);
 
     try {
       const response = await fetch("/api/content", {
@@ -53,8 +83,12 @@ export default function AdminPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
       setStatus("Error");
+    } finally {
+      setIsSaving(false);
     }
   };
+
+  const isSaveDisabled = Boolean(validationError) || isSaving || !hasLoaded;
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 p-6">
@@ -90,14 +124,24 @@ export default function AdminPage() {
               value={content}
               onChange={(event) => setContent(event.target.value)}
             />
+            {hasLoaded && (
+              <p
+                className={`text-xs ${
+                  validationError ? "text-red-300" : "text-emerald-300"
+                }`}
+              >
+                {validationError ? validationError : "JSON looks valid."}
+              </p>
+            )}
           </section>
 
           <section className="flex items-center gap-4" aria-live="polite">
             <button
               type="submit"
-              className="rounded-md bg-slate-100 text-slate-900 px-4 py-2 text-sm font-medium hover:bg-white"
+              className="rounded-md bg-slate-100 text-slate-900 px-4 py-2 text-sm font-medium hover:bg-white disabled:cursor-not-allowed disabled:bg-slate-400"
+              disabled={isSaveDisabled}
             >
-              Save to GitHub
+              {isSaving ? "Saving..." : "Save to GitHub"}
             </button>
             <span className="text-sm text-slate-400">{status}</span>
           </section>
