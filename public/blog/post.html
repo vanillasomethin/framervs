@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    window.__FRAMER_DISABLE_EDITOR__ = true;
+    window.__FRAMER_DISABLE_PREVIEW__ = true;
+    window.__FRAMER_DISABLE_ANALYTICS__ = true;
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog Post | Vanilla & Somethin</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: #0d0d0d;
+      color: #f5f5f5;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #0d0d0d;
+      color: #f5f5f5;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 24px clamp(20px, 6vw, 64px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+    nav {
+      display: flex;
+      gap: 16px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.8;
+    }
+    main {
+      padding: 40px clamp(20px, 6vw, 64px) 64px;
+      flex: 1;
+    }
+    .post {
+      max-width: 820px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .post h1 {
+      margin: 0;
+      font-size: clamp(32px, 6vw, 48px);
+      color: #f21d2f;
+    }
+    .meta {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.6;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(242, 29, 47, 0.12);
+      color: #f21d2f;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .cover {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid #232323;
+      overflow: hidden;
+      max-height: 420px;
+    }
+    .cover img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .content {
+      line-height: 1.7;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    .content h2,
+    .content h3 {
+      margin-top: 32px;
+      color: #f5f5f5;
+    }
+    .content a {
+      color: #f21d2f;
+    }
+    .status {
+      padding: 24px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      text-align: center;
+    }
+    footer {
+      padding: 24px clamp(20px, 6vw, 64px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <a class="brand" href="/">Vanilla &amp; Somethin</a>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/blog/">Blog</a>
+      </nav>
+    </header>
+    <main>
+      <article class="post" data-post>
+        <div class="status">Loading post…</div>
+      </article>
+    </main>
+    <footer>
+      © 2026 Vanilla &amp; Somethin. All rights reserved.
+    </footer>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="/blog/blog.js" defer></script>
+</body>
+</html>

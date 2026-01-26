@@ -1,0 +1,44 @@
+backend:
+  name: github
+  repo: your-github-username/your-repo
+  branch: main
+
+media_folder: "public/blog/uploads"
+public_folder: "/blog/uploads"
+
+collections:
+  - name: "posts"
+    label: "Blog Posts"
+    folder: "public/blog/posts"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: true }
+      - { label: "Tags", name: "tags", widget: "list", default: [] }
+      - { label: "Excerpt", name: "excerpt", widget: "text" }
+      - { label: "Cover Image", name: "cover", widget: "string", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+  - name: "blog_index"
+    label: "Blog Index"
+    files:
+      - name: "posts_index"
+        label: "Posts JSON"
+        file: "public/blog/posts.json"
+        format: "json"
+        fields:
+          - label: "Posts"
+            name: "posts"
+            widget: "list"
+            fields:
+              - { label: "Slug", name: "slug", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Date", name: "date", widget: "datetime" }
+              - { label: "Draft", name: "draft", widget: "boolean", default: true }
+              - { label: "Tags", name: "tags", widget: "list", default: [] }
+              - { label: "Excerpt", name: "excerpt", widget: "text" }
+              - { label: "Cover Image", name: "cover", widget: "string", required: false }
+              - { label: "File Path", name: "file", widget: "string" }

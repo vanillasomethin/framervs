@@ -1,0 +1,12 @@
+[
+  {
+    "slug": "welcome-to-the-blog",
+    "title": "Welcome to the Blog",
+    "date": "2024-07-01",
+    "draft": false,
+    "tags": ["Announcement", "Studio"],
+    "excerpt": "A quick introduction to the Vanilla & Somethin blog and what we plan to share here.",
+    "cover": "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1600&q=80",
+    "file": "/blog/posts/welcome-to-the-blog.md"
+  }
+]
