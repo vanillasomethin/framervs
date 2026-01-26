@@ -25,7 +25,9 @@
 
         <script>
 (() => {
-  document.documentElement.classList.toggle("dark", false);
+  const prefersDark =
+    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.classList.toggle("dark", prefersDark);
 })();
 </script>
     
