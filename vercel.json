@@ -1,4 +1,15 @@
 {
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://www.googletagmanager.com; connect-src 'self'; img-src 'self' data: https://framerusercontent.com https://res.cloudinary.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://framerusercontent.com https://fonts.gstatic.com; media-src 'self' https://framerusercontent.com https://res.cloudinary.com; frame-src 'none';"
+        }
+      ]
+    }
+  ],
   "routes": [
     {
       "src": "^/cdn-cgi/.*",
