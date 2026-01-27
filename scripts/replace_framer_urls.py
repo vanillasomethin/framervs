@@ -19,6 +19,25 @@ def strip_query(url: str) -> str:
     return urlunparse((p.scheme, p.netloc, p.path, "", "", ""))
 
 
+def should_skip_url(original: str) -> bool:
+    if "/cdn-cgi/" in original:
+        return True
+    path = urlparse(original).path
+    extension = Path(path).suffix.lower()
+    if not extension:
+        return True
+    return extension not in {
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp",
+        ".avif",
+        ".gif",
+        ".mp4",
+        ".webm",
+    }
+
+
 def canonicalize_framer_url(url: str) -> str:
     url = html.unescape(url)
     p = urlparse(url)
@@ -73,7 +92,7 @@ def main() -> None:
         def replace_match(match: re.Match) -> str:
             nonlocal replacements
             original = match.group(0)
-            if "/cdn-cgi/" in original:
+            if should_skip_url(original):
                 return original
             canonical_url = canonicalize_framer_url(original)
             mapped_public_id = mapping.get(canonical_url)
