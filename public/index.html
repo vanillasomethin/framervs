@@ -2,6 +2,24 @@
 
 <html lang="en" data-redirect-timezone="1" dir="ltr">
 <head>
+<script>
+(() => {
+  const stored = (() => {
+    try {
+      return localStorage.getItem("theme");
+    } catch {
+      return null;
+    }
+  })();
+  const prefersDark =
+    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const theme = stored === "dark" || stored === "light" ? stored : prefersDark ? "dark" : "light";
+  const root = document.documentElement;
+  root.classList.toggle("dark", theme === "dark");
+  root.setAttribute("data-theme", theme);
+})();
+</script>
+
     <script>
   window.__FRAMER_DISABLE_EDITOR__ = true;
   window.__FRAMER_DISABLE_PREVIEW__ = true;
@@ -30,17 +48,6 @@
       gtag('config', 'G-88SHPS1HB3');
     </script>
     <meta charset="utf-8">
-    
-    
-        <script>
-(() => {
-  const prefersDark =
-    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  document.documentElement.classList.toggle("dark", prefersDark);
-})();
-</script>
-    
-    
     <meta name="google-site-verification" content="Dc3HD5PGuQdlUcUpi1k7au0prYod32IgIsYlGcUy6vA">
     <meta name="viewport" content="width=device-width">
     <title>Vanilla & Somethin | Architecture & Design Studio</title>
@@ -139,5 +146,28 @@
     
     <script src="/content-loader.js" defer></script>
     <script src="/admin/cms-loader.js" defer></script>
+<script>
+(() => {
+  const root = document.documentElement;
+  const getTheme = () =>
+    root.getAttribute("data-theme") || (root.classList.contains("dark") ? "dark" : "light");
+  const applyTheme = (theme) => {
+    root.classList.toggle("dark", theme === "dark");
+    root.setAttribute("data-theme", theme);
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {}
+  };
+  document.addEventListener("click", (event) => {
+    const target = event.target instanceof Element
+      ? event.target.closest("[data-theme-toggle]")
+      : null;
+    if (!target) return;
+    event.preventDefault();
+    const next = getTheme() === "dark" ? "light" : "dark";
+    applyTheme(next);
+  });
+})();
+</script>
 </body>
 </html>
