@@ -2,6 +2,24 @@
 
 <html lang="en" data-redirect-timezone="1" dir="ltr">
 <head>
+<script>
+(() => {
+  const stored = (() => {
+    try {
+      return localStorage.getItem("theme");
+    } catch {
+      return null;
+    }
+  })();
+  const prefersDark =
+    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const theme = stored === "dark" || stored === "light" ? stored : prefersDark ? "dark" : "light";
+  const root = document.documentElement;
+  root.classList.toggle("dark", theme === "dark");
+  root.setAttribute("data-theme", theme);
+})();
+</script>
+
     <script>
   window.__FRAMER_DISABLE_EDITOR__ = true;
   window.__FRAMER_DISABLE_PREVIEW__ = true;
@@ -129,5 +147,28 @@
     
     
     
+<script>
+(() => {
+  const root = document.documentElement;
+  const getTheme = () =>
+    root.getAttribute("data-theme") || (root.classList.contains("dark") ? "dark" : "light");
+  const applyTheme = (theme) => {
+    root.classList.toggle("dark", theme === "dark");
+    root.setAttribute("data-theme", theme);
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {}
+  };
+  document.addEventListener("click", (event) => {
+    const target = event.target instanceof Element
+      ? event.target.closest("[data-theme-toggle]")
+      : null;
+    if (!target) return;
+    event.preventDefault();
+    const next = getTheme() === "dark" ? "light" : "dark";
+    applyTheme(next);
+  });
+})();
+</script>
 </body>
 </html>
