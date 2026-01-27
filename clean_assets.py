@@ -1,12 +1,9 @@
 import csv
 import html
-import json
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 INPUT = "cloudinary-upload.csv"
 OUTPUT = "cloudinary-upload.cleaned.csv"
-MAP_FILE = "cloudinary-map.json"
-UNMIGRATED_REPORT = "cloudinary-upload.unmigrated.txt"
 
 # If True, keeps URL query params (width/height/scale-down-to).
 # If False, removes them to get canonical/original URLs.
@@ -57,54 +54,6 @@ def url_quality_score(url: str) -> tuple:
 
 rows = []
 bad_lines = 0
-unmigrated = []
-
-with open(MAP_FILE, "r", encoding="utf-8") as f:
-    cloudinary_map = json.load(f)
-
-cloud_name = cloudinary_map.get("cloudName")
-mapping = cloudinary_map.get("mapping", {})
-
-
-def strip_query(url: str) -> str:
-    p = urlparse(url)
-    return urlunparse((p.scheme, p.netloc, p.path, "", "", ""))
-
-
-def canonicalize_framer_url(url: str) -> str:
-    url = html.unescape(url)
-    p = urlparse(url)
-    q = parse_qsl(p.query, keep_blank_values=True)
-    q = sorted(q, key=lambda x: (x[0], x[1]))
-    return urlunparse((p.scheme, p.netloc, p.path, p.params, urlencode(q), p.fragment))
-
-
-def is_framer_asset(url: str) -> bool:
-    p = urlparse(url)
-    return p.netloc == "framerusercontent.com" and (
-        p.path.startswith("/assets/") or p.path.startswith("/images/")
-    )
-
-
-def is_sites_mjs(url: str) -> bool:
-    p = urlparse(url)
-    return "/sites/" in p.path and p.path.endswith(".mjs")
-
-
-def cloudinary_delivery_url(public_id: str, resource_type: str) -> str:
-    if resource_type == "raw":
-        return f"https://res.cloudinary.com/{cloud_name}/raw/upload/{public_id}"
-    if resource_type == "video":
-        return (
-            f"https://res.cloudinary.com/{cloud_name}/video/upload/f_auto,q_auto/{public_id}"
-        )
-    return f"https://res.cloudinary.com/{cloud_name}/image/upload/f_auto,q_auto/{public_id}"
-
-base_path_map = {}
-for framer_url, mapped_public_id in mapping.items():
-    base_path = strip_query(framer_url)
-    if base_path not in base_path_map:
-        base_path_map[base_path] = mapped_public_id
 
 with open(INPUT, "r", encoding="utf-8", newline="") as f:
     reader = csv.DictReader(f)
@@ -115,25 +64,10 @@ with open(INPUT, "r", encoding="utf-8", newline="") as f:
             continue
 
         source_url = normalize_url(r["source_url"])
-        if is_sites_mjs(source_url):
-            unmigrated.append(f"SKIPPED /sites .mjs: {source_url}")
-            continue
-
         public_id = r["public_id"].strip()
 
         # Fix resource type based on file extension
         resource_type = infer_resource_type(source_url)
-
-        if is_framer_asset(source_url):
-            canonical_url = canonicalize_framer_url(source_url)
-            mapped_public_id = mapping.get(canonical_url)
-            if not mapped_public_id:
-                mapped_public_id = base_path_map.get(strip_query(canonical_url))
-            if mapped_public_id:
-                public_id = mapped_public_id
-                source_url = cloudinary_delivery_url(mapped_public_id, resource_type)
-            else:
-                unmigrated.append(f"NO MAPPING: {canonical_url}")
 
         rows.append(
             {
@@ -160,10 +94,6 @@ with open(OUTPUT, "w", encoding="utf-8", newline="") as f:
     writer.writeheader()
     writer.writerows(deduped)
 
-with open(UNMIGRATED_REPORT, "w", encoding="utf-8") as f:
-    f.write("\n".join(sorted(set(unmigrated))) + "\n")
-
 print(f"Input rows: {len(rows)} (skipped malformed: {bad_lines})")
 print(f"Unique public_id: {len(deduped)}")
 print(f"Saved: {OUTPUT}")
-print(f"Unmigrated report: {UNMIGRATED_REPORT}")
