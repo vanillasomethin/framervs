@@ -73,6 +73,8 @@ def main() -> None:
         def replace_match(match: re.Match) -> str:
             nonlocal replacements
             original = match.group(0)
+            if "/cdn-cgi/" in original:
+                return original
             canonical_url = canonicalize_framer_url(original)
             mapped_public_id = mapping.get(canonical_url)
             if not mapped_public_id:
