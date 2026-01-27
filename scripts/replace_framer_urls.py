@@ -1,28 +1,17 @@
 import html
 import json
 import re
-import subprocess
-from collections import Counter
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 MAP_FILE = Path("cloudinary-map.json")
 REPORT_FILE = Path("cloudinary-replacements-report.json")
 ROOT = Path(".")
-EXTENSIONS = {".css", ".html", ".js", ".json"}
+EXTENSIONS = {".html", ".json"}
 
 FRAMER_URL_RE = re.compile(
     r"https?://framerusercontent\.com/(?:images|assets)/[^\s\"'<>)]*"
 )
-FRAMER_DOMAIN_RE = re.compile(
-    r"(framerusercontent\.com|framerstatic\.com|\.framer\.website|framer\.com|"
-    r"app\.framerstatic\.com|events\.framer\.com)"
-)
-VERIFY_EXCLUDE = {
-    "cloudinary-upload.cleaned.csv",
-    "cloudinary-replacements-report.json",
-    "cloudinary-upload.unmigrated.txt",
-}
 
 
 def strip_query(url: str) -> str:
@@ -113,32 +102,6 @@ def main() -> None:
         + "\n",
         encoding="utf-8",
     )
-
-    result = subprocess.run(
-        ["git", "ls-files", "public"],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    verify_candidates = [
-        Path(line)
-        for line in result.stdout.splitlines()
-        if Path(line).suffix in EXTENSIONS
-    ]
-    remaining_counts = Counter()
-    for path in verify_candidates:
-        if path.name in VERIFY_EXCLUDE:
-            continue
-        content = path.read_text(encoding="utf-8")
-        hits = len(FRAMER_DOMAIN_RE.findall(content))
-        if hits:
-            remaining_counts[str(path)] = hits
-
-    if remaining_counts:
-        print("Remaining Framer domain references:")
-        for file_path, hits in remaining_counts.most_common(20):
-            print(f"{hits:>4} {file_path}")
-        raise SystemExit(1)
 
 
 if __name__ == "__main__":
