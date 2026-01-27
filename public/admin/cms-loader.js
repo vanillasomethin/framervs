@@ -238,9 +238,13 @@
     }
   };
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", load);
+  const runAfterLoad = () => {
+    requestAnimationFrame(load);
+  };
+
+  if (document.readyState === "complete") {
+    runAfterLoad();
   } else {
-    load();
+    window.addEventListener("load", runAfterLoad, { once: true });
   }
 })();
