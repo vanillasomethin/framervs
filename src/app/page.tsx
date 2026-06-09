@@ -1,8 +1,31 @@
-export default function Page() {
+import Navigation from "@/components/Navigation";
+import HeroSection from "@/components/HeroSection";
+import { AboutSection } from "@/components/AboutSection";
+import { DesignPhilosophySection } from "@/components/DesignPhilosophySection";
+import { WorksSection } from "@/components/WorksSection";
+import { ServicesSection } from "@/components/ServicesSection";
+import VideoSection from "@/components/VideoSection";
+import ProcessSection from "@/components/ProcessSection";
+import TeamSection from "@/components/TeamSection";
+import FAQSection from "@/components/FAQSection";
+import ContactSection from "@/components/ContactSection";
+
+export default function HomePage() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", fontFamily: "sans-serif", background: "#0d0d0d", color: "#fff", gap: "1rem" }}>
-      <h1 style={{ fontSize: "2rem", fontWeight: 300, letterSpacing: "0.1em" }}>VANILLA & SOMETHIN</h1>
-      <p style={{ opacity: 0.5 }}>Architecture &amp; Interior Design Studio</p>
-    </div>
+    <>
+      <Navigation />
+      <main>
+        <HeroSection />
+        <AboutSection />
+        <DesignPhilosophySection />
+        <WorksSection />
+        <ServicesSection />
+        <VideoSection />
+        <ProcessSection />
+        <TeamSection />
+        <FAQSection />
+        <ContactSection />
+      </main>
+    </>
   );
 }
