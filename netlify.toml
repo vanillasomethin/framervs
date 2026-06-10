@@ -1,0 +1,21 @@
+# Static site — no build step. Publish the pre-rendered mirror in public/.
+[build]
+  publish = "public"
+
+# Apex → www, same as the host redirect in vercel.json
+[[redirects]]
+  from = "https://vanillasometh.in/*"
+  to = "https://www.vanillasometh.in/:splat"
+  status = 301
+  force = true
+
+# Serve the admin SPA, same as the rewrites in vercel.json
+[[redirects]]
+  from = "/admin"
+  to = "/admin/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/"
+  to = "/admin/index.html"
+  status = 200
