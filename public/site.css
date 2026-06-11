@@ -2,6 +2,7 @@
  * runtime (see site.js). */
 
 [data-vs-acc] {
+  display: contents;
   cursor: pointer;
 }
 

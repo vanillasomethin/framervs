@@ -104,6 +104,10 @@ async function run() {
         doc.querySelectorAll("script:not([src])").forEach((s) => {
           if (s.textContent.includes("__framer_force_showing_editorbar_since")) s.remove();
         });
+        // The "Made in Framer" badge is server-rendered; drop it.
+        doc
+          .querySelectorAll(".__framer-badge, #__framer-badge-container")
+          .forEach((el) => el.remove());
 
         // ---- 2. Bake final animation styles ---------------------------
         const styleMap = Object.assign(
@@ -184,30 +188,43 @@ async function run() {
           }
           return "desktop";
         };
+        // Static items are resolved exactly like the harvester did: the item
+        // is the direct child, on the trigger's ancestor path, of the common
+        // container of all same-viewport triggers. Each gets its two markup
+        // states stored in <template>s for site.js to swap between.
         let accId = 0;
         for (const sel of Object.keys(harvest.desktop.accordions || {})) {
-          const counts = { desktop: 0, tablet: 0, phone: 0 };
-          doc.querySelectorAll(sel).forEach((trigger) => {
-            const vp = vpOf(trigger);
-            const idx = counts[vp]++;
-            const item = (harvest[vp].accordions[sel] || [])[idx];
-            if (!item || !item.open || !item.closed) return;
-            let root = trigger;
-            for (let d = 0; d < item.level && root.parentElement; d++) root = root.parentElement;
-            const wrap = doc.createElement("div");
-            wrap.setAttribute("data-vs-acc", String(accId++));
-            wrap.setAttribute("data-vs-state", "closed");
-            root.replaceWith(wrap);
-            wrap.innerHTML = item.closed;
-            const tplC = doc.createElement("template");
-            tplC.setAttribute("data-vs-closed", "");
-            tplC.innerHTML = item.closed;
-            const tplO = doc.createElement("template");
-            tplO.setAttribute("data-vs-open", "");
-            tplO.innerHTML = item.open;
-            wrap.appendChild(tplC);
-            wrap.appendChild(tplO);
-          });
+          const triggers = Array.from(doc.querySelectorAll(sel));
+          if (!triggers.length) continue;
+          const groups = { desktop: [], tablet: [], phone: [] };
+          triggers.forEach((t) => groups[vpOf(t)].push(t));
+          for (const vp of ["desktop", "tablet", "phone"]) {
+            const group = groups[vp];
+            if (!group.length) continue;
+            let anc = group[0];
+            while (anc && !group.every((t) => anc.contains(t))) anc = anc.parentElement;
+            if (!anc) continue;
+            const items = Array.from(anc.children).filter(
+              (ch) => ch.querySelector(sel) || ch.matches(sel)
+            );
+            items.forEach((item, idx) => {
+              const cap = (harvest[vp].accordions[sel] || [])[idx];
+              if (!cap || !cap.open || !cap.closed) return;
+              const holder = doc.createElement("div");
+              holder.setAttribute("data-vs-acc", String(accId++));
+              holder.setAttribute("data-vs-state", "closed");
+              item.replaceWith(holder);
+              holder.innerHTML = cap.closed;
+              const tplC = doc.createElement("template");
+              tplC.setAttribute("data-vs-closed", "");
+              tplC.innerHTML = cap.closed;
+              const tplO = doc.createElement("template");
+              tplO.setAttribute("data-vs-open", "");
+              tplO.innerHTML = cap.open;
+              holder.appendChild(tplC);
+              holder.appendChild(tplO);
+            });
+          }
         }
 
         // ---- 6. Mobile menu ----------------------------------------------

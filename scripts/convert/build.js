@@ -107,75 +107,89 @@ async function harvestBasics(page) {
 }
 
 /**
- * Click each accordion trigger and capture the pre/post HTML of whichever
- * ancestor actually expands (the trigger itself is often just the label).
+ * Click each accordion trigger and capture the closed/open HTML of its item.
+ * The item is the direct child of the list container (the common ancestor of
+ * all triggers) on the trigger's ancestor path — stable across React
+ * re-renders, unlike the trigger itself (whose data-framer-name can change
+ * when its variant flips, e.g. "Primary Closed" -> "Primary Open").
  */
 async function harvestAccordions(page, selector) {
   const count = await page.evaluate((sel) => document.querySelectorAll(sel).length, selector);
-  const items = [];
-  for (let i = 0; i < count; i++) {
-    const pre = await page.evaluate(
+  if (!count) return [];
+
+  const itemHandle = (i) =>
+    page.evaluateHandle(
       ({ sel, i }) => {
-        const el = document.querySelectorAll(sel)[i];
-        if (!el) return null;
-        el.scrollIntoView({ block: "center" });
-        const chain = [];
-        let p = el;
-        for (let d = 0; d < 8 && p && p !== document.body; d++) {
-          chain.push(p.outerHTML.length);
-          p = p.parentElement;
-        }
-        return chain;
+        const triggers = Array.from(document.querySelectorAll(sel));
+        let anc = triggers[0] || document.querySelector("[data-vs-touched]");
+        if (!anc) return null;
+        const all = (el) => triggers.every((t) => el.contains(t));
+        while (anc && !all(anc)) anc = anc.parentElement;
+        if (!anc) return null;
+        // After a click the toggled trigger may stop matching the selector
+        // (variant rename), shifting indexes; resolve items as container
+        // children that contain a trigger or were already visited.
+        const items = Array.from(anc.children).filter(
+          (ch) => ch.querySelector(sel) || ch.matches(sel) || ch.getAttribute("data-vs-touched")
+        );
+        return items[i] || null;
       },
       { sel: selector, i }
     );
-    if (!pre) {
+
+  const items = [];
+  for (let i = 0; i < count; i++) {
+    let h = await itemHandle(i);
+    let el = h.asElement();
+    if (!el) {
       items.push(null);
       continue;
     }
+    const closed = await el.evaluate((n) => {
+      n.scrollIntoView({ block: "center" });
+      const html = n.outerHTML;
+      n.setAttribute("data-vs-touched", "1");
+      return html;
+    });
     await sleep(250);
     try {
-      await page.locator(selector).nth(i).click({ timeout: 3000, force: true });
+      const trig = await el.evaluateHandle((n, sel) => n.querySelector(sel) || n, selector);
+      await trig.asElement().click({ force: true, timeout: 3000 });
     } catch {
       items.push(null);
       continue;
     }
     await sleep(1000);
-    const result = await page.evaluate(
-      ({ sel, i, pre }) => {
-        const el = document.querySelectorAll(sel)[i];
-        if (!el) return null;
-        let p = el;
-        let best = null;
-        for (let d = 0; d < 8 && p && p !== document.body; d++) {
-          const grew = p.outerHTML.length - (pre[d] || 0);
-          if (grew > 200) best = { level: d, open: p.outerHTML };
-          p = p.parentElement;
-        }
-        return best;
-      },
-      { sel: selector, i, pre }
-    );
-    // Close it again so later items are captured against a clean state.
-    try {
-      await page.locator(selector).nth(i).click({ timeout: 3000, force: true });
-      await sleep(600);
-    } catch {}
-    if (!result) {
-      items.push(null);
-      continue;
+    h = await itemHandle(i);
+    el = h.asElement();
+    let open = null;
+    if (el) {
+      open = await el.evaluate((n) => {
+        n.setAttribute("data-vs-touched", "1");
+        const c = n.cloneNode(true);
+        c.removeAttribute("data-vs-touched");
+        return c.outerHTML;
+      });
     }
-    const closed = await page.evaluate(
-      ({ sel, i, level }) => {
-        let p = document.querySelectorAll(sel)[i];
-        for (let d = 0; d < level && p; d++) p = p.parentElement;
-        return p ? p.outerHTML : null;
-      },
-      { sel: selector, i, level: result.level }
-    );
-    items.push({ level: result.level, closed, open: result.open });
+    // close again so the next item is captured against a clean state
+    try {
+      if (el) {
+        const trig2 = await el.evaluateHandle((n, sel) => n.querySelector(sel) || n, selector);
+        await trig2.asElement().click({ force: true, timeout: 3000 });
+        await sleep(600);
+      }
+    } catch {}
+    items.push(open && open !== closed ? { closed, open } : null);
   }
-  return items;
+  // strip the bookkeeping attribute from captures
+  return items.map((it) =>
+    it
+      ? {
+          closed: it.closed.replace(/ data-vs-touched="1"/g, ""),
+          open: it.open.replace(/ data-vs-touched="1"/g, ""),
+        }
+      : null
+  );
 }
 
 /** Capture the navigation in closed and open (mobile menu) states. */
