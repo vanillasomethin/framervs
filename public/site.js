@@ -90,22 +90,95 @@
     });
   }
 
-  /* ---- Scroll reveal for elements marked by the converter ---- */
+  /* ---- Scroll reveal: replay Framer entrance animations ---- */
   var revealEls = document.querySelectorAll("[data-vs-reveal]");
   if ("IntersectionObserver" in window && revealEls.length) {
     var rio = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("vs-in");
-            rio.unobserve(entry.target);
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          rio.unobserve(el);
+          // Stagger siblings (e.g. the letter-by-letter hero headline).
+          var idx = 0;
+          if (el.parentElement) {
+            var sibs = el.parentElement.children;
+            for (var i = 0; i < sibs.length; i++) {
+              if (sibs[i] === el) break;
+              if (sibs[i].hasAttribute && sibs[i].hasAttribute("data-vs-reveal")) idx++;
+            }
           }
+          el.style.transitionDelay = Math.min(idx * 45, 700) + "ms";
+          requestAnimationFrame(function () {
+            el.classList.add("vs-in");
+          });
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0.08 }
     );
     revealEls.forEach(function (el) {
       rio.observe(el);
+    });
+  } else {
+    revealEls.forEach(function (el) {
+      el.classList.add("vs-in");
+    });
+  }
+
+  var reduceMotion =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- Ticker marquees: flex <ul> tracks inside overflow-hidden rows ---- */
+  if (!reduceMotion) {
+    var tracks = [];
+    Array.prototype.forEach.call(document.querySelectorAll("ul"), function (ul) {
+      var s = ul.getAttribute("style") || "";
+      if (s.indexOf("translateX") === -1 || !ul.parentElement || !ul.children.length) return;
+      var cs = getComputedStyle(ul.parentElement);
+      if ((cs.overflow + cs.overflowX).indexOf("hidden") === -1) return;
+      var copies = Array.prototype.slice.call(ul.children);
+      for (var d = 0; d < 2; d++) {
+        copies.forEach(function (li) {
+          ul.appendChild(li.cloneNode(true));
+        });
+      }
+      tracks.push({ el: ul, x: 0, copy: 0 });
+    });
+    if (tracks.length) {
+      var last = performance.now();
+      var SPEED = 0.04; // px per ms
+      var tick = function (t) {
+        var dt = Math.min(t - last, 100);
+        last = t;
+        tracks.forEach(function (tr) {
+          if (!tr.copy) tr.copy = tr.el.scrollWidth / 3;
+          tr.x -= dt * SPEED;
+          if (-tr.x >= tr.copy) tr.x += tr.copy;
+          tr.el.style.transform = "translateX(" + tr.x + "px)";
+        });
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  }
+
+  /* ---- Testimonial carousel: gentle auto-advance ---- */
+  if (!reduceMotion) {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-vs-carousel]"), function (c) {
+      if (c.children.length < 2) return;
+      var i = 0;
+      setInterval(function () {
+        if (!c.clientWidth) return; // hidden breakpoint variant
+        i++;
+        var kids = c.children;
+        if (i >= kids.length) i = 0;
+        var x = kids[i].offsetLeft - kids[0].offsetLeft;
+        if (x > c.scrollWidth - c.clientWidth) {
+          i = 0;
+          x = 0;
+        }
+        c.scrollTo({ left: x, behavior: "smooth" });
+      }, 4500);
     });
   }
 })();
