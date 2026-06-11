@@ -110,6 +110,11 @@ async function run() {
           .forEach((el) => el.remove());
 
         // ---- 2. Bake final animation styles ---------------------------
+        // The static inline style holds each element's animation *start*
+        // state (opacity 0 + offset); the harvested styleMap holds the end
+        // state. Bake the end state so the page is complete without JS, and
+        // keep the start transform in --vs-fr so site.js can replay the
+        // entrance animation on scroll.
         const styleMap = Object.assign(
           {},
           harvest.phone.styleMap,
@@ -124,13 +129,23 @@ async function run() {
           const s = el.getAttribute("style") || "";
           if (!/opacity:\s*0(\.\d+)?\s*(;|$)/.test(s)) return;
           if (/opacity:\s*0\.[2-9]/.test(s)) return; // intentional partial opacity
+          const fromT = (s.match(/(?:^|;)\s*transform:\s*([^;]+)/) || [])[1];
           const k = uniq(el);
-          if (k && styleMap[k]) {
-            el.setAttribute("style", styleMap[k]);
-          } else {
-            el.setAttribute("style", s.replace(/opacity:\s*0(\.\d+)?/g, "opacity:1"));
+          const finalS =
+            k && styleMap[k] ? styleMap[k] : s.replace(/opacity:\s*0(\.\d+)?/g, "opacity:1");
+          el.setAttribute("style", finalS);
+          const m = finalS.match(/opacity:\s*([\d.]+)/);
+          const visible = !m || parseFloat(m[1]) > 0.5;
+          if (visible) {
+            el.setAttribute("data-vs-reveal", "");
+            if (fromT && fromT.trim() !== "none") el.style.setProperty("--vs-fr", fromT.trim());
           }
         });
+        // Gate the hidden start state behind a JS flag so the page is fully
+        // visible without JavaScript.
+        const flag = doc.createElement("script");
+        flag.textContent = "document.documentElement.classList.add('vs-js')";
+        doc.head.insertBefore(flag, doc.head.firstChild);
 
         // ---- 3. Counter end values -------------------------------------
         const counters = harvest.desktop.counters || {};
@@ -155,6 +170,17 @@ async function run() {
             const wrap = doc.createElement("div");
             wrap.className = WRAPS[vp];
             wrap.innerHTML = harvest[vp].sections["Section - Testimonials"];
+            // The quote ticker was captured mid-rotation with off-screen
+            // clones hidden; rewind the track and unhide the slides so the
+            // section is complete without JS and site.js can scroll it.
+            wrap.querySelectorAll("ul").forEach((ul) => {
+              if (!/translateX/.test(ul.getAttribute("style") || "")) return;
+              ul.style.transform = "translateX(0px)";
+              ul.querySelectorAll("*").forEach((el) => {
+                if (el.style && el.style.visibility === "hidden") el.style.visibility = "";
+                if (el.getAttribute("aria-hidden") === "true") el.removeAttribute("aria-hidden");
+              });
+            });
             holder.appendChild(wrap);
           }
           staticSection.replaceWith(...holder.childNodes);

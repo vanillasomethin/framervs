@@ -16,20 +16,25 @@
   overflow: hidden;
 }
 
-/* Scroll reveal */
-[data-vs-reveal] {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+/* Entrance animations: elements carry their final state inline and their
+ * original Framer start offset in --vs-fr. The hidden start state only
+ * applies when JS is running (html.vs-js), so the page is fully visible
+ * without JavaScript. site.js adds .vs-in as elements scroll into view. */
+html.vs-js [data-vs-reveal] {
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
-[data-vs-reveal].vs-in {
-  opacity: 1;
-  transform: none;
+html.vs-js [data-vs-reveal]:not(.vs-in) {
+  opacity: 0 !important;
+  transform: var(--vs-fr, translateY(28px)) !important;
 }
+
 @media (prefers-reduced-motion: reduce) {
-  [data-vs-reveal] {
-    opacity: 1;
-    transform: none;
-    transition: none;
+  html.vs-js [data-vs-reveal],
+  html.vs-js [data-vs-reveal]:not(.vs-in) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
