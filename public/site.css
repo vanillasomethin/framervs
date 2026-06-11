@@ -23,11 +23,22 @@
 html.vs-js [data-vs-reveal] {
   transition:
     opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 html.vs-js [data-vs-reveal]:not(.vs-in) {
   opacity: 0 !important;
   transform: var(--vs-fr, translateY(28px)) !important;
+  filter: var(--vs-ff, none) !important;
+}
+
+/* Parallax elements get their transform driven per-frame by site.js;
+ * only fade them on reveal so scrolling stays in sync. */
+html.vs-js [data-vs-px][data-vs-reveal] {
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.vs-js [data-vs-px][data-vs-reveal]:not(.vs-in) {
+  transform: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
