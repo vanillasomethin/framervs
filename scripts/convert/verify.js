@@ -83,15 +83,17 @@ const VIEWPORTS = [
     // exercise first accordion
     let accToggled = null;
     if (checks.accordions) {
-      const before = await page.evaluate(
-        () => document.querySelector("[data-vs-acc]").innerHTML.length
-      );
-      await page.locator("[data-vs-acc]").first().click({ force: true });
-      await page.waitForTimeout(300);
-      const after = await page.evaluate(
-        () => document.querySelector("[data-vs-acc]").innerHTML.length
-      );
-      accToggled = after !== before;
+      accToggled = await page.evaluate(() => {
+        const acc = Array.from(document.querySelectorAll("[data-vs-acc]")).find(
+          (a) => a.getBoundingClientRect().width > 0 || a.firstElementChild?.getBoundingClientRect().width > 0
+        );
+        if (!acc) return null;
+        const before = acc.innerHTML.length;
+        (acc.firstElementChild || acc).click();
+        return new Promise((resolve) =>
+          setTimeout(() => resolve(acc.innerHTML.length !== before), 300)
+        );
+      });
     }
 
     await page.evaluate(() => window.scrollTo(0, 0));
