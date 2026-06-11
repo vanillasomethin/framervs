@@ -201,15 +201,32 @@ async function run() {
           for (const vp of ["desktop", "tablet", "phone"]) {
             const group = groups[vp];
             if (!group.length) continue;
-            let anc = group[0];
-            while (anc && !group.every((t) => anc.contains(t))) anc = anc.parentElement;
+            // Majority container: nearest ancestor holding >=2 group
+            // triggers, so a stray trigger can't widen the scope.
+            const counts = new Map();
+            const inGroup = (el) => group.filter((t) => el.contains(t)).length;
+            group.forEach((t) => {
+              let p = t.parentElement;
+              while (p && p !== doc.body && inGroup(p) < 2) p = p.parentElement;
+              if (p) counts.set(p, (counts.get(p) || 0) + 1);
+            });
+            let anc = null;
+            let best = 0;
+            counts.forEach((n, c) => {
+              if (n > best) {
+                best = n;
+                anc = c;
+              }
+            });
             if (!anc) continue;
             const items = Array.from(anc.children).filter(
-              (ch) => ch.querySelector(sel) || ch.matches(sel)
+              (ch) =>
+                (ch.querySelector(sel) || ch.matches(sel)) && ch.outerHTML.length < 120000
             );
             items.forEach((item, idx) => {
               const cap = (harvest[vp].accordions[sel] || [])[idx];
               if (!cap || !cap.open || !cap.closed) return;
+              if (cap.closed.length > 120000 || cap.open.length > 200000) return;
               const holder = doc.createElement("div");
               holder.setAttribute("data-vs-acc", String(accId++));
               holder.setAttribute("data-vs-state", "closed");
