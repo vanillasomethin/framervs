@@ -1,13 +1,7 @@
-# Static site — no build step. Publish the pre-rendered mirror in public/.
-# A package.json now exists for the in-progress Next.js/unframer migration
-# (see UNFRAMER_SETUP.md); the explicit no-op command and the skip flag stop
-# Netlify from auto-detecting Next and building it before it's ready.
+# Static site — no build step. Publish the Framer export in public/ as-is so
+# the Framer runtime (and all its animations) runs exactly as designed.
 [build]
-  command = "echo 'Serving prerendered static site; Next.js build not yet enabled.'"
   publish = "public"
-
-[build.environment]
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
 # Apex → www, same as the host redirect in vercel.json
 [[redirects]]
