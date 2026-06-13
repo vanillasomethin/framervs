@@ -1,4 +1,5 @@
-# Static site — no build step. Publish the pre-rendered mirror in public/.
+# Static site — no build step. Publish the Framer export in public/ as-is so
+# the Framer runtime (and all its animations) runs exactly as designed.
 [build]
   publish = "public"
 
