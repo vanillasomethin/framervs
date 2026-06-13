@@ -162,6 +162,107 @@
     }
   }
 
+  /* ---- Scroll parallax: replay measured scroll-linked transforms ---- */
+  var pxEls = document.querySelectorAll("[data-vs-px]");
+  if (pxEls.length && !reduceMotion) {
+    var pxItems = [];
+    pxEls.forEach(function (el) {
+      try {
+        var d = JSON.parse(el.getAttribute("data-vs-px"));
+        d.el = el;
+        pxItems.push(d);
+      } catch (e) {}
+    });
+    // Each entry carries the measured (scrollY, value...) sample points;
+    // interpolate linearly between them and clamp at the ends.
+    var interp = function (pts, y, slot) {
+      if (y <= pts[0][0]) return pts[0][slot];
+      var last = pts[pts.length - 1];
+      if (y >= last[0]) return last[slot];
+      for (var i = 1; i < pts.length; i++) {
+        if (y <= pts[i][0]) {
+          var p0 = pts[i - 1];
+          var p1 = pts[i];
+          var f = (y - p0[0]) / (p1[0] - p0[0] || 1);
+          return p0[slot] + (p1[slot] - p0[slot]) * f;
+        }
+      }
+      return last[slot];
+    };
+    var pxTick = false;
+    var pxUpdate = function () {
+      pxTick = false;
+      var y = window.scrollY || window.pageYOffset;
+      pxItems.forEach(function (d) {
+        if (!d.el.offsetParent || !d.pts) return; // hidden breakpoint variant
+        var t = d.t.replace(/^transform:\s*/, "");
+        t = t.replace("%v0", interp(d.pts, y, 1).toFixed(1));
+        if (t.indexOf("%v1") !== -1) t = t.replace("%v1", interp(d.pts, y, 2).toFixed(1));
+        d.el.style.transform = t;
+      });
+    };
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (!pxTick) {
+          pxTick = true;
+          requestAnimationFrame(pxUpdate);
+        }
+      },
+      { passive: true }
+    );
+    pxUpdate();
+  }
+
+  /* ---- Hero cursor image trail ---- */
+  var trailHost = document.querySelector("[data-vs-trail]");
+  if (trailHost && !reduceMotion && window.matchMedia("(pointer: fine)").matches) {
+    var trailImgs = [];
+    try {
+      trailImgs = JSON.parse(trailHost.getAttribute("data-vs-trail"));
+    } catch (e) {}
+    if (trailImgs.length) {
+      trailImgs.forEach(function (u) {
+        new Image().src = u; // pre-warm
+      });
+      var ti = 0;
+      var lastX = -999;
+      var lastY = -999;
+      var live = 0;
+      if (getComputedStyle(trailHost).position === "static") trailHost.style.position = "relative";
+      trailHost.addEventListener("mousemove", function (e) {
+        var r = trailHost.getBoundingClientRect();
+        var x = e.clientX - r.left;
+        var y = e.clientY - r.top;
+        if (Math.hypot(x - lastX, y - lastY) < 110 || live > 6) return;
+        lastX = x;
+        lastY = y;
+        var d = document.createElement("div");
+        d.style.cssText =
+          "position:absolute;width:200px;height:150px;background-size:contain;" +
+          "background-position:center;background-repeat:no-repeat;border-radius:2px;" +
+          "pointer-events:none;perspective:500px;will-change:transform;z-index:2;" +
+          "transform:rotateX(-90deg);transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .4s ease";
+        d.style.backgroundImage = 'url("' + trailImgs[ti++ % trailImgs.length] + '")';
+        d.style.left = x - 100 + "px";
+        d.style.top = y - 85 + "px";
+        trailHost.appendChild(d);
+        live++;
+        requestAnimationFrame(function () {
+          d.style.transform = "rotateX(0deg)";
+        });
+        setTimeout(function () {
+          d.style.transform = "rotateX(90deg)";
+          d.style.opacity = "0";
+          setTimeout(function () {
+            d.remove();
+            live--;
+          }, 450);
+        }, 750);
+      });
+    }
+  }
+
   /* ---- Testimonial carousel: gentle auto-advance ---- */
   if (!reduceMotion) {
     Array.prototype.forEach.call(document.querySelectorAll("[data-vs-carousel]"), function (c) {

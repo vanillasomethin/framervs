@@ -54,6 +54,10 @@ async function run() {
     const rel = PAGES[key];
     const harvestPath = path.join(__dirname, `harvest/${key}.json`);
     const harvest = JSON.parse(fs.readFileSync(harvestPath, "utf8"));
+    const fxPath = path.join(__dirname, `harvest/${key}-fx.json`);
+    const fx = fs.existsSync(fxPath)
+      ? JSON.parse(fs.readFileSync(fxPath, "utf8"))
+      : { parallax: {}, trail: null };
 
     // Load the page with JS disabled: full static DOM, no hydration.
     const ctx = await browser.newContext({
@@ -64,7 +68,7 @@ async function run() {
     await page.goto(`${BASE}/${rel}`, { waitUntil: "load", timeout: 90000 });
 
     const html = await page.evaluate(
-      ({ harvest }) => {
+      ({ harvest, fx }) => {
         const doc = document;
 
         // Breakpoint hashes are page-specific; derive them from the
@@ -130,15 +134,36 @@ async function run() {
           if (!/opacity:\s*0(\.\d+)?\s*(;|$)/.test(s)) return;
           if (/opacity:\s*0\.[2-9]/.test(s)) return; // intentional partial opacity
           const fromT = (s.match(/(?:^|;)\s*transform:\s*([^;]+)/) || [])[1];
+          const fromF = (s.match(/(?:^|;)\s*filter:\s*([^;]+)/) || [])[1];
           const k = uniq(el);
-          const finalS =
-            k && styleMap[k] ? styleMap[k] : s.replace(/opacity:\s*0(\.\d+)?/g, "opacity:1");
+          let finalS;
+          if (k && styleMap[k]) {
+            finalS = styleMap[k];
+          } else {
+            // No harvested end state (e.g. classless text-reveal spans):
+            // derive it by neutralising the entrance offsets — full
+            // opacity, no blur, identity offsets (percentage translates
+            // are layout, keep them).
+            finalS = s
+              .replace(/opacity:\s*0(\.\d+)?/g, "opacity:1")
+              .replace(/filter:\s*blur\([\d.]+px\)/g, "filter: blur(0px)")
+              .replace(/transform:\s*([^;]+)/, (m0, tval) => {
+                if (/matrix|var\(/.test(tval)) return m0;
+                const cleaned = tval
+                  .replace(/(translate[XYZ]?\()(-?[\d.]+px)/g, "$10px")
+                  .replace(/(rotate[XYZ]?\()(-?[\d.]+)(deg)/g, "$10$3")
+                  .replace(/(skew[XY]?\()(-?[\d.]+)(deg)/g, "$10$3")
+                  .replace(/scale\((?!1[,)])[\d.]+\)/g, "scale(1)");
+                return "transform: " + cleaned;
+              });
+          }
           el.setAttribute("style", finalS);
           const m = finalS.match(/opacity:\s*([\d.]+)/);
           const visible = !m || parseFloat(m[1]) > 0.5;
           if (visible) {
             el.setAttribute("data-vs-reveal", "");
             if (fromT && fromT.trim() !== "none") el.style.setProperty("--vs-fr", fromT.trim());
+            if (fromF && /blur\(\s*[1-9]/.test(fromF)) el.style.setProperty("--vs-ff", fromF.trim());
           }
         });
         // Gate the hidden start state behind a JS flag so the page is fully
@@ -287,6 +312,39 @@ async function run() {
           }
         }
 
+        // ---- 6a. Scroll parallax + hero cursor trail ----------------------
+        // Parallax entries are keyed by framer class + nth occurrence within
+        // one breakpoint's DOM. Recreate the same numbering here: shared
+        // (wrapper-less) elements count in every breakpoint, variant copies
+        // only in their own.
+        for (const vp of ["desktop", "tablet", "phone"]) {
+          const entries = (fx.parallax && fx.parallax[vp]) || [];
+          if (!entries.length) continue;
+          const wanted = {};
+          entries.forEach((e) => {
+            wanted[e.key] = e;
+          });
+          const counts = {};
+          doc.querySelectorAll('[style*="transform"]').forEach((el) => {
+            const v = el.closest(".ssr-variant");
+            if (v && vpOf(el) !== vp) return;
+            const cls = Array.from(el.classList).find(
+              (c) => /^framer-[a-z0-9]+$/i.test(c) && !/^framer-(text|body|page)$/i.test(c)
+            );
+            if (!cls) return;
+            counts[cls] = (counts[cls] || 0) + 1;
+            const key = cls + "|" + (counts[cls] - 1);
+            const e = wanted[key];
+            if (e && !el.hasAttribute("data-vs-px")) {
+              el.setAttribute("data-vs-px", JSON.stringify({ t: e.t, pts: e.pts }));
+            }
+          });
+        }
+        if (fx.trail && fx.trail.length) {
+          const hero = doc.querySelector('[data-framer-name="Section - Hero"]');
+          if (hero) hero.setAttribute("data-vs-trail", JSON.stringify(fx.trail));
+        }
+
         // ---- 6b. Contact form: post to a static-friendly backend ----------
         doc.querySelectorAll("form").forEach((form) => {
           form.setAttribute("action", "https://formsubmit.co/hello@vanillasometh.in");
@@ -319,7 +377,7 @@ async function run() {
 
         return "<!doctype html>\n" + doc.documentElement.outerHTML;
       },
-      { harvest }
+      { harvest, fx }
     );
 
     const out = path.join(SRC, rel);
