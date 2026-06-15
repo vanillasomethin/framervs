@@ -3,12 +3,9 @@
 [build]
   publish = "public"
 
-# Apex → www, same as the host redirect in vercel.json
-[[redirects]]
-  from = "https://vanillasometh.in/*"
-  to = "https://www.vanillasometh.in/:splat"
-  status = 301
-  force = true
+# Apex → www is handled by Netlify's domain management (primary domain +
+# alias redirect). A duplicate redirect here can ping-pong against that and
+# cause "too many redirects" loops, so it's intentionally left out.
 
 # Serve the admin SPA, same as the rewrites in vercel.json
 [[redirects]]
