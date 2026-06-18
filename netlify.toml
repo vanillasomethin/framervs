@@ -1,11 +1,26 @@
-# Static site — no build step. Publish the Framer export in public/ as-is so
-# the Framer runtime (and all its animations) runs exactly as designed.
+# The site is the Framer export in public/ (served as-is so the Framer runtime
+# and all its animations run exactly as designed). The one exception is
+# /estimator, which is the React/Vite cost-estimator app in vs-calculator/.
+# Netlify builds that app at deploy time and drops its output into
+# public/estimator/ so it ships alongside the static export.
 [build]
   publish = "public"
+  command = "cd vs-calculator && npm ci && npm run build && rm -rf ../public/estimator && cp -r dist ../public/estimator"
+
+[build.environment]
+  NODE_VERSION = "20"
 
 # Apex → www is handled by Netlify's domain management (primary domain +
 # alias redirect). A duplicate redirect here can ping-pong against that and
 # cause "too many redirects" loops, so it's intentionally left out.
+
+# Client-side routing fallback for the estimator SPA. Real files (assets,
+# images, fonts) are served directly; unknown sub-paths fall back to the app
+# shell so deep links like /estimator/architect-fee work on refresh.
+[[redirects]]
+  from = "/estimator/*"
+  to = "/estimator/index.html"
+  status = 200
 
 # Serve the admin SPA, same as the rewrites in vercel.json
 [[redirects]]
