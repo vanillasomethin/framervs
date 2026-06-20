@@ -59,6 +59,31 @@ export type ConstructionSubtype = "house" | "apartment";
 // Area input type for construction
 export type AreaInputType = "plot" | "plinth" | "builtup";
 
+// Whether the project is a fresh build or a renovation of an existing structure.
+// Renovations skip the new foundation/shell, add selective demolition, and keep
+// MEP/finishes/interiors at full scope.
+export type ProjectMode = "new" | "renovation";
+
+// Foundation/soil condition. Drives the structural shell cost — poor or
+// difficult ground needs deeper/stronger foundations, soil replacement, piling,
+// or retaining work. Only relevant to new construction.
+export type FoundationType = "normal" | "blackcotton" | "rocky" | "sloped";
+
+// Premium lifestyle amenities (priced as fixed lump sums, not per-sqft, since a
+// pool or home theatre is a discrete installation). Mostly relevant to villas,
+// independent houses and high-end residential.
+export type AmenityOption =
+  | "swimmingPool"
+  | "homeGym"
+  | "saunaSteam"
+  | "homeTheater"
+  | "homeAutomation"
+  | "solarPower"
+  | "outdoorKitchen"
+  | "jacuzziSpa"
+  | "wineCellar"
+  | "borewell";
+
 // Main project estimate interface
 export interface ProjectEstimate {
   // Location
@@ -73,6 +98,8 @@ export interface ProjectEstimate {
 
   // Construction specific fields
   constructionSubtype?: ConstructionSubtype; // House or apartment
+  projectMode?: ProjectMode; // New build vs renovation (default "new")
+  foundationType?: FoundationType; // Soil/foundation condition (new construction)
   floorCount?: number; // Number of floors
   areaInputType?: AreaInputType; // Plot area or plinth area
   plotArea?: number; // Plot/site area (if selected)
@@ -97,10 +124,14 @@ export interface ProjectEstimate {
   
   // Finishes
   buildingEnvelope: ComponentOption;
+  waterproofing: ComponentOption;
   lighting: ComponentOption;
   windows: ComponentOption;
   ceiling: ComponentOption;
   surfaces: ComponentOption;
+
+  // Premium amenities (lump-sum installations, multi-select)
+  amenities?: AmenityOption[];
   
   // Interiors
   fixedFurniture: ComponentOption;

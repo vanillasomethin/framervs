@@ -1,10 +1,10 @@
 
 import { motion } from "framer-motion";
 import { useEffect } from "react";
-import { Building2, Home, Building, Paintbrush, HardHat, Trees, Check, Layers } from "lucide-react";
+import { Building2, Home, Building, Paintbrush, HardHat, Trees, Check, Layers, Hammer, Wrench, Mountain, TriangleRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AnimatedText from "@/components/AnimatedText";
-import { ProjectSubcategory, RoomConfiguration, LandscapeArea, ConstructionSubtype, AreaInputType } from "@/types/estimator";
+import { ProjectSubcategory, RoomConfiguration, LandscapeArea, ConstructionSubtype, AreaInputType, ProjectMode, FoundationType } from "@/types/estimator";
 
 type ProjectType = "residential" | "commercial" | "mixed-use";
 
@@ -39,6 +39,8 @@ interface ProjectTypeStepProps {
   selectedRoomConfig?: RoomConfiguration;
   selectedLandscapeAreas?: LandscapeArea[];
   selectedConstructionSubtype?: ConstructionSubtype;
+  selectedProjectMode?: ProjectMode;
+  selectedFoundationType?: FoundationType;
   selectedFloorCount?: number;
   selectedAreaInputType?: AreaInputType;
   onSelectType: (type: ProjectType) => void;
@@ -46,6 +48,8 @@ interface ProjectTypeStepProps {
   onSelectRoomConfig: (config: RoomConfiguration) => void;
   onSelectLandscapeAreas: (areas: LandscapeArea[]) => void;
   onSelectConstructionSubtype: (subtype: ConstructionSubtype) => void;
+  onSelectProjectMode: (mode: ProjectMode) => void;
+  onSelectFoundationType: (type: FoundationType) => void;
   onSelectFloorCount: (count: number) => void;
   onSelectAreaInputType: (type: AreaInputType) => void;
 }
@@ -56,6 +60,8 @@ const ProjectTypeStep = ({
   selectedRoomConfig,
   selectedLandscapeAreas = [],
   selectedConstructionSubtype,
+  selectedProjectMode,
+  selectedFoundationType,
   selectedFloorCount,
   selectedAreaInputType,
   onSelectType,
@@ -63,6 +69,8 @@ const ProjectTypeStep = ({
   onSelectRoomConfig,
   onSelectLandscapeAreas,
   onSelectConstructionSubtype,
+  onSelectProjectMode,
+  onSelectFoundationType,
   onSelectFloorCount,
   onSelectAreaInputType,
 }: ProjectTypeStepProps) => {
@@ -144,6 +152,18 @@ const ProjectTypeStep = ({
     { id: "Rooftop Garden", title: "Rooftop Garden" },
     { id: "Full Compound", title: "Full Compound" },
     { id: "Courtyard", title: "Courtyard" },
+  ];
+
+  const projectModeOptions: { id: ProjectMode; title: string; description: string; icon: React.ReactNode }[] = [
+    { id: "new", title: "New Construction", description: "Ground-up build on a fresh or cleared site", icon: <Hammer className="size-5" /> },
+    { id: "renovation", title: "Renovation / Remodel", description: "Reworking an existing structure — saves the shell, adds demolition", icon: <Wrench className="size-5" /> },
+  ];
+
+  const foundationOptions: { id: FoundationType; title: string; description: string; icon: React.ReactNode }[] = [
+    { id: "normal", title: "Normal Soil", description: "Firm ground, standard bearing capacity", icon: <Layers className="size-5" /> },
+    { id: "rocky", title: "Rocky Terrain", description: "Hard excavation but stable — no piling", icon: <Mountain className="size-5" /> },
+    { id: "blackcotton", title: "Black Cotton Soil", description: "Expansive soil — needs replacement / piling", icon: <Layers className="size-5" /> },
+    { id: "sloped", title: "Sloped / Hilly Site", description: "Stepped foundation + retaining walls", icon: <TriangleRight className="size-5" /> },
   ];
 
   const toggleWorkType = (workType: ProjectSubcategory) => {
@@ -271,6 +291,95 @@ const ProjectTypeStep = ({
                       <p className="text-sm text-[#4f090c]/70">{option.description}</p>
                     </div>
                   </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Project Mode: New vs Renovation (Conditional - when construction is selected) */}
+      {selectedType && selectedWorkTypes.includes("construction") && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <AnimatedText
+            text="New Construction or Renovation?"
+            className="text-xl font-display mb-6 text-center"
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {projectModeOptions.map((option, index) => {
+              const isSelected = (selectedProjectMode ?? "new") === option.id;
+              return (
+                <motion.div
+                  key={option.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className={cn(
+                    "group flex items-start gap-3 border rounded-lg p-5 cursor-pointer transition-all duration-300 hover:shadow-md",
+                    isSelected ? "border-vs bg-vs/5 shadow-sm" : "border-primary/10 hover:border-primary/30"
+                  )}
+                  onClick={() => onSelectProjectMode(option.id)}
+                >
+                  <div className={cn(
+                    "flex items-center justify-center size-10 rounded-lg transition-colors flex-shrink-0",
+                    isSelected ? "bg-vs text-white" : "bg-primary/5 text-primary/70 group-hover:bg-primary/10"
+                  )}>
+                    {option.icon}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-base font-semibold text-[#4f090c] mb-1">{option.title}</h4>
+                    <p className="text-xs text-[#4f090c]/70">{option.description}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Foundation / Soil Type (Conditional - new construction only) */}
+      {selectedType && selectedWorkTypes.includes("construction") && (selectedProjectMode ?? "new") === "new" && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <AnimatedText
+            text="Site / Soil Condition"
+            className="text-xl font-display mb-2 text-center"
+          />
+          <p className="text-sm text-[#4f090c]/60 text-center mb-6">
+            Ground conditions drive the foundation cost. Pick the closest match (a soil test confirms this later).
+          </p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
+            {foundationOptions.map((option, index) => {
+              const isSelected = (selectedFoundationType ?? "normal") === option.id;
+              return (
+                <motion.div
+                  key={option.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.04 }}
+                  className={cn(
+                    "group flex flex-col items-center text-center border rounded-lg p-4 cursor-pointer transition-all duration-300 hover:shadow-md",
+                    isSelected ? "border-vs bg-vs/5 shadow-sm" : "border-primary/10 hover:border-primary/30"
+                  )}
+                  onClick={() => onSelectFoundationType(option.id)}
+                >
+                  <div className={cn(
+                    "flex items-center justify-center size-10 rounded-lg transition-colors mb-2",
+                    isSelected ? "bg-vs text-white" : "bg-primary/5 text-primary/70 group-hover:bg-primary/10"
+                  )}>
+                    {option.icon}
+                  </div>
+                  <h4 className="text-sm font-semibold text-[#4f090c] mb-1">{option.title}</h4>
+                  <p className="text-[11px] text-[#4f090c]/70 leading-tight">{option.description}</p>
                 </motion.div>
               );
             })}

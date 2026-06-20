@@ -7,6 +7,7 @@ import ProjectTypeStep from "@/components/estimator/ProjectTypeStep";
 import AreaStep from "@/components/estimator/AreaStep";
 import ComponentsStep from "@/components/estimator/ComponentsStep";
 import FinishesStep from "@/components/estimator/FinishesStep";
+import AmenitiesStep from "@/components/estimator/AmenitiesStep";
 import InteriorsStep from "@/components/estimator/InteriorsStep";
 import ResultsStep from "@/components/estimator/ResultsStep";
 
@@ -19,7 +20,7 @@ const StepContent = () => {
     if (step === 4) {
       const componentsToInitialize = [
         'plumbing', 'ac', 'electrical', 'elevator', 'civilQuality',
-        'lighting', 'windows', 'ceiling', 'surfaces', 'buildingEnvelope',
+        'lighting', 'windows', 'ceiling', 'surfaces', 'buildingEnvelope', 'waterproofing',
         'fixedFurniture', 'looseFurniture', 'furnishings', 'appliances', 'artefacts'
       ];
 
@@ -57,6 +58,8 @@ const StepContent = () => {
             selectedRoomConfig={estimate.roomConfiguration}
             selectedLandscapeAreas={estimate.landscapeAreas}
             selectedConstructionSubtype={estimate.constructionSubtype}
+            selectedProjectMode={estimate.projectMode}
+            selectedFoundationType={estimate.foundationType}
             selectedFloorCount={estimate.floorCount}
             selectedAreaInputType={estimate.areaInputType}
             onSelectType={(type) => updateEstimate('projectType', type)}
@@ -64,6 +67,8 @@ const StepContent = () => {
             onSelectRoomConfig={(config) => updateEstimate('roomConfiguration', config)}
             onSelectLandscapeAreas={(areas) => updateEstimate('landscapeAreas', areas)}
             onSelectConstructionSubtype={(subtype) => updateEstimate('constructionSubtype', subtype)}
+            onSelectProjectMode={(mode) => updateEstimate('projectMode', mode)}
+            onSelectFoundationType={(type) => updateEstimate('foundationType', type)}
             onSelectFloorCount={(count) => updateEstimate('floorCount', count)}
             onSelectAreaInputType={(type) => updateEstimate('areaInputType', type)}
           />
@@ -103,8 +108,16 @@ const StepContent = () => {
               ceiling={estimate.ceiling}
               surfaces={estimate.surfaces}
               buildingEnvelope={estimate.buildingEnvelope}
+              waterproofing={estimate.waterproofing}
               workTypes={estimate.workTypes}
               onOptionChange={handleOptionChange}
+            />
+
+            <AmenitiesStep
+              selectedAmenities={estimate.amenities ?? []}
+              projectType={estimate.projectType}
+              workTypes={estimate.workTypes}
+              onToggleAmenity={(amenities) => updateEstimate('amenities', amenities)}
             />
 
             <InteriorsStep

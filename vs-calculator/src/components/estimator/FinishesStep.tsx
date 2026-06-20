@@ -1,4 +1,4 @@
-import { Lightbulb, DoorOpen, Layers, Brush, Building2 } from "lucide-react";
+import { Lightbulb, DoorOpen, Layers, Brush, Building2, Umbrella } from "lucide-react";
 import { ComponentOption, ProjectSubcategory } from "@/types/estimator";
 import QualityLevelSelector from "./QualityLevelSelector";
 
@@ -8,6 +8,7 @@ interface FinishesStepProps {
   ceiling: ComponentOption;
   surfaces: ComponentOption;
   buildingEnvelope: ComponentOption;
+  waterproofing: ComponentOption;
   workTypes: ProjectSubcategory[];
   onOptionChange: (component: string, option: ComponentOption) => void;
 }
@@ -18,6 +19,7 @@ const FinishesStep = ({
   ceiling,
   surfaces,
   buildingEnvelope,
+  waterproofing,
   workTypes,
   onOptionChange,
 }: FinishesStepProps) => {
@@ -29,7 +31,7 @@ const FinishesStep = ({
 
     const finishAvailability: Record<ProjectSubcategory, string[]> = {
       interiors: ["lighting", "windows", "ceiling", "surfaces"], // Interior finishes including door/window upgrades
-      construction: ["buildingEnvelope", "lighting", "windows", "ceiling", "surfaces"],
+      construction: ["buildingEnvelope", "waterproofing", "lighting", "windows", "ceiling", "surfaces"],
       landscape: ["lighting"], // Outdoor lighting only
     };
 
@@ -46,6 +48,13 @@ const FinishesStep = ({
       icon: <Building2 className="size-6" />,
       value: buildingEnvelope,
       description: "Exterior wall systems, facade cladding (ACP/stone/glass), weather protection, thermal/acoustic insulation, and architectural features for building exterior",
+    },
+    {
+      key: "waterproofing",
+      title: "Waterproofing & Damp Protection",
+      icon: <Umbrella className="size-6" />,
+      value: waterproofing,
+      description: "Terrace, bathroom, balcony and basement waterproofing — membrane/crystalline/PU systems guarding against seepage, leakage and dampness. A critical, often-overlooked line item in Indian construction",
     },
     {
       key: "lighting",

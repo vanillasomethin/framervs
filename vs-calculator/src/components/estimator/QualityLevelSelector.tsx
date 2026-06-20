@@ -71,6 +71,13 @@ const COMPONENT_CONFIG: Record<string, {
     luxuryDesc: "ACP panels/natural stone, architectural features, complete thermal envelope. Premium facade with metal/glass elements, superior weatherproofing, and design appeal.",
     pricing: { standard: 400, premium: 800, luxury: 1600 }
   },
+  waterproofing: {
+    notRequiredDesc: "No waterproofing in scope. Only for interior-only work relying on the existing building's waterproofing.",
+    standardDesc: "Cementitious/acrylic coating for terrace, bathrooms & wet areas. Standard membrane with 5-7 year protection against seepage.",
+    premiumDesc: "APP/SBS modified bitumen membrane + crystalline treatment for wet areas. Enhanced protection with 10-12 year warranty.",
+    luxuryDesc: "PU/PMMA liquid membrane + integral crystalline + basement tanking. Complete building envelope protection with 15+ year warranty.",
+    pricing: { standard: 250, premium: 400, luxury: 650 }
+  },
   lighting: {
     notRequiredDesc: "No decorative lighting needed. Basic electrical points only without fixtures.",
     standardDesc: "LED panels, basic decorative lights, standard fixtures. Essential ambient and task lighting with energy-efficient LED technology.",

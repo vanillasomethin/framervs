@@ -21,6 +21,7 @@ const componentPricingRows: Row[] = [
   { label: "AC / HVAC", values: [0, 800, 1300, 2100] },
   { label: "Elevator", values: [0, 750, 1200, 1950] },
   { label: "Building Envelope", values: [0, 150, 240, 390] },
+  { label: "Waterproofing", values: [0, 250, 400, 650] },
   { label: "Lighting", values: [0, 400, 640, 1040] },
   { label: "Windows", values: [0, 500, 800, 1300] },
   { label: "Ceiling", values: [0, 350, 560, 910] },
@@ -89,6 +90,35 @@ const feesRows: Row[] = [
   { label: "Contingency", values: ["5% of subtotal"] },
   { label: "GST on professional fees", values: ["18% of professional fees (COA regulation — explicit line per COA guidelines)"] },
   { label: "GST on construction & contingency", values: ["6% of (subtotal + contingency) — net of input credits"] },
+];
+
+const foundationRows: Row[] = [
+  { label: "Normal Soil", values: ["1.0× — firm ground, standard footing"] },
+  { label: "Rocky Terrain", values: ["1.08× — harder excavation but stable, no piling"] },
+  { label: "Black Cotton Soil", values: ["1.12× — expansive soil, replacement / under-reamed piles"] },
+  { label: "Sloped / Hilly Site", values: ["1.15× — stepped foundation + retaining walls"] },
+  { label: "Scope", values: ["Applied to the structural shell only, for NEW construction. Renovations skip this entirely."] },
+];
+
+const projectModeRows: Row[] = [
+  { label: "New Construction", values: ["Full structural shell + foundation/soil multiplier above"] },
+  { label: "Renovation / Remodel", values: ["Shell reduced to 0.40× (strengthening & modification, not new framing); no foundation multiplier"] },
+  { label: "Demolition allowance (renovation)", values: ["₹1,500/sqm of built-up area — selective demolition + debris removal"] },
+  { label: "MEP / finishes / interiors", values: ["Charged at full scope in both modes"] },
+];
+
+const amenitiesRows: Row[] = [
+  { label: "Swimming Pool", values: ["₹20,00,000"] },
+  { label: "Home Theater", values: ["₹12,00,000"] },
+  { label: "Home Gym", values: ["₹8,00,000"] },
+  { label: "Wine Cellar", values: ["₹6,00,000"] },
+  { label: "Home Automation", values: ["₹6,00,000"] },
+  { label: "Sauna / Steam", values: ["₹5,00,000"] },
+  { label: "Jacuzzi / Spa", values: ["₹4,50,000"] },
+  { label: "Solar Power (~5kW)", values: ["₹4,00,000"] },
+  { label: "Outdoor Kitchen / BBQ", values: ["₹3,50,000"] },
+  { label: "Borewell", values: ["₹2,50,000"] },
+  { label: "Scaling", values: ["Fixed lump sums × location multiplier only (no size / project-type / complexity inflation). Residential & mixed-use construction only."] },
 ];
 
 const phaseAllocationRows: Row[] = [
@@ -183,29 +213,47 @@ const sections: Table[] = [
     rows: projectTypeMultiplierRows,
   },
   {
-    title: "7. Professional fees, contingency & tax",
-    note: "Architect fees follow the COA (Council of Architecture) minimum scale of professional charges. Applied in sequence to the post-multiplier subtotal: fees + contingency are added first, then GST is applied on top of that running total.",
+    title: "7. Foundation / soil-condition multiplier",
+    note: "Applied to the structural shell only, for NEW construction. Difficult ground raises the substructure cost (deeper footings, soil replacement, piling, retaining work) while the superstructure and finishes are unaffected.",
+    columns: ["Site / Soil Condition", "Multiplier & Rationale"],
+    rows: foundationRows,
+  },
+  {
+    title: "8. Project mode — new construction vs renovation",
+    note: "Renovations reuse the existing structure: the shell is charged at a fraction of a new build plus a demolition allowance, and the foundation/soil multiplier does not apply. MEP, finishes and interiors are charged at full scope in both modes.",
+    columns: ["Mode / Line", "Treatment"],
+    rows: projectModeRows,
+  },
+  {
+    title: "9. Premium amenities (fixed lump sums)",
+    note: "Optional lifestyle installations priced as discrete lump sums rather than per-sqft. Only the location multiplier is applied on top — never the size, project-type or complexity multipliers. Offered for residential & mixed-use construction (villas, houses, penthouses).",
+    columns: ["Amenity", "Indicative Cost (pre-location)"],
+    rows: amenitiesRows,
+  },
+  {
+    title: "10. Professional fees, contingency & tax",
+    note: "Architect fees follow the COA (Council of Architecture) minimum scale of professional charges. GST is split COA-literal: 18% on professional fees, 6% on construction + contingency.",
     columns: ["Line Item", "Rate"],
     rows: feesRows,
   },
   {
-    title: "8. Phase budget allocation (how the total cost splits across project phases)",
+    title: "11. Phase budget allocation (how the total cost splits across project phases)",
     columns: ["Phase Rule", "Detail"],
     rows: phaseAllocationRows,
   },
   {
-    title: "9. Timeline constants (project duration in months)",
+    title: "12. Timeline constants (project duration in months)",
     columns: ["Phase / Adjustment", "Rule"],
     rows: timelineRows,
   },
   {
-    title: "10. FSI (Floor Space Index) rules by city",
+    title: "13. FSI (Floor Space Index) rules by city",
     note: "Used only for residential plot-area projects to compute the maximum/typical legally buildable area before it's converted to a built-up area for pricing. Not a cost constant, but feeds directly into the area used by every calculation above.",
     columns: ["City", "FSI Range"],
     rows: fsiRows,
   },
   {
-    title: "11. Standalone Architect Fee Calculator (/architect-fee page — separate from the main estimator)",
+    title: "14. Standalone Architect Fee Calculator (/architect-fee page — separate from the main estimator)",
     note: "This is a separate quoting tool for the studio's own design fees, not the construction-cost estimator. Listed here for completeness since it has its own independent set of constants.",
     columns: ["Line Item", "Rate"],
     rows: architectFeeCalcRows,

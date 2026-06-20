@@ -73,6 +73,10 @@ const COMPONENT_PRICING: Record<string, Record<ComponentOption, number>> = {
 
   // Finishes & Envelope
   buildingEnvelope: { none: 0, standard: 150, premium: 240, luxury: 390 },
+  // Waterproofing across terrace, wet areas & (where present) basement, averaged
+  // over built-up area. Standard ~₹23/sqft, premium ~₹37, luxury ~₹60 — in line
+  // with 2026 membrane/crystalline/PU rates and a critical line item in India.
+  waterproofing: { none: 0, standard: 250, premium: 400, luxury: 650 },
   lighting: { none: 0, standard: 400, premium: 640, luxury: 1040 },
   windows: { none: 0, standard: 500, premium: 800, luxury: 1300 },
   ceiling: { none: 0, standard: 350, premium: 560, luxury: 910 },
@@ -98,6 +102,39 @@ const BASE_CONSTRUCTION_COST: Record<string, number> = {
   "mixed-use": 23000,   // ₹23,000/sqm for mixed-use developments
 };
 
+// Foundation / soil-condition multipliers, applied to the structural shell only
+// (new construction). Difficult ground raises the cost of the substructure
+// through deeper footings, soil replacement, piling or retaining work — while
+// the superstructure and finishes are unaffected.
+const FOUNDATION_MULTIPLIERS: Record<string, number> = {
+  normal: 1.0,        // Firm soil, normal bearing capacity — standard footing
+  rocky: 1.08,        // Rocky terrain — harder excavation but stable, no piling
+  blackcotton: 1.12,  // Expansive black-cotton soil — soil replacement / under-reamed piles
+  sloped: 1.15,       // Sloped / hilly site — stepped foundation + retaining walls
+};
+
+// Renovation reduces the shell cost to a fraction of a new build (the structure
+// already exists — work is selective demolition, strengthening, and
+// modification rather than ground-up framing) and adds a demolition allowance.
+const RENOVATION_SHELL_FACTOR = 0.40;
+const DEMOLITION_COST_PER_SQM = 1500; // selective demolition + debris removal, ₹/sqm
+
+// Premium amenities priced as fixed lump sums (₹), not per-sqft — each is a
+// discrete installation. Calibrated to 2026 metro-India turnkey ranges; the
+// location multiplier is applied on top, nothing else.
+const AMENITY_PRICING: Record<string, number> = {
+  swimmingPool: 2000000,   // ~20-25 ft pool with filtration & deck
+  homeGym: 800000,         // equipment + flooring + mirrors
+  saunaSteam: 500000,      // sauna / steam cabin
+  homeTheater: 1200000,    // AV, acoustics, seating
+  homeAutomation: 600000,  // whole-home automation backbone
+  solarPower: 400000,      // rooftop solar (~5kW) with inverter
+  outdoorKitchen: 350000,  // BBQ / outdoor kitchen counter
+  jacuzziSpa: 450000,      // jacuzzi / spa unit
+  wineCellar: 600000,      // climate-controlled cellar
+  borewell: 250000,        // borewell + pump + plumbing
+};
+
 const initialEstimate: ProjectEstimate = {
   state: "",
   city: "",
@@ -106,6 +143,8 @@ const initialEstimate: ProjectEstimate = {
   roomConfiguration: undefined,
   landscapeAreas: undefined,
   constructionSubtype: undefined,
+  projectMode: "new",
+  foundationType: "normal",
   floorCount: 1,
   areaInputType: undefined,
   plotArea: undefined,
@@ -116,12 +155,14 @@ const initialEstimate: ProjectEstimate = {
   areaUnit: "sqft",
   complexity: 5,
   selectedMaterials: [],
+  amenities: [],
   civilQuality: "standard",
   plumbing: "standard",
   ac: "standard",
   electrical: "standard",
   elevator: "none",
   buildingEnvelope: "standard",
+  waterproofing: "standard",
   lighting: "standard",
   windows: "standard",
   ceiling: "standard",
@@ -185,6 +226,12 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
     // Add complexity adjustment
     const complexityAdjustment = (complexity - 5) * 0.05;
     return baseMultiplier * (1 + complexityAdjustment);
+  }, []);
+
+  // Get foundation/soil multiplier (new construction structural shell only)
+  const getFoundationMultiplier = useCallback((foundationType?: string): number => {
+    if (!foundationType) return 1.0;
+    return FOUNDATION_MULTIPLIERS[foundationType] ?? 1.0;
   }, []);
 
   // COA (Council of Architecture) minimum scale of professional charges, per the
@@ -270,8 +317,15 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
       ? COMPONENT_PRICING.windows[estimate.windows] * areaInSqM
       : 0;
 
+    // Waterproofing only applies when construction is in scope (it protects the
+    // shell/wet areas). Interior-only jobs inherit the existing building's.
+    const waterproofingCost = hasConstruction
+      ? COMPONENT_PRICING.waterproofing[estimate.waterproofing ?? "none"] * areaInSqM
+      : 0;
+
     const finishes = [
       buildingEnvelopeCost,
+      waterproofingCost,
       COMPONENT_PRICING.lighting[estimate.lighting] * areaInSqM,
       windowsCost,
       COMPONENT_PRICING.ceiling[estimate.ceiling] * areaInSqM,
@@ -457,21 +511,35 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
     const isInteriorsOnly = hasInteriors && !hasConstruction && !hasLandscape;
     const isLandscapeOnly = hasLandscape && !hasConstruction && !hasInteriors;
 
+    const isRenovation = currentEstimate.projectMode === "renovation";
+
     // 1. Base construction cost — only when construction is in scope (otherwise an
     //    interior-only project would be charged a full shell it isn't building).
-    const constructionCost = hasConstruction
-      ? calculateConstructionCost(
-          currentEstimate.projectType,
-          areaInSqM,
-          currentEstimate.civilQuality
-        )
-      : 0;
+    //    New builds carry the foundation/soil premium; renovations skip the new
+    //    foundation entirely and only pay a fraction of the shell (strengthening
+    //    & modification, not ground-up framing) plus a demolition allowance.
+    let constructionCost = 0;
+    let demolitionCost = 0;
+    if (hasConstruction) {
+      const rawShell = calculateConstructionCost(
+        currentEstimate.projectType,
+        areaInSqM,
+        currentEstimate.civilQuality
+      );
+      if (isRenovation) {
+        constructionCost = rawShell * RENOVATION_SHELL_FACTOR;
+        demolitionCost = DEMOLITION_COST_PER_SQM * areaInSqM;
+      } else {
+        const foundationMultiplier = getFoundationMultiplier(currentEstimate.foundationType);
+        constructionCost = rawShell * foundationMultiplier;
+      }
+    }
 
     // 2. Component costs
     const { core, finishes, interiors } = calculateComponentCosts(currentEstimate, areaInSqM);
 
-    // 3. Subtotal before adjustments
-    const baseSubtotal = constructionCost + core + finishes + interiors;
+    // 3. Subtotal before adjustments (shell + demolition + components)
+    const baseSubtotal = constructionCost + demolitionCost + core + finishes + interiors;
 
     // 4. Location + project-type/complexity multipliers
     const locationMultiplier = getLocationMultiplier(currentEstimate.city);
@@ -480,7 +548,16 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
       currentEstimate.complexity
     );
     const combinedMultiplier = locationMultiplier * projectMultiplier;
-    const subtotal = baseSubtotal * combinedMultiplier;
+
+    // 4a. Premium amenities — fixed lump sums, scaled by location only (not
+    //     project-type/complexity/size, which don't apply to a discrete pool or
+    //     home theatre).
+    const amenitiesCost = (currentEstimate.amenities ?? []).reduce(
+      (sum, amenity) => sum + (AMENITY_PRICING[amenity] ?? 0),
+      0
+    ) * locationMultiplier;
+
+    const subtotal = baseSubtotal * combinedMultiplier + amenitiesCost;
 
     // 5. Professional fees — COA minimum scale of charges. The architectural fee
     //    rate varies by project type (7.5% individual house / interiors, 5% for
@@ -510,7 +587,9 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
     //     (professional fees + contingency + GST). All five sum to totalCost, so
     //     every chart/percentage derived from them reconciles to the headline.
     const overheads = professionalFees + contingency + totalGst; // = totalCost - subtotal
-    const constructionScaled = constructionCost * combinedMultiplier;
+    // Demolition rolls into the construction category; amenities (location-scaled
+    // only) are added on top so the four categories still sum to `subtotal`.
+    const constructionScaled = (constructionCost + demolitionCost) * combinedMultiplier + amenitiesCost;
     const coreScaled = core * combinedMultiplier;
     const finishesScaled = finishes * combinedMultiplier;
     const interiorsScaled = interiors * combinedMultiplier;
@@ -552,7 +631,7 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
       },
       timeline,
     };
-  }, [calculateConstructionCost, calculateComponentCosts, getLocationMultiplier, getProjectTypeMultiplier, getArchitectFeeRate, calculateTimeline]);
+  }, [calculateConstructionCost, calculateComponentCosts, getLocationMultiplier, getProjectTypeMultiplier, getFoundationMultiplier, getArchitectFeeRate, calculateTimeline]);
 
   // Auto-adjust component selections based on work types
   useEffect(() => {
@@ -590,6 +669,7 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
           ...prev,
           civilQuality: "none",
           buildingEnvelope: "none",
+          waterproofing: "none",
           windows: "none",
         }));
       } else if (hasConstruction && estimate.civilQuality === "none") {
@@ -598,6 +678,7 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
           ...prev,
           civilQuality: "standard",
           buildingEnvelope: prev.buildingEnvelope === "none" ? "standard" : prev.buildingEnvelope,
+          waterproofing: prev.waterproofing === "none" ? "standard" : prev.waterproofing,
           windows: prev.windows === "none" ? "standard" : prev.windows,
           plumbing: prev.plumbing === "none" ? "standard" : prev.plumbing,
           electrical: prev.electrical === "none" ? "standard" : prev.electrical,
@@ -618,12 +699,16 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
     estimate.projectType,
     estimate.city,
     estimate.complexity,
+    estimate.projectMode,
+    estimate.foundationType,
+    estimate.amenities,
     estimate.civilQuality,
     estimate.plumbing,
     estimate.electrical,
     estimate.ac,
     estimate.elevator,
     estimate.buildingEnvelope,
+    estimate.waterproofing,
     estimate.lighting,
     estimate.windows,
     estimate.ceiling,

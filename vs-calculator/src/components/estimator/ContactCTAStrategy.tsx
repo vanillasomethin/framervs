@@ -53,6 +53,7 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
       { name: "AC & HVAC", level: estimate.ac },
       { name: "Elevator/Lift", level: estimate.elevator },
       { name: "Building Envelope", level: estimate.buildingEnvelope },
+      { name: "Waterproofing", level: estimate.waterproofing },
       { name: "Lighting Systems", level: estimate.lighting },
       { name: "Windows, Doors & Glazing", level: estimate.windows },
       { name: "Ceiling Design", level: estimate.ceiling },

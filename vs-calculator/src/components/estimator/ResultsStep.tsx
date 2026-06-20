@@ -4,6 +4,7 @@ import { ProjectEstimate, ComponentOption } from "@/types/estimator";
 import { Share, CheckCircle2, Download, IndianRupee, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ImprovedCostVisualization from "./ImprovedCostVisualization";
+import CostTransparency from "./CostTransparency";
 import PhaseTimelineCost from "./PhaseTimelineCost";
 import MeetingScheduler from "./MeetingScheduler";
 import DetailedBreakdownSection from "./DetailedBreakdownSection";
@@ -35,6 +36,7 @@ const COMPONENT_PRICING_PER_SQM: Record<string, Record<ComponentOption, number>>
   ac: { none: 0, standard: 650, premium: 1300, luxury: 2800 },
   elevator: { none: 0, standard: 1500, premium: 2300, luxury: 3800 },
   buildingEnvelope: { none: 0, standard: 400, premium: 800, luxury: 1600 },
+  waterproofing: { none: 0, standard: 250, premium: 400, luxury: 650 },
   lighting: { none: 0, standard: 300, premium: 650, luxury: 1300 },
   windows: { none: 0, standard: 500, premium: 1000, luxury: 2000 },
   ceiling: { none: 0, standard: 300, premium: 600, luxury: 1200 },
@@ -77,6 +79,11 @@ const COMPONENT_DESCRIPTIONS: Record<string, { standard: string[]; premium: stri
     standard: ["Basic exterior paint", "Standard waterproofing", "Basic thermal insulation", "Standard facade finish"],
     premium: ["Premium textured paint (Asian/Berger)", "APP membrane waterproofing", "Enhanced thermal insulation", "Elevation with designer elements"],
     luxury: ["ACP/Glass facade panels", "Premium waterproofing system", "Complete thermal envelope", "Designer cladding (Stone/Wood/Metal)", "Green building materials"]
+  },
+  waterproofing: {
+    standard: ["Cementitious/acrylic coating", "Terrace & bathroom treatment", "Basic damp-proof course", "5-7 year protection"],
+    premium: ["APP/SBS bitumen membrane", "Crystalline wet-area treatment", "Balcony & sunken slab protection", "10-12 year warranty"],
+    luxury: ["PU/PMMA liquid membrane", "Integral crystalline + basement tanking", "Full envelope protection", "15+ year warranty"]
   },
   lighting: {
     standard: ["Philips/Crompton LED lights", "Basic fixtures", "Standard outdoor lighting", "Energy-efficient bulbs"],
@@ -123,6 +130,21 @@ const COMPONENT_DESCRIPTIONS: Record<string, { standard: string[]; premium: stri
     premium: ["Designer wall art", "Sculptures", "Statement mirrors", "Premium vases & artifacts", "Indoor plants with designer pots"],
     luxury: ["Original artwork/Limited editions", "Designer sculptures", "Antique pieces", "Custom installations", "Premium indoor landscaping", "Curated art collection"]
   },
+};
+
+// Amenity id → display label, for the results summary (priced as lump sums in
+// the engine; listed here qualitatively).
+const AMENITY_LABELS: Record<string, string> = {
+  swimmingPool: "Swimming Pool",
+  homeGym: "Home Gym",
+  saunaSteam: "Sauna / Steam",
+  homeTheater: "Home Theater",
+  homeAutomation: "Home Automation",
+  solarPower: "Solar Power",
+  outdoorKitchen: "Outdoor Kitchen / BBQ",
+  jacuzziSpa: "Jacuzzi / Spa",
+  wineCellar: "Wine Cellar",
+  borewell: "Borewell",
 };
 
 const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
@@ -309,6 +331,15 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
       perSqft: Math.round(COMPONENT_PRICING_PER_SQM.buildingEnvelope[estimate.buildingEnvelope] / 10.764),
       totalCost: Math.round(COMPONENT_PRICING_PER_SQM.buildingEnvelope[estimate.buildingEnvelope] * areaInSqM),
     },
+    isIncluded(estimate.waterproofing) && {
+      category: "Finishes",
+      name: "Waterproofing & Damp Protection",
+      level: estimate.waterproofing,
+      description: COMPONENT_DESCRIPTIONS.waterproofing[estimate.waterproofing],
+      perSqm: COMPONENT_PRICING_PER_SQM.waterproofing[estimate.waterproofing],
+      perSqft: Math.round(COMPONENT_PRICING_PER_SQM.waterproofing[estimate.waterproofing] / 10.764),
+      totalCost: Math.round(COMPONENT_PRICING_PER_SQM.waterproofing[estimate.waterproofing] * areaInSqM),
+    },
     isIncluded(estimate.lighting) && {
       category: "Finishes",
       name: "Lighting Systems & Fixtures",
@@ -440,6 +471,9 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
           <ImprovedCostVisualization estimate={estimate} />
         </div>
 
+        {/* Cost transparency — drivers ranking + market benchmark */}
+        <CostTransparency estimate={estimate} />
+
         {/* Timeline */}
         <div>
           <h3 className="text-base font-semibold text-vs-dark mb-3">Project Timeline & Costs</h3>
@@ -502,6 +536,27 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
             </div>
           </div>
         </div>
+
+        {/* Premium Amenities (if any selected) */}
+        {estimate.amenities && estimate.amenities.length > 0 && (
+          <div>
+            <h3 className="text-base font-semibold text-vs-dark mb-3">Premium Amenities</h3>
+            <div className="flex flex-wrap gap-2">
+              {estimate.amenities.map((a) => (
+                <span
+                  key={a}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-vs bg-vs/10 px-3 py-1.5 rounded-full"
+                >
+                  <CheckCircle2 size={14} className="text-green-600" />
+                  {AMENITY_LABELS[a] || a}
+                </span>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              Priced as fixed installations (adjusted for {estimate.city}) and included in the total above.
+            </p>
+          </div>
+        )}
 
         {/* Detailed Cost Breakdown */}
         <DetailedBreakdownSection estimate={estimate} />
