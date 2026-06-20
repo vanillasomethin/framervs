@@ -527,8 +527,11 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
           appliances: "none",
           artefacts: "none",
         }));
-      } else if (hasInteriors && estimate.fixedFurniture === undefined) {
-        // If interiors is newly added and components are not set, set sensible defaults
+      } else if (hasInteriors) {
+        // Interiors is selected — restore any components that a previous
+        // "no interiors" pass had forced to "none" (e.g. when construction was
+        // picked before interiors). Without this, adding interiors after
+        // construction leaves them at "none" and interiors cost stays ₹0.
         setEstimate(prev => ({
           ...prev,
           fixedFurniture: prev.fixedFurniture === "none" ? "standard" : prev.fixedFurniture,
