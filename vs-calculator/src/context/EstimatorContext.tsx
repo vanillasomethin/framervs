@@ -497,20 +497,19 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
     // 6. Contingency (5%)
     const contingency = subtotal * 0.05;
 
-    // 7. Total before tax
-    const totalBeforeTax = subtotal + professionalFees + contingency;
+    // 7. GST — per COA, professional fees get 18% GST, construction/contingency get 6%
+    const feeGst = professionalFees * 0.18;
+    const constructionGst = (subtotal + contingency) * 0.06;
+    const totalGst = feeGst + constructionGst;
 
-    // 8. GST — 6% effective (lower than statutory 12% due to input credits)
-    const gst = totalBeforeTax * 0.06;
+    // 8. Final total cost
+    const totalCost = subtotal + professionalFees + contingency + totalGst;
 
-    // 9. Final total cost
-    const totalCost = totalBeforeTax + gst;
-
-    // 10. Category breakdown. Scale each work category by the same multiplier so
+    // 9. Category breakdown. Scale each work category by the same multiplier so
     //     the four categories sum to `subtotal`, then add a fifth "fees" bucket
     //     (professional fees + contingency + GST). All five sum to totalCost, so
     //     every chart/percentage derived from them reconciles to the headline.
-    const overheads = professionalFees + contingency + gst; // = totalCost - subtotal
+    const overheads = professionalFees + contingency + totalGst; // = totalCost - subtotal
     const constructionScaled = constructionCost * combinedMultiplier;
     const coreScaled = core * combinedMultiplier;
     const finishesScaled = finishes * combinedMultiplier;

@@ -87,7 +87,8 @@ const feesRows: Row[] = [
   { label: "Documentation & communication", values: ["10% of the architectural fee (COA, all engagements)"] },
   { label: "Combined professional fees", values: ["8.25% of subtotal for an individual house; 5.5% for apartment/commercial/mixed-use"] },
   { label: "Contingency", values: ["5% of subtotal"] },
-  { label: "GST (effective)", values: ["6% of (subtotal + fees + contingency) — net of input credits, statutory rate is 12-18%"] },
+  { label: "GST on professional fees", values: ["18% of professional fees (COA regulation — explicit line per COA guidelines)"] },
+  { label: "GST on construction & contingency", values: ["6% of (subtotal + contingency) — net of input credits"] },
 ];
 
 const phaseAllocationRows: Row[] = [
