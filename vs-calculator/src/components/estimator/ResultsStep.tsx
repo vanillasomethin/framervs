@@ -27,25 +27,27 @@ interface ResultsStepProps {
   onSave: () => void;
 }
 
-// Component pricing per square meter mapping for display
-// Updated based on realistic 2025 Indian construction costs
+// Mirrors EstimatorContext's COMPONENT_PRICING so displayed ₹/sqft match what's
+// actually charged. civilQuality is shown at its effective contribution (×0.15)
+// since the bulk of the quality jump is priced via the structural shell
+// multiplier on base construction cost, shown separately.
 const COMPONENT_PRICING_PER_SQM: Record<string, Record<ComponentOption, number>> = {
-  civilQuality: { none: 0, standard: 1500, premium: 2300, luxury: 3800 },
-  plumbing: { none: 0, standard: 500, premium: 1000, luxury: 2000 },
-  electrical: { none: 0, standard: 450, premium: 850, luxury: 1650 },
-  ac: { none: 0, standard: 650, premium: 1300, luxury: 2800 },
-  elevator: { none: 0, standard: 1500, premium: 2300, luxury: 3800 },
-  buildingEnvelope: { none: 0, standard: 400, premium: 800, luxury: 1600 },
+  civilQuality: { none: 0, standard: 45, premium: 72, luxury: 117 },
+  plumbing: { none: 0, standard: 500, premium: 800, luxury: 1300 },
+  electrical: { none: 0, standard: 400, premium: 640, luxury: 1040 },
+  ac: { none: 0, standard: 800, premium: 1300, luxury: 2100 },
+  elevator: { none: 0, standard: 750, premium: 1200, luxury: 1950 },
+  buildingEnvelope: { none: 0, standard: 150, premium: 240, luxury: 390 },
   waterproofing: { none: 0, standard: 250, premium: 400, luxury: 650 },
-  lighting: { none: 0, standard: 300, premium: 650, luxury: 1300 },
-  windows: { none: 0, standard: 500, premium: 1000, luxury: 2000 },
-  ceiling: { none: 0, standard: 300, premium: 600, luxury: 1200 },
-  surfaces: { none: 0, standard: 550, premium: 1100, luxury: 2200 },
-  fixedFurniture: { none: 0, standard: 900, premium: 1700, luxury: 3200 },
-  looseFurniture: { none: 0, standard: 650, premium: 1300, luxury: 3000 },
-  furnishings: { none: 0, standard: 200, premium: 450, luxury: 950 },
-  appliances: { none: 0, standard: 400, premium: 800, luxury: 1800 },
-  artefacts: { none: 0, standard: 150, premium: 400, luxury: 900 },
+  lighting: { none: 0, standard: 400, premium: 640, luxury: 1040 },
+  windows: { none: 0, standard: 500, premium: 800, luxury: 1300 },
+  ceiling: { none: 0, standard: 350, premium: 560, luxury: 910 },
+  surfaces: { none: 0, standard: 600, premium: 1000, luxury: 1700 },
+  fixedFurniture: { none: 0, standard: 3000, premium: 5400, luxury: 9000 },
+  looseFurniture: { none: 0, standard: 2000, premium: 3600, luxury: 6500 },
+  furnishings: { none: 0, standard: 500, premium: 1000, luxury: 1800 },
+  appliances: { none: 0, standard: 1000, premium: 2000, luxury: 3800 },
+  artefacts: { none: 0, standard: 300, premium: 900, luxury: 2000 },
 };
 
 // Component descriptions for detailed breakdown with specs/brands
