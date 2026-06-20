@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Phone, Mail, MessageSquare, Download, ChevronRight, CheckCircle2, Clock, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateEstimatePDF } from "@/utils/pdfExport";
-import { submitLead, LeadEstimateSnapshot } from "@/utils/leads";
+import { submitLeadWithPdf, LeadEstimateSnapshot } from "@/utils/leads";
 import { ProjectEstimate, ComponentOption } from "@/types/estimator";
 
 interface ContactCTAStrategyProps {
@@ -93,7 +93,15 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
     setIsSubmitting(true);
 
     try {
-      await submitLead({
+      let pdfBase64: string | undefined;
+      try {
+        const doc = generateEstimatePDF(estimate, { save: false });
+        pdfBase64 = doc.output("datauristring").split("base64,")[1];
+      } catch (pdfError) {
+        console.error("PDF generation failed:", pdfError);
+      }
+
+      await submitLeadWithPdf({
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
@@ -101,6 +109,8 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
         preferredTime: formData.preferredTime,
         message: formData.message,
         estimate: buildEstimateSnapshot(),
+        pdfBase64,
+        fileName: `Estimate_${estimate.city}_${estimate.area}${estimate.areaUnit}.pdf`,
       });
 
       // Give the user their own copy of the estimate PDF.
@@ -170,20 +180,11 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
               <span className="font-semibold">Estimated Cost:</span> {formatCurrency(estimate.totalCost)}
             </p>
             <p className="text-xs text-gray-600">
-              <span className="font-semibold">Range:</span> {formatCurrency(Math.round(estimate.totalCost * 0.95))} - {formatCurrency(Math.round(estimate.totalCost * 1.05))}
-            </p>
-            <p className="text-xs text-gray-600">
               <span className="font-semibold">Per {estimate.areaUnit}:</span> ₹{Math.round(estimate.totalCost / estimate.area).toLocaleString()}
-              <span className="text-gray-500"> (₹{Math.round((estimate.totalCost / estimate.area) * 0.95).toLocaleString()}-{Math.round((estimate.totalCost / estimate.area) * 1.05).toLocaleString()})</span>
-            </p>
-          </div>
-          <div className="bg-blue-50 border border-blue-200 rounded p-2 mb-2">
-            <p className="text-[10px] text-blue-800 font-medium">
-              ✓ Based on Bangalore 2025 market rates (₹1,750-1,900/sqft standard)
             </p>
           </div>
           <p className="text-xs text-gray-600">
-            This is an indicative estimate. For a precise BOQ tailored to your specific requirements and site conditions, connect with our team.
+            This is an indicative estimate based on current market rates for {estimate.city}. Actual costs may vary ±10% based on site conditions, material price fluctuations, and contractor rates. For a precise BOQ tailored to your specific requirements, connect with our team.
           </p>
         </div>
 
@@ -342,15 +343,15 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
       {/* Quick contact options */}
       <div className="grid grid-cols-3 gap-2">
         <a
-          href="tel:+919876543210"
+          href="tel:+917411349844"
           className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-vs hover:bg-vs/5 transition-colors group"
         >
           <Phone className="w-5 h-5 text-vs mb-1 group-hover:scale-110 transition-transform" />
           <span className="text-[10px] font-medium text-gray-700">Call Us</span>
         </a>
-        
+
         <a
-          href="https://wa.me/919876543210"
+          href="https://wa.me/917411349844"
           target="_blank"
           rel="noopener noreferrer"
           className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors group"

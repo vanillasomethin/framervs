@@ -11,7 +11,7 @@ import FAQSection from "./FAQSection";
 import ContactCTAStrategy from "./ContactCTAStrategy";
 import UserInfoForm from "./UserInfoForm";
 import { generateEstimatePDF } from "@/utils/pdfExport";
-import { submitLead } from "@/utils/leads";
+import { submitLeadWithPdf } from "@/utils/leads";
 import {
   Dialog,
   DialogContent,
@@ -187,7 +187,17 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
   const handleLeadSubmit = async (userData: { name: string; email: string; phone: string }) => {
     setShowLeadForm(false);
     try {
-      await submitLead({ ...userData, estimate: buildLeadSnapshot() });
+      // Build the PDF once: extract its bytes to attach to the Zoho lead, then
+      // reuse the same doc to trigger the user's download below.
+      const doc = generateEstimatePDF(estimate, { save: false });
+      const dataUri = doc.output("datauristring");
+      const pdfBase64 = dataUri.split("base64,")[1];
+      await submitLeadWithPdf({
+        ...userData,
+        estimate: buildLeadSnapshot(),
+        pdfBase64,
+        fileName: `Estimate_${estimate.city}_${estimate.area}${estimate.areaUnit}.pdf`,
+      });
     } catch (error) {
       // Lead delivery failing shouldn't block the user's download.
       console.error("Lead submission failed", error);

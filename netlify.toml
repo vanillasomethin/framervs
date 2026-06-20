@@ -10,6 +10,11 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Serverless functions (e.g. /.netlify/functions/submit-lead, which attaches
+# the generated estimate PDF to a Zoho CRM lead — see netlify/functions/).
+[functions]
+  directory = "netlify/functions"
+
 # Apex → www is handled by Netlify's domain management (primary domain +
 # alias redirect). A duplicate redirect here can ping-pong against that and
 # cause "too many redirects" loops, so it's intentionally left out.

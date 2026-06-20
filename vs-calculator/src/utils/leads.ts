@@ -48,6 +48,12 @@ export interface LeadPayload {
   estimate: LeadEstimateSnapshot;
 }
 
+export interface LeadPayloadWithPdf extends LeadPayload {
+  /** Base64-encoded PDF bytes (no data-URI prefix), if available. */
+  pdfBase64?: string;
+  fileName?: string;
+}
+
 const formatINR = (amount: number): string =>
   `Rs. ${Math.round(amount).toLocaleString("en-IN")}`;
 
@@ -145,4 +151,31 @@ export async function submitLead(payload: LeadPayload): Promise<void> {
     body: params.toString(),
   });
   // Opaque response under no-cors — reaching here without throwing == success.
+}
+
+/**
+ * Submits a lead AND attaches the actual PDF file via the Netlify serverless
+ * function (netlify/functions/submit-lead.js), which creates the lead through
+ * Zoho's authenticated REST API rather than the attachment-less Web-to-Lead
+ * form. Requires ZOHO_CLIENT_ID / ZOHO_CLIENT_SECRET / ZOHO_REFRESH_TOKEN to
+ * be configured as Netlify environment variables (see ZOHO_LEAD_SETUP.md).
+ *
+ * If the function isn't configured yet (not deployed, or missing
+ * credentials), falls back to the text-only Web-to-Lead path so the lead
+ * still reaches Zoho — just without the PDF attached.
+ */
+export async function submitLeadWithPdf(payload: LeadPayloadWithPdf): Promise<void> {
+  try {
+    const res = await fetch("/.netlify/functions/submit-lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) return;
+    console.warn(`[submitLeadWithPdf] serverless function returned ${res.status}; falling back to Web-to-Lead.`);
+  } catch (err) {
+    console.warn("[submitLeadWithPdf] serverless function unreachable; falling back to Web-to-Lead.", err);
+  }
+
+  await submitLead(payload);
 }

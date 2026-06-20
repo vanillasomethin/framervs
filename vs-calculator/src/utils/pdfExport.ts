@@ -123,34 +123,6 @@ export const generateEstimatePDF = (
   doc.setTextColor(0, 0, 0);
   yPos += 18;
 
-  // Architect Fee Section
-  checkPageBreak(30);
-  const getArchitectFeePercentage = (projectCost: number): number => {
-    if (projectCost <= 5000000) return 12;
-    if (projectCost <= 10000000) return 10;
-    if (projectCost <= 50000000) return 9;
-    return 8;
-  };
-
-  const architectFeePercent = getArchitectFeePercentage(estimate.totalCost);
-  const architectFee = estimate.totalCost * (architectFeePercent / 100);
-  const totalWithArchitectFee = estimate.totalCost + architectFee;
-
-  doc.setFillColor(240, 245, 250);
-  doc.roundedRect(margin, yPos, pageWidth - 2 * margin, 28, 3, 3, 'F');
-  yPos += 9;
-  addText(`Architect Fee (${architectFeePercent}% as per COA standards):`, margin + 5, yPos, 11, 'normal');
-  addText(formatCurrency(Math.round(architectFee)), pageWidth - margin - 5, yPos, 11, 'bold', 'right');
-  yPos += 9;
-  doc.setDrawColor(150, 150, 150);
-  doc.line(margin + 5, yPos, pageWidth - margin - 5, yPos);
-  yPos += 7;
-  doc.setTextColor(0, 0, 0);
-  addText('Total with Architect Fee:', margin + 5, yPos, 12, 'bold');
-  addText(formatCurrency(Math.round(totalWithArchitectFee)), pageWidth - margin - 5, yPos, 13, 'bold', 'right');
-  doc.setTextColor(0, 0, 0);
-  yPos += 16;
-
   // Cost Distribution
   checkPageBreak(60);
   addText('COST DISTRIBUTION', margin, yPos, 14, 'bold');
@@ -163,6 +135,7 @@ export const generateEstimatePDF = (
     { label: 'Core Components (MEP)', value: estimate.categoryBreakdown.core, color: [200, 220, 255] },
     { label: 'Finishes & Surfaces', value: estimate.categoryBreakdown.finishes, color: [200, 255, 220] },
     { label: 'Interiors & Furnishings', value: estimate.categoryBreakdown.interiors, color: [255, 240, 200] },
+    { label: 'Professional Fees & Tax', value: estimate.categoryBreakdown.fees, color: [230, 215, 215] },
   ];
 
   breakdown.forEach(item => {
@@ -207,25 +180,6 @@ export const generateEstimatePDF = (
 
   yPos += 12;
 
-  // Component pricing per sqm
-  const COMPONENT_PRICING_PER_SQM: Record<string, Record<ComponentOption, number>> = {
-    civilQuality: { none: 0, standard: 650, premium: 1100, luxury: 2000 },
-    plumbing: { none: 0, standard: 450, premium: 850, luxury: 1600 },
-    electrical: { none: 0, standard: 400, premium: 750, luxury: 1500 },
-    ac: { none: 0, standard: 900, premium: 1600, luxury: 3000 },
-    elevator: { none: 0, standard: 450, premium: 850, luxury: 1800 },
-    buildingEnvelope: { none: 0, standard: 350, premium: 700, luxury: 1400 },
-    lighting: { none: 0, standard: 300, premium: 650, luxury: 1400 },
-    windows: { none: 0, standard: 400, premium: 800, luxury: 1700 },
-    ceiling: { none: 0, standard: 280, premium: 550, luxury: 1200 },
-    surfaces: { none: 0, standard: 450, premium: 900, luxury: 2000 },
-    fixedFurniture: { none: 0, standard: 850, premium: 1500, luxury: 2800 },
-    looseFurniture: { none: 0, standard: 550, premium: 1100, luxury: 2500 },
-    furnishings: { none: 0, standard: 200, premium: 450, luxury: 1000 },
-    appliances: { none: 0, standard: 350, premium: 750, luxury: 1800 },
-    artefacts: { none: 0, standard: 150, premium: 400, luxury: 1000 },
-  };
-
   // Helper to format component level
   const formatLevel = (level: ComponentOption) => {
     if (level === 'standard') return 'Standard';
@@ -239,9 +193,9 @@ export const generateEstimatePDF = (
     return !!(value && value !== 'none' && value !== '');
   };
 
-  // Selected Components with detailed pricing
+  // Selected Components
   checkPageBreak(30);
-  addText('SELECTED COMPONENTS & PRICING', margin, yPos, 14, 'bold');
+  addText('SELECTED COMPONENTS', margin, yPos, 14, 'bold');
   yPos += 10;
   addLine(yPos);
   yPos += 8;
@@ -267,43 +221,24 @@ export const generateEstimatePDF = (
   componentDetails.forEach((item, index) => {
     checkPageBreak(12);
 
-    const areaInSqM = estimate.areaUnit === "sqft" ? estimate.area * 0.092903 : estimate.area;
-    const perSqm = COMPONENT_PRICING_PER_SQM[item.key]?.[item.level] || 0;
-    const perUnit = estimate.areaUnit === "sqft" ? Math.round(perSqm / 10.764) : perSqm;
-    const totalCost = Math.round(perSqm * areaInSqM);
-
     // Alternating background with better spacing
     if (index % 2 === 0) {
       doc.setFillColor(250, 250, 250);
       doc.rect(margin, yPos - 5, pageWidth - 2 * margin, 10, 'F');
     }
 
-    // Component name - consistent font size
+    // Component name
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(0, 0, 0);
-    const nameText = item.name.length > 25 ? item.name.substring(0, 25) + '...' : item.name;
+    const nameText = item.name.length > 40 ? item.name.substring(0, 40) + '...' : item.name;
     doc.text(nameText, margin + 3, yPos);
 
-    // Quality level - consistent size and position
+    // Quality level - right aligned
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(79, 9, 12);
-    doc.text(formatLevel(item.level), margin + 68, yPos);
-
-    // Per unit price - consistent size
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(0, 100, 0);
-    const priceText = `₹${perUnit.toLocaleString('en-IN')}/${estimate.areaUnit}`;
-    doc.text(priceText, margin + 105, yPos);
-
-    // Total cost - consistent size, right aligned
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 0, 0);
-    const totalText = formatCurrency(totalCost);
-    doc.text(totalText, pageWidth - margin - 3, yPos, { align: 'right' });
+    doc.text(formatLevel(item.level), pageWidth - margin - 3, yPos, { align: 'right' });
 
     doc.setFont('helvetica', 'normal');
     yPos += 8;
@@ -324,7 +259,7 @@ export const generateEstimatePDF = (
   doc.setTextColor(60, 60, 60);
   yPos += 6;
   doc.setFontSize(9);
-  const disclaimerText = `• All costs shown are inclusive of GST @ 18%\n• Actual costs may vary ±10% based on site conditions, material price fluctuations, and contractor rates\n• Architect's fee shown separately as per COA standards\n• This is an indicative estimate based on current market rates for ${estimate.city}\n• Valid for 30 days from generation date. For detailed itemized quote, please contact our team.`;
+  const disclaimerText = `• Total is inclusive of professional fees (architectural + documentation), contingency, and applicable GST\n• Actual costs may vary ±10% based on site conditions, material price fluctuations, and contractor rates\n• This is an indicative estimate based on current market rates for ${estimate.city}\n• Valid for 30 days from generation date. For detailed itemized quote, please contact our team.`;
   const splitDisclaimer = doc.splitTextToSize(disclaimerText, pageWidth - 2 * margin - 10);
   doc.text(splitDisclaimer, margin + 5, yPos);
 
