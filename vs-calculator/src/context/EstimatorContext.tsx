@@ -18,71 +18,84 @@ interface EstimatorContextType {
 
 const EstimatorContext = createContext<EstimatorContextType | undefined>(undefined);
 
-// Location-based cost multipliers
+// Location-based cost multipliers.
+// Calibrated against InfraLens 2026 metro standard rates (₹/sqft): Mumbai 3150,
+// Delhi 2835, Gurgaon 2730, Pune 2573, Bangalore 2520, Chennai 2363, Hyderabad
+// 2205, Kolkata 2205, Ahmedabad 2153 — expressed relative to a national
+// baseline of ~₹2,100/sqft (multiplier 1.0). Bangalore anchors at 1.20.
 const LOCATION_MULTIPLIERS: Record<string, number> = {
   // Tier 1 Cities - High cost
-  "Mumbai": 1.30,
-  "Navi Mumbai": 1.25,
-  "Thane": 1.22,
-  "Delhi": 1.25,
-  "New Delhi": 1.25,
-  "Gurgaon": 1.28,
-  "Noida": 1.22,
+  "Mumbai": 1.50,
+  "Navi Mumbai": 1.42,
+  "Thane": 1.40,
+  "Delhi": 1.35,
+  "New Delhi": 1.35,
+  "Gurgaon": 1.30,
+  "Noida": 1.28,
   "Bangalore": 1.20,
   "Bengaluru": 1.20,
-  "Hyderabad": 1.15,
-  "Chennai": 1.15,
-  "Pune": 1.15,
-  
+  "Pune": 1.22,
+  "Hyderabad": 1.05,
+  "Chennai": 1.13,
+  "Kolkata": 1.05,
+
   // Tier 2 Cities - Medium cost
-  "Ahmedabad": 1.10,
-  "Surat": 1.08,
-  "Jaipur": 1.10,
+  "Ahmedabad": 1.03,
+  "Surat": 1.00,
+  "Jaipur": 1.05,
   "Kochi": 1.05,
-  "Coimbatore": 1.05,
-  "Indore": 1.05,
-  "Chandigarh": 1.12,
-  "Lucknow": 1.02,
-  "Visakhapatnam": 1.00,
-  "Nagpur": 1.00,
-  "Vadodara": 1.05,
-  
+  "Coimbatore": 1.00,
+  "Indore": 1.00,
+  "Chandigarh": 1.15,
+  "Lucknow": 0.98,
+  "Visakhapatnam": 0.95,
+  "Nagpur": 0.98,
+  "Vadodara": 1.00,
+
   // Tier 3 and others - Base cost
-  "default": 0.95
+  "default": 0.92
 };
 
-// Component pricing per square meter (in INR)
-// Updated based on 2025 market research: Premium interiors ₹1,500-3,000/sqft, Luxury ₹2,500-4,000/sqft
+// Component pricing per square meter (in INR).
+// Standard-tier rates reflect 2025-26 market research; premium and luxury tiers
+// step up ~1.6x and ~2.6x of standard respectively. This intentionally moderate
+// escalation (rather than the 6-7x of earlier versions) keeps the AGGREGATE
+// quality jump in line with InfraLens 2026 grade factors — Premium ~1.35x and
+// Luxury ~1.85x of a standard build — since in real projects finishes/MEP rise
+// with quality while the structural shell barely does.
 const COMPONENT_PRICING: Record<string, Record<ComponentOption, number>> = {
-  // Core Construction Components (realistic market rates)
-  civilQuality: { none: 0, standard: 300, premium: 700, luxury: 1400 },
-  plumbing: { none: 0, standard: 500, premium: 1500, luxury: 3500 }, // Premium fixtures ₹140/sqft
-  electrical: { none: 0, standard: 400, premium: 1200, luxury: 2800 }, // Premium wiring & switches ₹112/sqft
-  ac: { none: 0, standard: 800, premium: 2200, luxury: 5000 }, // Split/VRV systems
-  elevator: { none: 0, standard: 750, premium: 1300, luxury: 2300 },
+  // Core Construction Components (MEP + civil)
+  civilQuality: { none: 0, standard: 300, premium: 480, luxury: 780 },
+  plumbing: { none: 0, standard: 500, premium: 800, luxury: 1300 },
+  electrical: { none: 0, standard: 400, premium: 640, luxury: 1040 },
+  ac: { none: 0, standard: 800, premium: 1300, luxury: 2100 },
+  elevator: { none: 0, standard: 750, premium: 1200, luxury: 1950 },
 
-  // Finishes & Envelope (updated to 2025 market rates)
-  buildingEnvelope: { none: 0, standard: 150, premium: 400, luxury: 900 },
-  lighting: { none: 0, standard: 400, premium: 1200, luxury: 3000 }, // Designer lighting ₹112/sqft premium
-  windows: { none: 0, standard: 500, premium: 1500, luxury: 3500 }, // uPVC/aluminum premium ₹140/sqft
-  ceiling: { none: 0, standard: 350, premium: 1000, luxury: 2500 }, // False ceiling ₹93/sqft premium
-  surfaces: { none: 0, standard: 600, premium: 1800, luxury: 4000 }, // Premium tiles/marble ₹167/sqft
+  // Finishes & Envelope
+  buildingEnvelope: { none: 0, standard: 150, premium: 240, luxury: 390 },
+  lighting: { none: 0, standard: 400, premium: 640, luxury: 1040 },
+  windows: { none: 0, standard: 500, premium: 800, luxury: 1300 },
+  ceiling: { none: 0, standard: 350, premium: 560, luxury: 910 },
+  surfaces: { none: 0, standard: 600, premium: 1000, luxury: 1700 }, // marble/Italian genuinely jumps
 
-  // Interior Components (realistic 2025 rates - modular kitchen ₹2000-3500/sqft, wardrobes ₹65k+)
-  fixedFurniture: { none: 0, standard: 3000, premium: 8000, luxury: 15000 }, // Kitchen, wardrobes, TV units ₹745/sqft
-  looseFurniture: { none: 0, standard: 2000, premium: 5000, luxury: 12000 }, // Sofas, beds, dining ₹465/sqft
-  furnishings: { none: 0, standard: 500, premium: 2000, luxury: 4000 }, // Curtains, blinds, soft furnishings ₹186/sqft
-  appliances: { none: 0, standard: 1000, premium: 3500, luxury: 8000 }, // Built-in appliances, chimney, hob ₹325/sqft
-  artefacts: { none: 0, standard: 300, premium: 1500, luxury: 3500 }, // Decor, art, lighting fixtures ₹140/sqft
+  // Interior Components (FF&E — a separate budget line from construction; scales
+  // steeper than construction since luxury bespoke interiors are open-ended).
+  fixedFurniture: { none: 0, standard: 3000, premium: 5400, luxury: 9000 },
+  looseFurniture: { none: 0, standard: 2000, premium: 3600, luxury: 6500 },
+  furnishings: { none: 0, standard: 500, premium: 1000, luxury: 1800 },
+  appliances: { none: 0, standard: 1000, premium: 2000, luxury: 3800 },
+  artefacts: { none: 0, standard: 300, premium: 900, luxury: 2000 },
 };
 
-// Base construction cost per square meter - aligned with market rates
-// Based on architects4design.com: ₹1,300-₹1,900/sqft = ₹13,993-₹20,451/sqm
-// This represents COMPLETE construction at each quality level (shell + finishes + basic MEP)
+// Base construction cost per square meter (structural shell + basic finishes +
+// basic MEP, at the STANDARD tier). Components above are added on top.
+// Calibrated so a standard construction-only build lands near reference rates:
+// e.g. residential standard in Bangalore (location 1.20) ≈ ₹2,300/sqft pre-fee,
+// between architects4design (₹1,750-1,900) and InfraLens 2026 (₹2,520).
 const BASE_CONSTRUCTION_COST: Record<string, number> = {
-  residential: 15000,   // ₹15,000/sqm (₹1,393/sqft) - standard complete construction
-  commercial: 18000,    // ₹18,000/sqm for commercial projects
-  "mixed-use": 21000,   // ₹21,000/sqm for mixed-use developments
+  residential: 17000,   // ₹17,000/sqm (₹1,579/sqft)
+  commercial: 20000,    // ₹20,000/sqm for commercial projects
+  "mixed-use": 23000,   // ₹23,000/sqm for mixed-use developments
 };
 
 const initialEstimate: ProjectEstimate = {
@@ -157,14 +170,18 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
 
   // Get project type multiplier
   const getProjectTypeMultiplier = useCallback((projectType: string, complexity: number): number => {
+    // Kept modest because the typology cost difference is mostly already carried
+    // by BASE_CONSTRUCTION_COST (residential 17k vs commercial 20k vs mixed-use
+    // 23k per sqm). This is the residual premium for commercial/mixed-use
+    // systems & compliance, not the whole gap, to avoid double-counting.
     let baseMultiplier = 1.0;
-    
+
     if (projectType === "commercial") {
-      baseMultiplier = 1.15;
+      baseMultiplier = 1.08;
     } else if (projectType === "mixed-use") {
-      baseMultiplier = 1.25;
+      baseMultiplier = 1.15;
     }
-    
+
     // Add complexity adjustment
     const complexityAdjustment = (complexity - 5) * 0.05;
     return baseMultiplier * (1 + complexityAdjustment);
@@ -187,10 +204,14 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
   ): number => {
     const baseCost = BASE_CONSTRUCTION_COST[projectType] || BASE_CONSTRUCTION_COST.residential;
 
-    // Quality multiplier for construction
+    // Quality multiplier for the structural shell. Deliberately gentle: per
+    // architects4design's BOQ split, structure (RCC/steel/masonry) is ~48% of
+    // construction cost and rises only modestly with quality (better concrete
+    // grade, a little more steel). The dramatic luxury premium lives in the
+    // finishes/MEP components, not the shell — so this stays near 1x.
     let qualityMultiplier = 1.0;
-    if (civilQuality === "premium") qualityMultiplier = 1.6;
-    else if (civilQuality === "luxury") qualityMultiplier = 2.8;
+    if (civilQuality === "premium") qualityMultiplier = 1.25;
+    else if (civilQuality === "luxury") qualityMultiplier = 1.5;
     else if (civilQuality === "none") qualityMultiplier = 0; // Interior-only projects
 
     // Size-based adjustment

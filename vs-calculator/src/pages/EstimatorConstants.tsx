@@ -15,34 +15,34 @@ interface Table {
 }
 
 const componentPricingRows: Row[] = [
-  { label: "Civil Quality (shell)", values: [0, 300, 700, 1400] },
-  { label: "Plumbing", values: [0, 500, 1500, 3500] },
-  { label: "Electrical", values: [0, 400, 1200, 2800] },
-  { label: "AC / HVAC", values: [0, 800, 2200, 5000] },
-  { label: "Elevator", values: [0, 750, 1300, 2300] },
-  { label: "Building Envelope", values: [0, 150, 400, 900] },
-  { label: "Lighting", values: [0, 400, 1200, 3000] },
-  { label: "Windows", values: [0, 500, 1500, 3500] },
-  { label: "Ceiling", values: [0, 350, 1000, 2500] },
-  { label: "Surfaces (flooring/walls)", values: [0, 600, 1800, 4000] },
-  { label: "Fixed Furniture & Cabinetry", values: [0, 3000, 8000, 15000] },
-  { label: "Loose Furniture", values: [0, 2000, 5000, 12000] },
-  { label: "Furnishings & Soft Decor", values: [0, 500, 2000, 4000] },
-  { label: "Appliances & Equipment", values: [0, 1000, 3500, 8000] },
-  { label: "Artefacts & Art Pieces", values: [0, 300, 1500, 3500] },
+  { label: "Civil Quality (shell)", values: [0, 300, 480, 780] },
+  { label: "Plumbing", values: [0, 500, 800, 1300] },
+  { label: "Electrical", values: [0, 400, 640, 1040] },
+  { label: "AC / HVAC", values: [0, 800, 1300, 2100] },
+  { label: "Elevator", values: [0, 750, 1200, 1950] },
+  { label: "Building Envelope", values: [0, 150, 240, 390] },
+  { label: "Lighting", values: [0, 400, 640, 1040] },
+  { label: "Windows", values: [0, 500, 800, 1300] },
+  { label: "Ceiling", values: [0, 350, 560, 910] },
+  { label: "Surfaces (flooring/walls)", values: [0, 600, 1000, 1700] },
+  { label: "Fixed Furniture & Cabinetry", values: [0, 3000, 5400, 9000] },
+  { label: "Loose Furniture", values: [0, 2000, 3600, 6500] },
+  { label: "Furnishings & Soft Decor", values: [0, 500, 1000, 1800] },
+  { label: "Appliances & Equipment", values: [0, 1000, 2000, 3800] },
+  { label: "Artefacts & Art Pieces", values: [0, 300, 900, 2000] },
 ];
 
 const baseConstructionRows: Row[] = [
-  { label: "Residential", values: ["₹15,000/sqm (₹1,393/sqft)"] },
-  { label: "Commercial", values: ["₹18,000/sqm (₹1,672/sqft)"] },
-  { label: "Mixed-use", values: ["₹21,000/sqm (₹1,951/sqft)"] },
+  { label: "Residential", values: ["₹17,000/sqm (₹1,579/sqft)"] },
+  { label: "Commercial", values: ["₹20,000/sqm (₹1,858/sqft)"] },
+  { label: "Mixed-use", values: ["₹23,000/sqm (₹2,137/sqft)"] },
 ];
 
 const civilQualityMultiplierRows: Row[] = [
   { label: "Not Required", values: ["0× (interior-only projects)"] },
   { label: "Standard", values: ["1.0×"] },
-  { label: "Premium", values: ["1.6×"] },
-  { label: "Luxury", values: ["2.8×"] },
+  { label: "Premium", values: ["1.25× — structural shell rises only modestly with quality"] },
+  { label: "Luxury", values: ["1.5× — luxury premium lives in finishes, not the shell"] },
 ];
 
 const sizeMultiplierRows: Row[] = [
@@ -55,30 +55,30 @@ const sizeMultiplierRows: Row[] = [
 
 const projectTypeMultiplierRows: Row[] = [
   { label: "Residential", values: ["1.0× base"] },
-  { label: "Commercial", values: ["1.15× base"] },
-  { label: "Mixed-use", values: ["1.25× base"] },
+  { label: "Commercial", values: ["1.08× base (typology gap mostly carried by the higher base rate above)"] },
+  { label: "Mixed-use", values: ["1.15× base"] },
   { label: "Complexity adjustment", values: ["±5% per point away from a baseline of 5 (scale 1–10)"] },
 ];
 
 const locationMultiplierRows: Row[] = [
-  { label: "Mumbai", values: [1.30] },
-  { label: "Gurgaon", values: [1.28] },
-  { label: "Navi Mumbai", values: [1.25] },
-  { label: "Delhi / New Delhi", values: [1.25] },
-  { label: "Thane", values: [1.22] },
-  { label: "Noida", values: [1.22] },
+  { label: "Mumbai", values: [1.50] },
+  { label: "Navi Mumbai", values: [1.42] },
+  { label: "Thane", values: [1.40] },
+  { label: "Delhi / New Delhi", values: [1.35] },
+  { label: "Gurgaon", values: [1.30] },
+  { label: "Noida", values: [1.28] },
+  { label: "Pune", values: [1.22] },
   { label: "Bangalore / Bengaluru", values: [1.20] },
-  { label: "Chandigarh", values: [1.12] },
-  { label: "Hyderabad", values: [1.15] },
-  { label: "Chennai", values: [1.15] },
-  { label: "Pune", values: [1.15] },
-  { label: "Ahmedabad", values: [1.10] },
-  { label: "Jaipur", values: [1.10] },
-  { label: "Surat", values: [1.08] },
-  { label: "Vadodara / Kochi / Coimbatore / Indore", values: [1.05] },
-  { label: "Lucknow", values: [1.02] },
-  { label: "Visakhapatnam / Nagpur", values: [1.00] },
-  { label: "All other cities (default)", values: [0.95] },
+  { label: "Chandigarh", values: [1.15] },
+  { label: "Chennai", values: [1.13] },
+  { label: "Hyderabad", values: [1.05] },
+  { label: "Kolkata", values: [1.05] },
+  { label: "Jaipur / Kochi", values: [1.05] },
+  { label: "Ahmedabad", values: [1.03] },
+  { label: "Surat / Coimbatore / Indore / Vadodara", values: [1.00] },
+  { label: "Nagpur / Lucknow", values: [0.98] },
+  { label: "Visakhapatnam", values: [0.95] },
+  { label: "All other cities (default)", values: [0.92] },
 ];
 
 const feesRows: Row[] = [
@@ -170,7 +170,7 @@ const sections: Table[] = [
   },
   {
     title: "5. Location multiplier (by city)",
-    note: "Applied to the full subtotal (construction + core + finishes + interiors). Cities not listed use the 0.95 default.",
+    note: "Applied to the full subtotal (construction + core + finishes + interiors). Calibrated against InfraLens 2026 metro standard rates relative to a ~₹2,100/sqft national baseline (multiplier 1.0). Cities not listed use the 0.92 default.",
     columns: ["City", "Multiplier"],
     rows: locationMultiplierRows,
   },
@@ -227,11 +227,30 @@ const EstimatorConstants = () => {
         </Link>
 
         <h1 className="text-2xl md:text-3xl font-display mb-2">Estimator Calculation Reference</h1>
-        <p className="text-sm text-muted-foreground mb-10 max-w-2xl">
+        <p className="text-sm text-muted-foreground mb-6 max-w-2xl">
           Every hardcoded number the cost estimator and timeline engine use today, in the order they're
-          applied. This page exists purely as a reference so these placeholder/market-research figures can be
-          swapped for real project data later — it isn't linked from the main wizard flow.
+          applied. This page exists purely as a reference so these market-research figures can be swapped for
+          real project data later — it isn't linked from the main wizard flow.
         </p>
+
+        <div className="border border-gray-200 rounded-lg bg-gray-50 p-4 mb-10 max-w-3xl">
+          <p className="text-xs font-semibold text-vs-dark mb-2">Calibration benchmarks (residential, construction-only, pre-fee)</p>
+          <p className="text-xs text-muted-foreground mb-2">
+            The rates below were tuned so the engine reproduces published 2026 market figures. For a 200&nbsp;sqm
+            (≈2,150&nbsp;sqft) build the model outputs:
+          </p>
+          <ul className="text-xs text-muted-foreground list-disc pl-5 space-y-0.5">
+            <li>Bangalore standard ≈ ₹2,310/sqft — between architects4design (₹1,750–1,900) and InfraLens (₹2,520)</li>
+            <li>Mumbai standard ≈ ₹2,890/sqft — InfraLens ₹3,150</li>
+            <li>Hyderabad standard ≈ ₹2,020/sqft — InfraLens ₹2,205</li>
+            <li>Tier-3 / default city ≈ ₹1,770/sqft — architects4design floor ₹1,750</li>
+            <li>Premium grade ≈ 1.32× standard, Luxury ≈ 1.71× standard — InfraLens grade factors 1.35× / 1.85×</li>
+          </ul>
+          <p className="text-xs text-muted-foreground mt-2">
+            Sources: architects4design.com (Bangalore BOQ &amp; per-sqft rates), InfraLens 2026 construction-cost
+            calculator (multi-city, quality-graded), and Happho turnkey package pricing.
+          </p>
+        </div>
 
         <div className="space-y-10">
           {sections.map((table) => (
