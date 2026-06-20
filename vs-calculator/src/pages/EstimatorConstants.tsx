@@ -82,9 +82,10 @@ const locationMultiplierRows: Row[] = [
 ];
 
 const feesRows: Row[] = [
-  { label: "Architectural fee", values: ["7.5% of subtotal (post location/project multiplier)"] },
-  { label: "Documentation fee", values: ["0.75% of subtotal (10% of the architectural fee)"] },
-  { label: "Combined professional fees", values: ["8.25% of subtotal (COA guideline basis)"] },
+  { label: "Architectural fee — individual house / interiors", values: ["7.5% of subtotal (COA minimum scale)"] },
+  { label: "Architectural fee — apartment block / commercial / mixed-use", values: ["5.0% of subtotal (COA minimum scale)"] },
+  { label: "Documentation & communication", values: ["10% of the architectural fee (COA, all engagements)"] },
+  { label: "Combined professional fees", values: ["8.25% of subtotal for an individual house; 5.5% for apartment/commercial/mixed-use"] },
   { label: "Contingency", values: ["5% of subtotal"] },
   { label: "GST (effective)", values: ["6% of (subtotal + fees + contingency) — net of input credits, statutory rate is 12-18%"] },
 ];
@@ -182,7 +183,7 @@ const sections: Table[] = [
   },
   {
     title: "7. Professional fees, contingency & tax",
-    note: "Applied in sequence to the post-multiplier subtotal: fees + contingency are added first, then GST is applied on top of that running total.",
+    note: "Architect fees follow the COA (Council of Architecture) minimum scale of professional charges. Applied in sequence to the post-multiplier subtotal: fees + contingency are added first, then GST is applied on top of that running total.",
     columns: ["Line Item", "Rate"],
     rows: feesRows,
   },

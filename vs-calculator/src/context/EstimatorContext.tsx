@@ -187,6 +187,22 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
     return baseMultiplier * (1 + complexityAdjustment);
   }, []);
 
+  // COA (Council of Architecture) minimum scale of professional charges, per the
+  // Architects (Professional Conduct) Regulations, 1989:
+  //   - Individual residential house & interior architecture: 7.5% of cost of works
+  //   - Housing blocks (single block / sites up to 0.5 ha), commercial &
+  //     other non-housing buildings: 5.0%
+  // Documentation & communication charges (a further 10% of the professional
+  // fee) are added separately in the main calculation, also per COA.
+  const getArchitectFeeRate = useCallback((
+    projectType: string,
+    constructionSubtype?: string
+  ): number => {
+    if (projectType === "commercial" || projectType === "mixed-use") return 0.05;
+    if (projectType === "residential" && constructionSubtype === "apartment") return 0.05;
+    return 0.075; // individual house / interior architecture
+  }, []);
+
   // Get size-based cost multiplier
   const getSizeMultiplier = useCallback((areaInSqM: number): number => {
     if (areaInSqM < 50) return 1.20; // Very small projects - high fixed costs
@@ -466,8 +482,15 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
     const combinedMultiplier = locationMultiplier * projectMultiplier;
     const subtotal = baseSubtotal * combinedMultiplier;
 
-    // 5. Professional fees — COA guidelines: 7.5% architectural + 0.75% docs = 8.25%
-    const architecturalFees = subtotal * 0.075;
+    // 5. Professional fees — COA minimum scale of charges. The architectural fee
+    //    rate varies by project type (7.5% individual house / interiors, 5% for
+    //    apartment blocks, commercial & mixed-use), plus COA's documentation &
+    //    communication charge of a further 10% of the professional fee.
+    const architectFeeRate = getArchitectFeeRate(
+      currentEstimate.projectType,
+      currentEstimate.constructionSubtype
+    );
+    const architecturalFees = subtotal * architectFeeRate;
     const documentationFees = architecturalFees * 0.10;
     const professionalFees = architecturalFees + documentationFees;
 
@@ -530,7 +553,7 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
       },
       timeline,
     };
-  }, [calculateConstructionCost, calculateComponentCosts, getLocationMultiplier, getProjectTypeMultiplier, calculateTimeline]);
+  }, [calculateConstructionCost, calculateComponentCosts, getLocationMultiplier, getProjectTypeMultiplier, getArchitectFeeRate, calculateTimeline]);
 
   // Auto-adjust component selections based on work types
   useEffect(() => {
