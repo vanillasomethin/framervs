@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Video, Building, MessageCircle, Mail, Calendar, CheckCircle2, ChevronRight, Clock, Zap, CalendarCheck } from "lucide-react";
+import { motion } from "framer-motion";
+import { MessageCircle, Mail, Calendar, CheckCircle2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import CalBookingForm from "./CalBookingForm";
-import CalEmbed from "./CalEmbed";
-import { isCalComConfigured } from "@/utils/calcom";
 import { getCalApi } from "@calcom/embed-react";
 
-type MainOptionType = "schedule" | "api-booking" | "schedule-virtual" | "schedule-office" | "schedule-site";
-type ScheduleSubOption = "on-site" | "in-office" | "virtual";
+// Cal.com keyless embed configuration.
+// These are public booking links (no API key required). Change here to update everywhere.
+const CAL_NAMESPACE = "vs-booking";
+const CAL_LINK_15 = "hisham-khalid-qyohid/15min";
+const CAL_LINK_30 = "hisham-khalid-qyohid/30min";
+
+type MainOptionType = "schedule-intro" | "schedule-consultation" | "schedule-office" | "schedule-site";
 
 interface MainOption {
   id: MainOptionType;
@@ -19,14 +21,6 @@ interface MainOption {
   action?: () => void;
 }
 
-interface ScheduleOption {
-  id: ScheduleSubOption;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  action: () => void;
-}
-
 interface MeetingSchedulerProps {
   autoExpand?: boolean;
   estimate?: any; // ProjectEstimate
@@ -34,10 +28,7 @@ interface MeetingSchedulerProps {
 
 const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProps) => {
   const [selectedMainOption, setSelectedMainOption] = useState<MainOptionType | null>(null);
-  const [selectedSubOption, setSelectedSubOption] = useState<ScheduleSubOption | null>(null);
   const [shouldPulse, setShouldPulse] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedTime, setSelectedTime] = useState<string>("");
 
   // Auto-expand when triggered from parent
   useEffect(() => {
@@ -49,10 +40,10 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
     }
   }, [autoExpand, selectedMainOption]);
 
-  // Initialize Cal.com
+  // Initialize Cal.com keyless embed
   useEffect(() => {
     (async function () {
-      const cal = await getCalApi({ namespace: "schedule-meeting" });
+      const cal = await getCalApi({ namespace: CAL_NAMESPACE });
       cal("ui", {
         cssVarsPerTheme: {
           light: { "cal-brand": "#44080b" }
@@ -64,10 +55,11 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
     })();
   }, []);
 
-  const openCalWidget = async () => {
-    const cal = await getCalApi({ namespace: "schedule-meeting" });
-    cal("vanilla-somethin-nezld5/15min", {
-      layout: "month_view",
+  const openCalWidget = async (calLink: string) => {
+    const cal = await getCalApi({ namespace: CAL_NAMESPACE });
+    cal("modal", {
+      calLink,
+      config: { layout: "month_view" },
     });
   };
 
@@ -76,12 +68,21 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
 
   const mainOptions: MainOption[] = [
     {
-      id: "schedule-virtual",
-      title: "Schedule Meeting",
-      description: "Virtual / Onsite / At Office",
+      id: "schedule-intro",
+      title: "Book a 15-min intro call",
+      description: "Quick introduction & questions",
+      icon: <Clock className="size-6" />,
+      action: () => {
+        openCalWidget(CAL_LINK_15);
+      }
+    },
+    {
+      id: "schedule-consultation",
+      title: "Book a 30-min consultation",
+      description: "In-depth project discussion",
       icon: <Calendar className="size-6" />,
       action: () => {
-        openCalWidget();
+        openCalWidget(CAL_LINK_30);
       }
     },
     {
@@ -105,55 +106,11 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
     },
   ];
 
-  const scheduleOptions: ScheduleOption[] = [
-    {
-      id: "virtual",
-      title: "Virtual Meeting",
-      description: "Online meeting via Cal.com",
-      icon: <Video className="size-5" />,
-      action: () => {
-        setSelectedMainOption("schedule-virtual");
-      }
-    },
-    {
-      id: "in-office",
-      title: "At Office Meeting",
-      description: "Visit our office for consultation",
-      icon: <Building className="size-5" />,
-      action: () => {
-        const message = `Hi! I'd like to schedule an office visit to discuss my project.${selectedDate ? `\n\nPreferred Date: ${selectedDate}` : ''}${selectedTime ? `\nPreferred Time: ${selectedTime}` : ''}`;
-        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
-      }
-    },
-    {
-      id: "on-site",
-      title: "At Site Meeting",
-      description: "We'll visit your project location",
-      icon: <MapPin className="size-5" />,
-      action: () => {
-        const message = `Hi! I'd like to schedule an on-site visit to discuss my project.${selectedDate ? `\n\nPreferred Date: ${selectedDate}` : ''}${selectedTime ? `\nPreferred Time: ${selectedTime}` : ''}`;
-        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
-      }
-    },
-  ];
-
   const handleMainOptionClick = (option: MainOption) => {
     setSelectedMainOption(option.id);
     setTimeout(() => {
       option.action?.();
     }, 300);
-  };
-
-  const handleSubOptionClick = (option: ScheduleOption) => {
-    setSelectedSubOption(option.id);
-    setTimeout(() => {
-      option.action();
-    }, 300);
-  };
-
-  const handleBack = () => {
-    setSelectedMainOption(null);
-    setSelectedSubOption(null);
   };
 
   return (
@@ -173,9 +130,9 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
         }
       }}
       className={cn(
-        "bg-white p-6 rounded-xl border shadow-sm transition-all duration-300",
+        "bg-white p-6 rounded-xl border transition-colors duration-300",
         shouldPulse
-          ? "border-vs shadow-lg ring-2 ring-vs/20"
+          ? "border-vs ring-1 ring-vs/20"
           : "border-vs/10"
       )}
     >
@@ -189,12 +146,12 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
           <Calendar className="size-6" />
         </div>
         <h3 className="text-xl font-bold text-vs-dark mb-2">
-          {shouldPulse ? "👋 Ready to get started?" : "Let's Connect"}
+          {shouldPulse ? "Ready to get started?" : "Let's Connect"}
         </h3>
         <p className="text-sm text-muted-foreground">
           {shouldPulse
-            ? "Virtual / Onsite / At Office - Schedule a consultation to discuss your project"
-            : "Virtual / Onsite / At Office - Choose your preferred way to connect"}
+            ? "Schedule a consultation to discuss your project"
+            : "Choose your preferred way to connect"}
         </p>
       </div>
 
@@ -203,7 +160,7 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 20 }}
         transition={{ duration: 0.3 }}
-        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
       >
             {mainOptions.map((option, index) => (
               <motion.div
@@ -215,9 +172,9 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
                 <button
                   onClick={() => handleMainOptionClick(option)}
                   className={cn(
-                    "w-full group relative flex flex-col items-center p-6 border rounded-lg transition-all duration-300 text-center hover:shadow-md",
+                    "w-full group relative flex flex-col items-center p-6 border rounded-lg transition-colors duration-300 text-center",
                     selectedMainOption === option.id && !option.hasSubOptions
-                      ? "border-vs bg-vs/5 shadow-sm"
+                      ? "border-vs bg-vs/5"
                       : "border-gray-200 hover:border-vs/50"
                   )}
                 >

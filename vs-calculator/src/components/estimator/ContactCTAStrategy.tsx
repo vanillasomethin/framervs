@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Phone, Mail, MessageSquare, Download, ChevronRight, CheckCircle2, Clock, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateEstimatePDF } from "@/utils/pdfExport";
-import { ProjectEstimate } from "@/types/estimator";
+import { submitLead, LeadEstimateSnapshot } from "@/utils/leads";
+import { ProjectEstimate, ComponentOption } from "@/types/estimator";
 
 interface ContactCTAStrategyProps {
   estimate: ProjectEstimate;
@@ -44,9 +45,42 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const buildEstimateSnapshot = (): LeadEstimateSnapshot => {
+    const components: Array<{ name: string; level: ComponentOption }> = [
+      { name: "Quality of Construction", level: estimate.civilQuality },
+      { name: "Plumbing & Sanitary", level: estimate.plumbing },
+      { name: "Electrical Systems", level: estimate.electrical },
+      { name: "AC & HVAC", level: estimate.ac },
+      { name: "Elevator/Lift", level: estimate.elevator },
+      { name: "Building Envelope", level: estimate.buildingEnvelope },
+      { name: "Lighting Systems", level: estimate.lighting },
+      { name: "Windows, Doors & Glazing", level: estimate.windows },
+      { name: "Ceiling Design", level: estimate.ceiling },
+      { name: "Wall & Floor Finishes", level: estimate.surfaces },
+      { name: "Fixed Furniture", level: estimate.fixedFurniture },
+      { name: "Loose Furniture", level: estimate.looseFurniture },
+      { name: "Furnishings", level: estimate.furnishings },
+      { name: "Appliances", level: estimate.appliances },
+      { name: "Artefacts", level: estimate.artefacts },
+    ].filter((c) => c.level && c.level !== "none");
+
+    return {
+      totalCost: estimate.totalCost,
+      projectType: estimate.projectType,
+      workTypes: estimate.workTypes,
+      city: estimate.city,
+      state: estimate.state,
+      area: estimate.area,
+      areaUnit: estimate.areaUnit,
+      categoryBreakdown: estimate.categoryBreakdown,
+      timeline: estimate.timeline,
+      selectedComponents: components,
+    };
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.phone || !formData.email) {
       toast({
         title: "Required fields missing",
@@ -58,27 +92,39 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
 
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      await submitLead({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        preferredContact: formData.preferredContact,
+        preferredTime: formData.preferredTime,
+        message: formData.message,
+        estimate: buildEstimateSnapshot(),
+      });
 
-    // Here you would send to your backend/email service
-    console.log("Contact request:", {
-      ...formData,
-      estimate: {
-        totalCost: estimate.totalCost,
-        area: estimate.area,
-        location: `${estimate.city}, ${estimate.state}`,
-        projectType: estimate.projectType,
+      // Give the user their own copy of the estimate PDF.
+      try {
+        generateEstimatePDF(estimate);
+      } catch (pdfError) {
+        // Non-fatal: the lead was already submitted.
+        console.error("PDF generation failed:", pdfError);
       }
-    });
 
-    setIsSubmitting(false);
-    setShowForm(false);
-
-    toast({
-      title: "Request Received!",
-      description: "Our team will contact you within 24 hours with a detailed quote.",
-    });
+      setShowForm(false);
+      toast({
+        title: "Request Received!",
+        description: "Our team will contact you within 24 hours. Your estimate PDF has been downloaded.",
+      });
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        description: "We couldn't submit your request. Please try again or contact us directly.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDownloadPDF = () => {
@@ -100,7 +146,7 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
   return (
     <div className="space-y-4">
       {/* Value proposition cards */}
-      <div className="bg-gradient-to-br from-vs/5 to-vs/10 p-4 rounded-xl border border-vs/20">
+      <div className="bg-vs/5 p-4 rounded-xl border border-vs/20">
         <h3 className="text-base font-bold text-vs-dark mb-3">Get Your Detailed Quote</h3>
         
         <div className="grid grid-cols-3 gap-2 mb-4">
@@ -118,7 +164,7 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
           </div>
         </div>
 
-        <div className="bg-white/60 p-3 rounded-lg mb-3">
+        <div className="bg-white p-3 rounded-lg border border-gray-200 mb-3">
           <div className="mb-2">
             <p className="text-xs text-gray-700 mb-1">
               <span className="font-semibold">Estimated Cost:</span> {formatCurrency(estimate.totalCost)}

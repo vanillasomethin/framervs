@@ -1,7 +1,21 @@
 import { jsPDF } from 'jspdf';
 import { ProjectEstimate, ComponentOption } from '@/types/estimator';
 
-export const generateEstimatePDF = (estimate: ProjectEstimate) => {
+export interface GenerateEstimatePDFOptions {
+  /** When true (default), the PDF is downloaded via doc.save(). Set false to only build the doc. */
+  save?: boolean;
+}
+
+/**
+ * Builds the estimate PDF.
+ * By default it downloads the file (existing behavior). Pass { save: false } to
+ * build the doc without downloading. Returns the jsPDF doc so callers can extract
+ * bytes (see getEstimatePdfBlob) or save manually.
+ */
+export const generateEstimatePDF = (
+  estimate: ProjectEstimate,
+  { save = true }: GenerateEstimatePDFOptions = {}
+): jsPDF => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -341,5 +355,18 @@ export const generateEstimatePDF = (estimate: ProjectEstimate) => {
     ? `_${estimate.workTypes.join('_')}`
     : '';
   const fileName = `Construction_Estimate_${estimate.city}${workTypesText}_${estimate.area}${estimate.areaUnit}_${new Date().toISOString().split('T')[0]}.pdf`;
-  doc.save(fileName);
+  if (save) {
+    doc.save(fileName);
+  }
+
+  return doc;
+};
+
+/**
+ * Returns the estimate PDF as a Blob (bytes) without downloading it.
+ * Useful for upload/attachment flows.
+ */
+export const getEstimatePdfBlob = (estimate: ProjectEstimate): Blob => {
+  const doc = generateEstimatePDF(estimate, { save: false });
+  return doc.output('blob');
 };

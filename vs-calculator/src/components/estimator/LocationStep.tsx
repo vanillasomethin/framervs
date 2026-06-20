@@ -176,7 +176,7 @@ const LocationStep = ({ selectedState, selectedCity, onStateSelect, onCitySelect
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-8 text-center p-4 glass-card rounded-xl border border-vs/10"
+          className="mt-8 text-center p-4 bg-white rounded-xl border border-vs/10"
         >
           <p className="text-vs font-medium">
             Selected Location: {selectedCity}, {selectedState}

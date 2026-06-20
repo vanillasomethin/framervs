@@ -19,7 +19,7 @@ const CurrentEstimateDisplay = () => {
 
   return (
     <div className="mb-8 flex flex-col items-center">
-      <div className="glass-card border border-vs/10 px-6 py-3 rounded-full inline-flex items-center gap-3 mb-2">
+      <div className="bg-white border border-vs/10 px-6 py-3 rounded-full inline-flex items-center gap-3 mb-2">
         <span className="text-[#4f090c]">Current Estimate:</span>
         <span className="text-vs font-semibold">{formattedCost}</span>
       </div>

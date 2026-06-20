@@ -19,15 +19,20 @@ const ImprovedCostVisualization = ({ estimate }: ImprovedCostVisualizationProps)
     construction: '#8B0000', // Dark red
     core: '#B22222',        // Firebrick red
     finishes: '#CD5C5C',    // Indian red
-    interiors: '#F08080'    // Light coral
+    interiors: '#F08080',   // Light coral
+    fees: '#C9A9A9'         // Muted rose
   };
 
   const categoryData = [
     { name: 'Construction', value: estimate.categoryBreakdown.construction, color: COLORS.construction },
-    { name: 'Services', value: estimate.categoryBreakdown.core, color: COLORS.core },
+    { name: 'Core Services', value: estimate.categoryBreakdown.core, color: COLORS.core },
     { name: 'Finishes', value: estimate.categoryBreakdown.finishes, color: COLORS.finishes },
     { name: 'Interiors', value: estimate.categoryBreakdown.interiors, color: COLORS.interiors },
+    { name: 'Fees & Taxes', value: estimate.categoryBreakdown.fees, color: COLORS.fees },
   ].filter(item => item.value >= 1); // Filter out zero or near-zero values
+
+  // These categories sum to the headline total, so percentages reconcile to 100%.
+  const categorySum = categoryData.reduce((sum, item) => sum + item.value, 0) || 1;
 
   const barData = categoryData.map(item => ({
     name: item.name,
@@ -108,11 +113,16 @@ const ImprovedCostVisualization = ({ estimate }: ImprovedCostVisualizationProps)
       </div>
 
       {/* Cost Breakdown List */}
-      <div className="space-y-1.5 max-h-40 overflow-y-auto">
+      <div className="space-y-1.5">
         {categoryData.map((item, index) => (
           <div key={index} className="flex justify-between items-center text-[10px] py-1 px-2 bg-vs/5 rounded">
             <span className="text-vs-dark/70">{item.name}</span>
-            <span className="font-semibold text-vs">{formatCurrency(item.value)}</span>
+            <span className="font-semibold text-vs">
+              {formatCurrency(item.value)}
+              <span className="ml-1 font-normal text-vs-dark/50">
+                ({Math.round((item.value / categorySum) * 100)}%)
+              </span>
+            </span>
           </div>
         ))}
       </div>

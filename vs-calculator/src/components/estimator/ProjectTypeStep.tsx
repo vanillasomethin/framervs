@@ -411,7 +411,7 @@ const ProjectTypeStep = ({
                     initial={{ scale: 1.2, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 200 }}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-vs to-vs-light rounded-xl shadow-lg"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-vs rounded-xl shadow-lg"
                   >
                     <Layers className="size-6 text-white" />
                     <span className="text-4xl font-bold text-white">
@@ -482,7 +482,7 @@ const ProjectTypeStep = ({
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
-                className="mt-6 p-4 bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200 rounded-lg"
+                className="mt-6 p-4 bg-vs/5 border border-vs/10 rounded-lg"
               >
                 <div className="flex items-center gap-3 mb-3">
                   <Layers className="size-5 text-purple-600" />

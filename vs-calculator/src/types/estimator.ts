@@ -1,12 +1,15 @@
 // Component quality options
 export type ComponentOption = "none" | "standard" | "premium" | "luxury";
 
-// Category breakdown for cost visualization
+// Category breakdown for cost visualization.
+// All five fields are post-multiplier rupee amounts and sum to the headline
+// totalCost, so charts/percentages derived from them reconcile to the total.
 export interface CategoryBreakdown {
   construction: number;
   core: number;
   finishes: number;
   interiors: number;
+  fees: number; // professional fees + contingency + GST
 }
 
 // Phase breakdown for project timeline

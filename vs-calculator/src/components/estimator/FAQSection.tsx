@@ -107,7 +107,7 @@ const FAQSection = () => {
       </div>
 
       {/* Help Footer */}
-      <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
+      <div className="mt-6 p-4 bg-vs/5 rounded-lg border border-vs/10">
         <p className="text-sm text-gray-700">
           <span className="font-semibold text-green-800">Still have questions?</span>{" "}
           Our construction experts are here to help. Schedule a free consultation to discuss your specific project requirements and get personalized advice.

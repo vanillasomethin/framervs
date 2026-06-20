@@ -25,7 +25,7 @@ const StickyPricing = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
-        className="sticky bottom-0 left-0 right-0 bg-gradient-to-r from-vs to-vs-light text-white rounded-t-xl shadow-2xl border-t-4 border-white/20 z-50"
+        className="sticky bottom-0 left-0 right-0 bg-vs text-white rounded-t-xl shadow-lg border-t-4 border-white/20 z-50"
       >
         <div className="px-4 py-3">
           <div className="flex items-center justify-center gap-4">

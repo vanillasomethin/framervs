@@ -304,7 +304,7 @@ const AreaStep = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="mt-6 p-5 bg-gradient-to-br from-green-50 to-teal-50 border border-green-200 rounded-xl"
+          className="mt-6 p-5 bg-green-50 border border-green-200 rounded-xl"
         >
           <div className="flex items-start gap-3 mb-4">
             <Building2 className="size-6 text-green-600 mt-0.5 flex-shrink-0" />
@@ -352,7 +352,7 @@ const AreaStep = ({
           </div>
 
           {/* Total calculation */}
-          <div className="p-4 bg-gradient-to-r from-green-600 to-teal-600 rounded-lg text-white">
+          <div className="p-4 bg-green-600 rounded-lg text-white">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm opacity-90 mb-1">Total Built-up Area</p>
@@ -383,7 +383,7 @@ const AreaStep = ({
           className="mt-8 space-y-4"
         >
           {/* FSI Info Card */}
-          <div className="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
+          <div className="p-5 bg-blue-50 border border-blue-200 rounded-xl">
             <div className="flex items-start gap-3 mb-4">
               <Info className="size-5 text-blue-600 mt-0.5 flex-shrink-0" />
               <div className="flex-1">

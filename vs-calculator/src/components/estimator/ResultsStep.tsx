@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ProjectEstimate, ComponentOption } from "@/types/estimator";
 import { Share, CheckCircle2, Download, IndianRupee, X } from "lucide-react";
@@ -8,7 +8,10 @@ import PhaseTimelineCost from "./PhaseTimelineCost";
 import MeetingScheduler from "./MeetingScheduler";
 import DetailedBreakdownSection from "./DetailedBreakdownSection";
 import FAQSection from "./FAQSection";
+import ContactCTAStrategy from "./ContactCTAStrategy";
+import UserInfoForm from "./UserInfoForm";
 import { generateEstimatePDF } from "@/utils/pdfExport";
+import { submitLead } from "@/utils/leads";
 import {
   Dialog,
   DialogContent,
@@ -124,8 +127,8 @@ const COMPONENT_DESCRIPTIONS: Record<string, { standard: string[]; premium: stri
 
 const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
   const { toast } = useToast();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showConsultationPrompt, setShowConsultationPrompt] = useState(false);
+  const [showLeadForm, setShowLeadForm] = useState(false);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-IN', {
@@ -164,12 +167,36 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
     }
   };
 
-  const handleDownloadPDF = () => {
+  // Build the snapshot that goes to the CRM with each lead.
+  const buildLeadSnapshot = () => ({
+    totalCost: estimate.totalCost,
+    projectType: estimate.projectType,
+    workTypes: estimate.workTypes,
+    city: estimate.city,
+    state: estimate.state,
+    area: estimate.area,
+    areaUnit: estimate.areaUnit,
+    categoryBreakdown: estimate.categoryBreakdown,
+    timeline: estimate.timeline,
+  });
+
+  // Downloading the PDF is gated behind a short info form so every download is
+  // captured as a lead in the CRM, then the PDF is generated for the user.
+  const handleDownloadPDF = () => setShowLeadForm(true);
+
+  const handleLeadSubmit = async (userData: { name: string; email: string; phone: string }) => {
+    setShowLeadForm(false);
+    try {
+      await submitLead({ ...userData, estimate: buildLeadSnapshot() });
+    } catch (error) {
+      // Lead delivery failing shouldn't block the user's download.
+      console.error("Lead submission failed", error);
+    }
     try {
       generateEstimatePDF(estimate);
       toast({
         title: "PDF Generated!",
-        description: "Your estimate has been downloaded as a PDF."
+        description: "Your estimate has been downloaded. We'll be in touch shortly."
       });
     } catch (error) {
       toast({
@@ -180,28 +207,23 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
     }
   };
 
-  // Scroll detection for consultation prompt - show modal once
+  // Scroll detection for consultation prompt — the results now flow with the
+  // page, so we watch the window scroll (not an inner box) and trigger once.
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
     let hasTriggered = false;
 
     const handleScroll = () => {
       if (hasTriggered) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
-      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
-
-      // Show modal when scrolled 70% or more (only once)
-      if (scrollPercentage >= 0.7) {
+      const scrolled = window.scrollY + window.innerHeight;
+      const total = document.documentElement.scrollHeight;
+      if (total > 0 && scrolled / total >= 0.7) {
         hasTriggered = true;
         setShowConsultationPrompt(true);
       }
     };
 
-    scrollContainer.addEventListener('scroll', handleScroll);
-    return () => scrollContainer.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Helper to check if component is included
@@ -220,19 +242,8 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
   // Calculate area in sqm for calculations
   const areaInSqM = estimate.areaUnit === "sqft" ? estimate.area * 0.092903 : estimate.area;
 
-  // Calculate architect fee using same tiered system as PDF (COA standards)
-  const getArchitectFeePercentage = (projectCost: number): number => {
-    if (projectCost <= 5000000) return 12;  // Up to 50 lakh: 12%
-    if (projectCost <= 10000000) return 10; // 50L - 1Cr: 10%
-    if (projectCost <= 50000000) return 9;  // 1Cr - 5Cr: 9%
-    return 8;                               // Above 5Cr: 8%
-  };
-
-  const architectFeePercent = getArchitectFeePercentage(estimate.totalCost);
-  const architectFee = (estimate.totalCost * architectFeePercent) / 100;
-  const totalWithArchitectFee = estimate.totalCost + architectFee;
-
-  // Create pricing list with costs
+  // Create list of selected components (qualitative — actual rupee distribution
+  // is shown in the reconciled category breakdown, not per-line here)
   const pricingList = [
     isIncluded(estimate.civilQuality) && {
       category: "Core Components",
@@ -372,10 +383,7 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
   ].filter(Boolean);
 
   return (
-    <div
-      ref={scrollContainerRef}
-      className="space-y-6 overflow-y-auto overflow-x-hidden max-h-[85vh] px-2 pb-6"
-    >
+    <div className="space-y-6 px-2 pb-6">
       {/* Main Summary Card */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -401,29 +409,18 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
           </div>
         </div>
 
-        {/* Total Cost - Prominent */}
-        <div className="bg-gradient-to-br from-vs/10 to-vs/5 p-5 rounded-xl text-center">
-          <h3 className="text-xs text-vs-dark/70 mb-1.5">Construction Cost Estimate</h3>
-          <p className="text-2xl font-bold text-vs-dark/80 mb-1.5">{formatCurrency(estimate.totalCost)}</p>
-          <p className="text-xs text-vs-dark/70">
-            {formatCurrency(Math.round(estimate.totalCost / estimate.area))} per {estimate.areaUnit}
-          </p>
-        </div>
-
-        {/* Architect Fee Display */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 text-center">
-          <p className="text-[10px] text-blue-800 mb-0.5">+ Architect's Fee ({architectFeePercent}% as per COA standards)</p>
-          <p className="text-sm font-semibold text-blue-900">{formatCurrency(Math.round(architectFee))}</p>
-        </div>
-
-        {/* Total Estimated Project Cost - HIGHLIGHTED */}
-        <div className="bg-gradient-to-br from-vs to-vs-dark p-4 rounded-xl text-center shadow-lg border-2 border-vs-dark">
-          <h3 className="text-xs text-white/90 mb-1.5 font-semibold">TOTAL ESTIMATED PROJECT COST</h3>
-          <p className="text-3xl font-bold text-white mb-1.5">{formatCurrency(Math.round(totalWithArchitectFee))}</p>
+        {/* Total Estimated Project Cost — single authoritative figure. The
+            engine total already includes professional fees, contingency and GST,
+            so it is shown once (no double-counting). */}
+        <div className="bg-vs text-white p-5 rounded-xl text-center border border-vs-dark">
+          <h3 className="text-xs text-white/90 mb-1.5 font-semibold tracking-wide">TOTAL ESTIMATED PROJECT COST</h3>
+          <p className="text-3xl font-bold text-white mb-1.5">{formatCurrency(estimate.totalCost)}</p>
           <p className="text-xs text-white/90">
-            {formatCurrency(Math.round(totalWithArchitectFee / estimate.area))} per {estimate.areaUnit}
+            {formatCurrency(Math.round(estimate.totalCost / Math.max(estimate.area, 1)))} per {estimate.areaUnit}
           </p>
-          <p className="text-[10px] text-white/70 mt-1.5">All costs inclusive of GST @ 18%</p>
+          <p className="text-[10px] text-white/70 mt-1.5">
+            Inclusive of professional fees, contingency &amp; GST
+          </p>
         </div>
 
 
@@ -472,18 +469,9 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
                   </ul>
                 </div>
 
-                {/* Pricing information */}
-                <div className="flex items-center justify-between gap-2 mt-2 pl-6">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1 text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
-                      <IndianRupee className="size-3" />
-                      <span className="font-medium">{estimate.areaUnit === "sqft" ? item.perSqft : item.perSqm}/{estimate.areaUnit}</span>
-                    </div>
-                    <span className="text-xs text-gray-500">{item.category}</span>
-                  </div>
-                  <div className="text-sm font-bold text-vs">
-                    {formatCurrency(item.totalCost)}
-                  </div>
+                {/* Category tag */}
+                <div className="mt-2 pl-6">
+                  <span className="text-xs text-gray-500">{item.category}</span>
                 </div>
               </div>
             ))}
@@ -496,15 +484,12 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
           {/* Total Summary */}
           <div className="mt-4 pt-4 border-t border-gray-300">
             <div className="flex items-center justify-between text-lg font-bold">
-              <span className="text-vs-dark">Total Construction Cost</span>
+              <span className="text-vs-dark">Total Project Cost</span>
               <div className="flex items-center gap-1 text-vs">
                 <IndianRupee className="size-5" />
                 <span>{formatCurrency(estimate.totalCost)}</span>
               </div>
             </div>
-            <p className="text-xs text-gray-500 mt-2 text-right">
-              (Architect fee shown above - Total Project Cost: {formatCurrency(Math.round(totalWithArchitectFee))})
-            </p>
           </div>
         </div>
 
@@ -515,9 +500,8 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 text-xs text-gray-700">
           <p className="font-medium text-orange-800 mb-1">Important Disclaimer:</p>
           <ul className="list-disc list-inside space-y-1 text-gray-700">
-            <li>All costs shown are inclusive of GST @ 18%</li>
+            <li>The total is inclusive of professional fees, contingency and GST</li>
             <li>Actual costs may vary ±10% based on site conditions and material price fluctuations</li>
-            <li>Architect's fee shown separately as per COA standards</li>
             <li>Detailed BOQ will be provided after site visit and requirement analysis</li>
             <li>Final pricing subject to contractor quotes and material availability</li>
             <li>This is an indicative estimate - please contact us for detailed quotation</li>
@@ -547,6 +531,11 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
         >
           Start New Estimate
         </button>
+      </div>
+
+      {/* Request a detailed quote / callback — captured as a lead in the CRM */}
+      <div className="mt-6">
+        <ContactCTAStrategy estimate={estimate} />
       </div>
 
       {/* Bottom Booking Section */}
@@ -582,6 +571,13 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
           </button>
         </DialogContent>
       </Dialog>
+
+      {/* Info form gating the PDF download — every download becomes a lead */}
+      <UserInfoForm
+        isOpen={showLeadForm}
+        onClose={() => setShowLeadForm(false)}
+        onSubmit={handleLeadSubmit}
+      />
     </div>
   );
 };

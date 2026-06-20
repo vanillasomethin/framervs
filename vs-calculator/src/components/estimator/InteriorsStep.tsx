@@ -1,4 +1,4 @@
-import { Armchair, Sofa, Palette, Microwave, Frame, DoorOpen } from "lucide-react";
+import { Armchair, Sofa, Palette, Microwave, Frame } from "lucide-react";
 import { ComponentOption, ProjectSubcategory } from "@/types/estimator";
 import QualityLevelSelector from "./QualityLevelSelector";
 
@@ -8,7 +8,6 @@ interface InteriorsStepProps {
   furnishings: ComponentOption;
   appliances: ComponentOption;
   artefacts: ComponentOption;
-  interiorDoorsWindows: ComponentOption;
   workTypes: ProjectSubcategory[];
   onOptionChange: (component: string, option: ComponentOption) => void;
 }
@@ -19,7 +18,6 @@ const InteriorsStep = ({
   furnishings,
   appliances,
   artefacts,
-  interiorDoorsWindows,
   workTypes,
   onOptionChange,
 }: InteriorsStepProps) => {
@@ -37,13 +35,6 @@ const InteriorsStep = ({
       icon: <Armchair className="size-6" />,
       value: fixedFurniture,
       description: "Built-in wardrobes, modular kitchen cabinets, vanity units, wall shelving, study tables, TV units, and custom carpentry with hardware and finishes",
-    },
-    {
-      key: "interiorDoorsWindows",
-      title: "Interior Doors & Windows",
-      icon: <DoorOpen className="size-6" />,
-      value: interiorDoorsWindows,
-      description: "Bedroom doors, bathroom doors, kitchen doors, internal partitions, sliding doors, french doors, windows for internal rooms, door handles and locks, and interior glazing work",
     },
     {
       key: "looseFurniture",

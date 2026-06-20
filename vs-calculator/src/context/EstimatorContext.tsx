@@ -124,6 +124,7 @@ const initialEstimate: ProjectEstimate = {
     core: 0,
     finishes: 0,
     interiors: 0,
+    fees: 0,
   },
   phaseBreakdown: {
     planning: 0,
@@ -396,9 +397,14 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
 
     // Calculate effective area for cost estimation based on area input type
     let areaInSqM: number;
-    if (currentEstimate.areaInputType === "plot" && currentEstimate.builtUpArea) {
-      // For plot area, use the calculated built-up area from FSI validation (already in sqm)
-      areaInSqM = currentEstimate.builtUpArea;
+    if (currentEstimate.areaInputType === "plot") {
+      // Plot area must be converted to built-up area before pricing. Prefer the
+      // FSI-derived built-up value; if it hasn't been computed yet, fall back to
+      // plot × floorCount rather than pricing the raw plot area (which would be
+      // wildly low — a plot is not the same as built-up space).
+      areaInSqM = currentEstimate.builtUpArea
+        ? currentEstimate.builtUpArea
+        : baseAreaInSqM * (currentEstimate.floorCount || 1);
     } else if (currentEstimate.areaInputType === "plinth" && currentEstimate.floorCount) {
       // For plinth area, multiply by floor count to get total built-up area
       areaInSqM = baseAreaInSqM * currentEstimate.floorCount;
@@ -407,98 +413,99 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
       areaInSqM = baseAreaInSqM;
     }
 
-    // 1. Calculate base construction cost
-    const constructionCost = calculateConstructionCost(
-      currentEstimate.projectType,
-      areaInSqM,
-      currentEstimate.civilQuality
-    );
+    // Work-type flags
+    const hasConstruction = currentEstimate.workTypes?.includes("construction") ?? false;
+    const hasInteriors = currentEstimate.workTypes?.includes("interiors") ?? false;
+    const hasLandscape = currentEstimate.workTypes?.includes("landscape") ?? false;
+    const isInteriorsOnly = hasInteriors && !hasConstruction && !hasLandscape;
+    const isLandscapeOnly = hasLandscape && !hasConstruction && !hasInteriors;
 
-    // 2. Calculate component costs
+    // 1. Base construction cost — only when construction is in scope (otherwise an
+    //    interior-only project would be charged a full shell it isn't building).
+    const constructionCost = hasConstruction
+      ? calculateConstructionCost(
+          currentEstimate.projectType,
+          areaInSqM,
+          currentEstimate.civilQuality
+        )
+      : 0;
+
+    // 2. Component costs
     const { core, finishes, interiors } = calculateComponentCosts(currentEstimate, areaInSqM);
 
-    // 3. Calculate subtotal before adjustments
-    let subtotal = constructionCost + core + finishes + interiors;
+    // 3. Subtotal before adjustments
+    const baseSubtotal = constructionCost + core + finishes + interiors;
 
-    // 4. Apply location multiplier
+    // 4. Location + project-type/complexity multipliers
     const locationMultiplier = getLocationMultiplier(currentEstimate.city);
-    subtotal *= locationMultiplier;
-
-    // 5. Apply project type and complexity multiplier
     const projectMultiplier = getProjectTypeMultiplier(
       currentEstimate.projectType,
       currentEstimate.complexity
     );
-    subtotal *= projectMultiplier;
+    const combinedMultiplier = locationMultiplier * projectMultiplier;
+    const subtotal = baseSubtotal * combinedMultiplier;
 
-    // 6. Add professional fees - aligned with COA (Council of Architecture) guidelines
-    // For Individual Houses: 7.5% architectural services + 0.75% documentation (10% of 7.5%)
-    const architecturalFees = subtotal * 0.075; // 7.5% COA standard for individual houses
-    const documentationFees = architecturalFees * 0.10; // 10% of architectural fees
-    const professionalFees = architecturalFees + documentationFees; // Total: 8.25%
+    // 5. Professional fees — COA guidelines: 7.5% architectural + 0.75% docs = 8.25%
+    const architecturalFees = subtotal * 0.075;
+    const documentationFees = architecturalFees * 0.10;
+    const professionalFees = architecturalFees + documentationFees;
 
-    // 7. Add contingency - aligned with architects4design.com
-    const contingency = subtotal * 0.05; // 5% (they recommend 5-10%)
+    // 6. Contingency (5%)
+    const contingency = subtotal * 0.05;
 
-    // 8. Calculate total before tax
+    // 7. Total before tax
     const totalBeforeTax = subtotal + professionalFees + contingency;
 
-    // 9. Add GST (effective rate after deductions and exemptions)
-    const gst = totalBeforeTax * 0.06; // 6% effective (lower than statutory 12% due to input credits)
+    // 8. GST — 6% effective (lower than statutory 12% due to input credits)
+    const gst = totalBeforeTax * 0.06;
 
-    // 10. Final total cost
+    // 9. Final total cost
     const totalCost = totalBeforeTax + gst;
 
-    // 11. Calculate phase breakdown
-    // Check project work types
-    const isInteriorsOnly = currentEstimate.workTypes?.includes("interiors") &&
-                           !currentEstimate.workTypes?.includes("construction") &&
-                           !currentEstimate.workTypes?.includes("landscape");
-    const isLandscapeOnly = currentEstimate.workTypes?.includes("landscape") &&
-                           !currentEstimate.workTypes?.includes("construction") &&
-                           !currentEstimate.workTypes?.includes("interiors");
-    const hasConstruction = currentEstimate.workTypes?.includes("construction");
-    const hasLandscape = currentEstimate.workTypes?.includes("landscape");
+    // 10. Category breakdown. Scale each work category by the same multiplier so
+    //     the four categories sum to `subtotal`, then add a fifth "fees" bucket
+    //     (professional fees + contingency + GST). All five sum to totalCost, so
+    //     every chart/percentage derived from them reconciles to the headline.
+    const overheads = professionalFees + contingency + gst; // = totalCost - subtotal
+    const constructionScaled = constructionCost * combinedMultiplier;
+    const coreScaled = core * combinedMultiplier;
+    const finishesScaled = finishes * combinedMultiplier;
+    const interiorsScaled = interiors * combinedMultiplier;
 
+    // 11. Phase breakdown. Distribute the whole total across active phases so
+    //     planning + construction + interiors + landscape === totalCost exactly.
     const planningCost = totalCost * 0.08;
-
-    // Distribute remaining cost proportionally across phases
-    const remainingCost = totalCost - planningCost;
-
-    // Count active work types
-    const workTypeCount = [hasConstruction, currentEstimate.workTypes?.includes("interiors"), hasLandscape].filter(Boolean).length;
-
-    const constructionPhaseCost = hasConstruction
-      ? constructionCost + (core * 0.6) + (professionalFees * 0.5 / workTypeCount)
+    const buildBudget = totalCost - planningCost;
+    const wConstruction = hasConstruction ? constructionScaled + coreScaled + finishesScaled : 0;
+    const wInteriors = hasInteriors ? interiorsScaled : 0;
+    // Landscape isn't priced as its own category; weight it so the phase shows a
+    // share when combined with other work, or the whole build budget when alone.
+    const wLandscape = hasLandscape
+      ? (isLandscapeOnly ? Math.max(subtotal, 1) : subtotal * 0.15)
       : 0;
+    const wSum = wConstruction + wInteriors + wLandscape;
+    const constructionPhaseCost = wSum ? (buildBudget * wConstruction) / wSum : 0;
+    const interiorsPhaseCost = wSum ? (buildBudget * wInteriors) / wSum : 0;
+    const landscapePhaseCost = wSum ? (buildBudget * wLandscape) / wSum : 0;
 
-    const landscapePhaseCost = hasLandscape
-      ? (isLandscapeOnly ? remainingCost : (totalCost * 0.15)) // 15% of total for landscape when combined
-      : 0;
-
-    const interiorsPhaseCost = isInteriorsOnly
-      ? totalCost - planningCost
-      : (currentEstimate.workTypes?.includes("interiors")
-          ? interiors + finishes + (core * 0.4) + (professionalFees * 0.5 / workTypeCount) + (hasLandscape ? 0 : contingency + gst)
-          : 0);
-
-    // 12. Calculate timeline
+    // 12. Timeline
     const timeline = calculateTimeline(currentEstimate);
 
     return {
       ...currentEstimate,
       totalCost: Math.round(totalCost),
       categoryBreakdown: {
-        construction: hasConstruction ? Math.round(constructionCost) : 0,
-        core: Math.round(core),
-        finishes: Math.round(finishes),
-        interiors: Math.round(interiors),
+        construction: Math.round(constructionScaled),
+        core: Math.round(coreScaled),
+        finishes: Math.round(finishesScaled),
+        interiors: Math.round(interiorsScaled),
+        fees: Math.round(overheads),
       },
       phaseBreakdown: {
         planning: Math.round(planningCost),
-        construction: hasConstruction ? Math.round(constructionPhaseCost) : 0,
+        construction: Math.round(constructionPhaseCost),
         interiors: Math.round(interiorsPhaseCost),
-        landscape: hasLandscape ? Math.round(landscapePhaseCost) : 0,
+        landscape: Math.round(landscapePhaseCost),
       },
       timeline,
     };

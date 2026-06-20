@@ -254,12 +254,9 @@ const PhaseTimelineCost = ({ estimate }: PhaseTimelineCostProps) => {
           <div key={index} className="space-y-1">
             <div className="flex items-center justify-between text-[11px]">
               <span className="text-gray-700 font-medium">{phase.name}</span>
-              <div className="flex items-center gap-2">
-                <span className="text-gray-600">
-                  {phase.duration} {phase.duration === 1 ? 'Month' : 'Months'}
-                </span>
-                <span className="text-vs font-semibold">{formatCurrency(phase.cost)}</span>
-              </div>
+              <span className="text-gray-600">
+                {phase.duration} {phase.duration === 1 ? 'Month' : 'Months'}
+              </span>
             </div>
 
             {/* Timeline bar */}
@@ -278,10 +275,9 @@ const PhaseTimelineCost = ({ estimate }: PhaseTimelineCostProps) => {
               </div>
             </div>
 
-            {/* Cost percentage */}
-            <div className="flex justify-between text-[10px] text-gray-500">
+            {/* Month range */}
+            <div className="text-[10px] text-gray-500">
               <span>Month {phase.startMonth} - {phase.endMonth}</span>
-              <span>{phase.percentage.toFixed(1)}% of total</span>
             </div>
           </div>
         ))}
