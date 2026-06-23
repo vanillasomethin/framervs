@@ -54,8 +54,8 @@ const Navbar = () => {
     label: "Contact",
     href: "#contact"
   }, {
-    label: "Architect Fee",
-    href: "/architect-fee",
+    label: "Pricing",
+    href: "/pricing",
     isRoute: true
   }];
   

@@ -4,6 +4,7 @@ import { calculateArchitectFee } from '@/utils/feeCalculations';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import AnimatedText from '@/components/AnimatedText';
+import DiscoverySessionCard from '@/components/estimator/DiscoverySessionCard';
 import {
   Home,
   Building2,
@@ -51,7 +52,7 @@ export default function ArchitectFee() {
       name: 'Individual House',
       icon: Home,
       description: 'Single residential unit design',
-      baseRate: '8% of construction cost',
+      baseRate: '₹200–250/sqft or 7.5% (COA), whichever is higher',
       minFee: '₹20,000'
     },
     {
@@ -59,7 +60,7 @@ export default function ArchitectFee() {
       name: 'Residential Block',
       icon: Building2,
       description: 'Multi-unit residential complex',
-      baseRate: '5% of construction cost',
+      baseRate: '₹200–250/sqft or 5% (COA), whichever is higher',
       minFee: '₹50,000'
     },
     {
@@ -67,7 +68,7 @@ export default function ArchitectFee() {
       name: 'Commercial',
       icon: Building,
       description: 'Office, retail, or commercial space',
-      baseRate: '4% of construction cost',
+      baseRate: '5% of construction cost (COA)',
       minFee: '₹80,000'
     }
   ];
@@ -169,7 +170,9 @@ export default function ArchitectFee() {
   ];
 
   const architectFee = React.useMemo(() => {
-    if (!projectType || !clientType || !complexity || !clientInvolvement || !constructionCost || !area) {
+    // Construction cost is optional — with just the area, the per-sqft tiers
+    // still produce a fee. When a cost is supplied, the COA percentage floors it.
+    if (!projectType || !clientType || !complexity || !clientInvolvement || !area) {
       return {
         baseFee: 0,
         cifAdjustment: 0,
@@ -179,7 +182,9 @@ export default function ArchitectFee() {
         overheadAllocation: 0,
         profit: 0,
         tax: 0,
-        totalFee: 0
+        totalFee: 0,
+        feeBasis: 'sqft' as const,
+        perSqftRate: 0,
       };
     }
 
@@ -203,7 +208,8 @@ export default function ArchitectFee() {
   const canProceed = () => {
     switch (currentStep) {
       case 1: return projectType !== '';
-      case 2: return constructionCost !== '' && area !== '' && parseFloat(constructionCost) > 0 && parseFloat(area) > 0;
+      // Area is required; construction cost is optional (per-sqft tiers cover it).
+      case 2: return area !== '' && parseFloat(area) > 0 && (constructionCost === '' || parseFloat(constructionCost) > 0);
       case 3: return clientType !== '';
       case 4: return complexity !== '';
       case 5: return clientInvolvement !== '';
@@ -356,7 +362,7 @@ export default function ArchitectFee() {
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium mb-3 text-vs-dark">
-                  Construction Cost ({currencySymbol})
+                  Construction Cost ({currencySymbol}) <span className="text-muted-foreground font-normal">— optional</span>
                 </label>
                 <input
                   type="number"
@@ -365,6 +371,12 @@ export default function ArchitectFee() {
                   placeholder="e.g., 5000000"
                   className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-vs focus:outline-none transition-colors"
                 />
+                <p className="text-xs text-muted-foreground mt-2">
+                  Leave blank to price purely per-sqft. If you add a cost, we charge the higher of the per-sqft rate and the COA percentage.{' '}
+                  <a href="/estimator/" className="text-vs font-medium underline hover:text-vs-dark">
+                    Don't know your build cost? Estimate it →
+                  </a>
+                </p>
               </div>
 
               <div>
@@ -792,7 +804,12 @@ export default function ArchitectFee() {
                 <p className="text-3xl md:text-5xl font-light text-vs mb-2">
                   {currencySymbol}{architectFee.totalFee.toLocaleString()}
                 </p>
-                <p className="text-sm text-muted-foreground">Including GST @ 18%</p>
+                <p className="text-sm text-muted-foreground mb-3">Including GST @ 18%</p>
+                <Badge variant="outline" className="border-vs/40 text-vs">
+                  {architectFee.feeBasis === 'sqft'
+                    ? `Charged at ₹${architectFee.perSqftRate}/sqft of built-up area`
+                    : 'Charged at COA percentage of construction cost'}
+                </Badge>
               </div>
 
               {/* Hidden content for PDF */}
@@ -806,7 +823,7 @@ export default function ArchitectFee() {
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div><span className="font-medium">Project Type:</span> {projectType}</div>
                       <div><span className="font-medium">Client Type:</span> {clientType}</div>
-                      <div><span className="font-medium">Construction Cost:</span> {currencySymbol}{parseFloat(constructionCost).toLocaleString()}</div>
+                      <div><span className="font-medium">Construction Cost:</span> {constructionCost ? `${currencySymbol}${parseFloat(constructionCost).toLocaleString()}` : 'Not provided (priced per-sqft)'}</div>
                       <div><span className="font-medium">Area:</span> {area} sq.ft</div>
                       <div><span className="font-medium">Complexity:</span> {complexity}</div>
                       <div><span className="font-medium">Involvement:</span> {clientInvolvement}</div>
@@ -975,6 +992,13 @@ export default function ArchitectFee() {
                 >
                   Start Over
                 </Button>
+              </div>
+
+              {/* Paid-but-credited discovery session for warm leads */}
+              <div className="pt-2">
+                <DiscoverySessionCard
+                  contextNote={`I used the fee calculator for a ${area} sq.ft ${projectType} project.`}
+                />
               </div>
 
               {/* COA Compliance */}

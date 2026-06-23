@@ -1,5 +1,10 @@
 export interface FeeRates {
-  typologies: Record<string, { model: 'PERCENT' | 'SQM'; rate: number; min: number }>;
+  // `coaRate` is the Council of Architecture percentage of construction cost.
+  // `useSqftTiers` enables the per-sqft headline pricing (residential practice);
+  // when true the fee is the *higher* of the per-sqft and the COA-percentage
+  // figure, so the headline reads cleanly while never undercutting COA.
+  typologies: Record<string, { model: 'PERCENT' | 'SQM'; rate: number; min: number; useSqftTiers?: boolean }>;
+  sqftFeeTiers: Array<{ minArea: number; rate: number }>;
   clientMultipliers: Record<string, number>;
   complexity: Record<string, number>;
   clientInvolvementMultipliers: Record<string, number>;
@@ -15,12 +20,20 @@ export interface FeeRates {
 
 export const defaultFeeRates: FeeRates = {
   typologies: {
-    "Individual House": { model: "PERCENT", rate: 0.08, min: 20000 },
-    "Residential Block": { model: "PERCENT", rate: 0.05, min: 50000 },
-    "Commercial": { model: "PERCENT", rate: 0.04, min: 80000 },
+    // COA scale: 7.5% individual house, 5% apartment/commercial.
+    "Individual House": { model: "PERCENT", rate: 0.075, min: 20000, useSqftTiers: true },
+    "Residential Block": { model: "PERCENT", rate: 0.05, min: 50000, useSqftTiers: true },
+    "Commercial": { model: "PERCENT", rate: 0.05, min: 80000, useSqftTiers: false },
     "FF&E Procurement": { model: "PERCENT", rate: 0.10, min: 30000 },
     "Landscape - Detailed": { model: "SQM", rate: 150, min: 25000 },
   },
+  // Per-sqft design-fee tiers on built-up area (larger projects get economies of
+  // scale, so the rate steps down). Evaluated highest-minArea first.
+  sqftFeeTiers: [
+    { minArea: 3000, rate: 200 },
+    { minArea: 1800, rate: 225 },
+    { minArea: 0, rate: 250 },
+  ],
   clientMultipliers: {
     "Friend/Family": 0.85,
     "Individual": 1.0,
@@ -62,6 +75,12 @@ export const defaultFeeRates: FeeRates = {
   minimumFeeStudio: 50000,
 };
 
+// Returns the per-sqft design-fee rate for a given built-up area.
+export function sqftFeeRate(area: number, rates: FeeRates = defaultFeeRates): number {
+  const tier = rates.sqftFeeTiers.find((t) => area >= t.minArea);
+  return tier ? tier.rate : rates.sqftFeeTiers[rates.sqftFeeTiers.length - 1].rate;
+}
+
 export function calculateArchitectFee(
   projectType: string,
   constructionCost: number,
@@ -83,9 +102,14 @@ export function calculateArchitectFee(
   const premiumMult = rates.premiumMultiplier;
   const rushMult = isRush ? rates.rushMultiplier : 1;
 
-  let rawFee = typ.model === "PERCENT" ?
-    constructionCost * typ.rate :
-    area * typ.rate;
+  // Hybrid pricing: the headline is the per-sqft tier where it applies, but the
+  // COA percentage acts as a floor so premium/luxury builds (high construction
+  // cost) are never undercharged. We take whichever base is larger.
+  const percentBase = typ.model === "PERCENT" ? constructionCost * typ.rate : area * typ.rate;
+  const perSqftRate = typ.useSqftTiers ? sqftFeeRate(area, rates) : 0;
+  const sqftBase = perSqftRate * area;
+  const rawFee = Math.max(percentBase, sqftBase);
+  const feeBasis: 'sqft' | 'percent' = typ.useSqftTiers && sqftBase >= percentBase ? 'sqft' : 'percent';
 
   const feeAfterMultipliers = rawFee * clientMult * complexityMult * premiumMult * rushMult * involvementMult;
   const baseFee = Math.max(typ.min || 0, rates.minimumFeeStudio || 0, feeAfterMultipliers);
@@ -128,6 +152,8 @@ export function calculateArchitectFee(
     profit,
     tax,
     totalFee: totalInCurrency,
-    currency
+    currency,
+    feeBasis,
+    perSqftRate,
   };
 }

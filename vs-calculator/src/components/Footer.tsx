@@ -50,8 +50,8 @@ const Footer = () => {
               }}>
                   Contact
                 </a>
-                <Link to="/estimator" className="text-sm text-muted-foreground hover:text-vs transition-colors duration-200">
-                  Estimator
+                <Link to="/pricing" className="text-sm text-muted-foreground hover:text-vs transition-colors duration-200">
+                  Pricing
                 </Link>
               </div>
             </div>

@@ -7,6 +7,7 @@ import ImprovedCostVisualization from "./ImprovedCostVisualization";
 import CostTransparency from "./CostTransparency";
 import PhaseTimelineCost from "./PhaseTimelineCost";
 import MeetingScheduler from "./MeetingScheduler";
+import DiscoverySessionCard from "./DiscoverySessionCard";
 import DetailedBreakdownSection from "./DetailedBreakdownSection";
 import FAQSection from "./FAQSection";
 import ContactCTAStrategy from "./ContactCTAStrategy";
@@ -608,6 +609,13 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
       {/* Bottom Booking Section */}
       <div className="mt-6">
         <MeetingScheduler autoExpand={false} estimate={estimate} />
+      </div>
+
+      {/* Paid-but-credited discovery session — shown only to warm leads here */}
+      <div className="mt-6">
+        <DiscoverySessionCard
+          contextNote={`My estimate is around ₹${Math.round(estimate.totalCost).toLocaleString("en-IN")} for ${estimate.area} ${estimate.areaUnit} in ${estimate.city}.`}
+        />
       </div>
 
       {/* FAQ Section */}
