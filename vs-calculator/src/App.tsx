@@ -22,7 +22,8 @@ const App = () => (
         <CursorAnimation />
         <BrowserRouter basename="/estimator">
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Pricing />} />
+            <Route path="/calculate" element={<Index />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/architect-fee" element={<ArchitectFee />} />
             <Route path="/constants" element={<EstimatorConstants />} />

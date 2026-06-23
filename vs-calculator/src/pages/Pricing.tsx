@@ -10,7 +10,7 @@ const options = [
     description:
       "Self-serve calculator. See your construction, finishes and interiors cost broken down line by line, benchmarked against the market.",
     icon: Calculator,
-    to: "/",
+    to: "/calculate",
     cta: "Start estimating",
     points: ["Cost per sqft + full breakdown", "Renovation & amenities", "Instant PDF summary"],
   },

@@ -269,7 +269,7 @@ const EstimatorConstants = () => {
     <div className="min-h-screen bg-background py-8 px-4">
       <div className="container-custom max-w-4xl mx-auto">
         <Link
-          to="/"
+          to="/calculate"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-vs mb-6"
         >
           <ArrowLeft className="size-4" />

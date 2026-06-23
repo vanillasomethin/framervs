@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { calculateArchitectFee } from '@/utils/feeCalculations';
 import { Button } from '@/components/ui/button';
@@ -373,9 +374,9 @@ export default function ArchitectFee() {
                 />
                 <p className="text-xs text-muted-foreground mt-2">
                   Leave blank to price purely per-sqft. If you add a cost, we charge the higher of the per-sqft rate and the COA percentage.{' '}
-                  <a href="/estimator/" className="text-vs font-medium underline hover:text-vs-dark">
+                  <Link to="/calculate" className="text-vs font-medium underline hover:text-vs-dark">
                     Don't know your build cost? Estimate it →
-                  </a>
+                  </Link>
                 </p>
               </div>
 
