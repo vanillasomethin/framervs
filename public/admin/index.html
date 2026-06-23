@@ -3,187 +3,264 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Visual CMS — Vanilla &amp; Somethin</title>
+  <title>CMS Admin</title>
   <style>
     :root {
       color-scheme: dark;
-      --bg: #0d0d0d;
-      --panel: #151515;
-      --line: #262626;
-      --accent: #f21d2f;
-      --text: #f5f5f5;
-      --muted: #9a9a9a;
       font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: #0d0d0d;
+      color: #f5f5f5;
     }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--text); }
-
-    /* Login */
-    #login-card {
-      max-width: 360px; margin: 18vh auto; background: var(--panel);
-      border: 1px solid var(--line); border-radius: 16px; padding: 28px;
+    body {
+      margin: 0;
+      padding: 24px;
     }
-    #login-card h1 { font-size: 20px; margin: 0 0 4px; }
-    #login-card p { color: var(--muted); font-size: 13px; margin: 0 0 18px; }
-
-    label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .card {
+      background: #151515;
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+    .grid.two {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.7;
+    }
     input, textarea, select, button {
-      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line);
-      background: #101010; color: var(--text); font-size: 14px; font-family: inherit;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      background: #101010;
+      color: #f5f5f5;
+      font-size: 14px;
+      box-sizing: border-box;
     }
-    textarea { min-height: 90px; resize: vertical; }
-    button { cursor: pointer; background: var(--accent); border: none; font-weight: 600; }
-    button.secondary { background: #2a2a2a; }
-    button.ghost { background: transparent; border: 1px solid var(--line); }
-    .hidden { display: none !important; }
-
-    /* App layout */
-    #app { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
-    .topbar {
-      display: flex; align-items: center; gap: 14px; padding: 10px 16px;
-      border-bottom: 1px solid var(--line); background: var(--panel);
+    textarea {
+      min-height: 80px;
+      resize: vertical;
     }
-    .topbar h1 { font-size: 15px; margin: 0; white-space: nowrap; }
-    .topbar .spacer { flex: 1; }
-    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-    .tab {
-      width: auto; padding: 6px 12px; font-size: 13px; font-weight: 500;
-      background: transparent; border: 1px solid var(--line); color: var(--muted);
+    button {
+      cursor: pointer;
+      background: #f21d2f;
+      border: none;
+      font-weight: 600;
     }
-    .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .topbar button.action { width: auto; padding: 8px 16px; }
-    #dirty-dot { color: var(--accent); font-weight: 700; }
-
-    .stage { display: grid; grid-template-columns: 1fr 340px; min-height: 0; }
-    .frame-wrap { position: relative; background: #1c1c1c; overflow: hidden; }
-    .frame-wrap iframe { width: 100%; height: 100%; border: 0; background: #fff; }
-    .frame-hint {
-      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-      background: rgba(0,0,0,.72); color: #fff; font-size: 12px; padding: 6px 12px;
-      border-radius: 999px; pointer-events: none; z-index: 5;
+    button.secondary {
+      background: #333;
     }
-
-    .sidebar { border-left: 1px solid var(--line); background: var(--panel); overflow-y: auto; padding: 16px; }
-    .sidebar h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 10px; }
-    .field { margin-bottom: 14px; }
-    .field label { display: block; margin-bottom: 6px; }
-    .muted { color: var(--muted); font-size: 12px; line-height: 1.5; }
-    .empty { color: var(--muted); font-size: 13px; line-height: 1.6; }
-
-    .proj-card { border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
-    .proj-card .row { display: grid; gap: 8px; }
-    .proj-card .rm { width: auto; padding: 6px 12px; font-size: 12px; justify-self: end; margin-top: 8px; }
-
-    .status { font-size: 12px; color: var(--muted); }
-    .status.ok { color: #7fd17f; }
-    .status.err { color: #ff8b8b; }
-
-    dialog {
-      border: 1px solid var(--line); background: var(--panel); color: var(--text);
-      border-radius: 16px; padding: 22px; width: min(440px, 92vw);
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
     }
-    dialog::backdrop { background: rgba(0,0,0,.6); }
-    dialog h3 { margin: 0 0 14px; font-size: 16px; }
-    .dlg-actions { display: flex; gap: 10px; margin-top: 18px; }
-    .dlg-actions button { width: auto; padding: 9px 16px; }
+    .row > * {
+      flex: 1 1 120px;
+    }
+    .list-item {
+      border: 1px solid #2b2b2b;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .hidden {
+      display: none;
+    }
+    .helper {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-top: 6px;
+    }
+    .action-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 16px;
+    }
+    .action-row button {
+      flex: 0 0 auto;
+      width: auto;
+      padding: 10px 18px;
+    }
+    @media (max-width: 640px) {
+      body {
+        padding: 16px;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Login gate -->
-  <section id="login-card">
-    <h1>Visual CMS</h1>
-    <p>Enter the admin password to edit the site.</p>
-    <div class="field">
-      <label for="admin-password">Password</label>
-      <input id="admin-password" type="password" autocomplete="current-password">
+  <header>
+    <h1>CMS Admin Panel</h1>
+    <p class="helper">Edit your content.json data and push changes to GitHub.</p>
+  </header>
+
+  <section id="login-card" class="card">
+    <h2>Login</h2>
+    <div class="grid">
+      <div>
+        <label for="admin-password">Admin Password</label>
+        <input id="admin-password" type="password" placeholder="change-me">
+      </div>
+      <button id="login-button" type="button">Unlock</button>
+      <p class="helper">
+        Default password is <strong>change-me</strong>. Update it in
+        <code>public/admin/admin.js</code>.
+      </p>
     </div>
-    <button id="login-button">Unlock</button>
-    <p id="login-error" class="status err" style="margin-top:12px"></p>
   </section>
 
-  <!-- Editor -->
-  <main id="app" class="hidden">
-    <div class="topbar">
-      <h1>Visual CMS <span id="dirty-dot" class="hidden">●</span></h1>
-      <div class="tabs" id="page-tabs"></div>
-      <div class="spacer"></div>
-      <span id="save-status" class="status"></span>
-      <button class="action secondary" id="settings-btn">GitHub…</button>
-      <button class="action" id="publish-btn">Publish</button>
-    </div>
-
-    <div class="stage">
-      <div class="frame-wrap">
-        <div class="frame-hint">Click any text or image to edit it</div>
-        <iframe id="stage-frame" title="Page preview"></iframe>
+  <main id="admin-app" class="hidden">
+    <section class="card">
+      <h2>Homepage Text</h2>
+      <div class="grid">
+        <div>
+          <label for="hero-headline">Hero Headline</label>
+          <input id="hero-headline" type="text">
+        </div>
+        <div>
+          <label for="about-title">About Title</label>
+          <input id="about-title" type="text">
+        </div>
+        <div>
+          <label for="about-subtitle">About Subtitle</label>
+          <textarea id="about-subtitle"></textarea>
+        </div>
+        <div>
+          <label for="services-title">Services Title</label>
+          <input id="services-title" type="text">
+        </div>
+        <div>
+          <label for="services-subtitle">Services Subtitle</label>
+          <textarea id="services-subtitle"></textarea>
+        </div>
+        <div>
+          <label for="works-title">Case Studies Title</label>
+          <input id="works-title" type="text">
+        </div>
+        <div>
+          <label for="works-subtitle">Case Studies Subtitle</label>
+          <textarea id="works-subtitle"></textarea>
+        </div>
+        <div>
+          <label for="team-title">Team Title</label>
+          <input id="team-title" type="text">
+        </div>
+        <div>
+          <label for="team-subtitle">Team Subtitle</label>
+          <textarea id="team-subtitle"></textarea>
+        </div>
       </div>
+    </section>
 
-      <aside class="sidebar" id="sidebar">
-        <!-- Inline edit panel -->
-        <div id="edit-panel" class="hidden">
-          <h2 id="edit-title">Edit</h2>
-          <div class="field" id="edit-text-field">
-            <label for="edit-text">Text</label>
-            <textarea id="edit-text"></textarea>
-          </div>
-          <div class="field hidden" id="edit-img-field">
-            <label for="edit-img-src">Image URL</label>
-            <input id="edit-img-src" type="text">
-            <label for="edit-img-alt" style="margin-top:10px;display:block">Alt text</label>
-            <input id="edit-img-alt" type="text">
-          </div>
-          <div class="field hidden" id="edit-link-field">
-            <label for="edit-link-href">Link URL</label>
-            <input id="edit-link-href" type="text">
-          </div>
-          <div style="display:flex;gap:8px">
-            <button id="apply-edit">Apply</button>
-            <button id="revert-edit" class="ghost">Reset</button>
-          </div>
-          <p class="muted" style="margin-top:14px">Changes preview instantly here. Nothing goes live until you press <strong>Publish</strong>.</p>
-        </div>
+    <section class="card">
+      <h2>Team Members</h2>
+      <div id="team-list"></div>
+      <button id="add-team" class="secondary">Add Team Member</button>
+    </section>
 
-        <!-- Projects manager (shown on home + showcase pages) -->
-        <div id="projects-panel" class="hidden">
-          <h2>Projects</h2>
-          <p class="muted" style="margin-bottom:12px">Edit an existing project by clicking its card in the preview. Add a new one below — it clones the layout of your last card.</p>
-          <div id="proj-list"></div>
-          <button id="add-project" class="secondary">+ Add project</button>
-        </div>
+    <section class="card">
+      <h2>Services</h2>
+      <div id="services-list"></div>
+      <button id="add-service" class="secondary">Add Service</button>
+    </section>
 
-        <div id="default-panel" class="empty">
-          Click any text or image in the page preview on the left to edit it in place.
+    <section class="card">
+      <h2>Case Studies</h2>
+      <div id="cases-list"></div>
+      <button id="add-case" class="secondary">Add Case Study</button>
+    </section>
+
+    <section class="card">
+      <h2>Contact Info</h2>
+      <div class="grid two">
+        <div>
+          <label for="contact-phone">Phone</label>
+          <input id="contact-phone" type="text">
         </div>
-      </aside>
-    </div>
+        <div>
+          <label for="contact-email">Email</label>
+          <input id="contact-email" type="email">
+        </div>
+      </div>
+      <div class="grid">
+        <div>
+          <label for="contact-locations">Locations (one per line)</label>
+          <textarea id="contact-locations"></textarea>
+        </div>
+        <div>
+          <label for="contact-social">Social Links (Label | URL per line)</label>
+          <textarea id="contact-social"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Save to GitHub</h2>
+      <div class="grid two">
+        <div>
+          <label for="repo-owner">Repo Owner</label>
+          <input id="repo-owner" type="text" placeholder="your-username">
+        </div>
+        <div>
+          <label for="repo-name">Repo Name</label>
+          <input id="repo-name" type="text" placeholder="your-repo">
+        </div>
+        <div>
+          <label for="repo-branch">Branch</label>
+          <input id="repo-branch" type="text" placeholder="main">
+        </div>
+        <div>
+          <label for="repo-path">File Path</label>
+          <input id="repo-path" type="text" value="public/content.json">
+        </div>
+        <div>
+          <label for="github-token">GitHub Personal Access Token</label>
+          <input id="github-token" type="password" placeholder="ghp_...">
+        </div>
+        <div>
+          <label for="commit-message">Commit Message</label>
+          <input id="commit-message" type="text" value="Update site content">
+        </div>
+      </div>
+      <div class="action-row">
+        <button id="save-button">Save + Commit</button>
+        <span id="save-status" class="helper"></span>
+      </div>
+      <p class="helper">Tip: store the token in a password manager and never commit it to Git.</p>
+    </section>
   </main>
 
-  <!-- GitHub settings dialog -->
-  <dialog id="settings-dialog">
-    <h3>Publish settings</h3>
-    <div class="field">
-      <label for="repo-owner">Repo owner</label>
-      <input id="repo-owner" type="text" placeholder="vanillasomethin">
-    </div>
-    <div class="field">
-      <label for="repo-name">Repo name</label>
-      <input id="repo-name" type="text" placeholder="framervs">
-    </div>
-    <div class="field">
-      <label for="repo-branch">Branch</label>
-      <input id="repo-branch" type="text" placeholder="main">
-    </div>
-    <div class="field">
-      <label for="github-token">GitHub token (repo scope)</label>
-      <input id="github-token" type="password" placeholder="ghp_…">
-    </div>
-    <p class="muted">Stored only in this browser (localStorage). Never committed.</p>
-    <div class="dlg-actions">
-      <button id="settings-save">Save</button>
-      <button id="settings-close" class="ghost">Close</button>
-    </div>
-  </dialog>
+  <section class="card">
+    <h2>Quick Setup Notes</h2>
+    <ol class="helper">
+      <li>Keep <strong>index.html</strong>, <strong>admin.js</strong>, and <strong>cms-loader.js</strong> in <code>public/admin/</code>.</li>
+      <li>Create a GitHub Personal Access Token with <code>repo</code> scope.</li>
+      <li>Open <code>https://your-domain.com/admin</code> to access the panel.</li>
+      <li>Change the admin password inside <code>public/admin/admin.js</code>.</li>
+    </ol>
+  </section>
 
-  <script src="/admin/editor.js?v=1"></script>
+ <script src="/admin/admin.js?v=3"></script>
 </body>
 </html>
