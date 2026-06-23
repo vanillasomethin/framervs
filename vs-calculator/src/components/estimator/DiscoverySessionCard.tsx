@@ -1,10 +1,6 @@
 import { motion } from "framer-motion";
 import { Sparkles, Check, ArrowRight } from "lucide-react";
 
-// Price of the paid design-discovery session. It is fully credited against the
-// design fee if the client proceeds — change this single value to reprice it.
-const DISCOVERY_SESSION_FEE = 5000;
-
 const WHATSAPP_NUMBER = "917411349844";
 
 interface DiscoverySessionCardProps {
@@ -14,7 +10,7 @@ interface DiscoverySessionCardProps {
 
 const DiscoverySessionCard = ({ contextNote }: DiscoverySessionCardProps) => {
   const message =
-    `Hi! I'd like to book the Design Discovery Session (₹${DISCOVERY_SESSION_FEE.toLocaleString("en-IN")}, credited to my design fee).` +
+    `Hi! I'd like to book the Design Discovery Session (credited to my design fee).` +
     (contextNote ? ` ${contextNote}` : "");
 
   const inclusions = [
@@ -45,14 +41,9 @@ const DiscoverySessionCard = ({ contextNote }: DiscoverySessionCardProps) => {
         </span>
       </div>
 
-      <div className="flex items-baseline gap-2 mb-4">
-        <span className="text-2xl font-bold text-vs">
-          ₹{DISCOVERY_SESSION_FEE.toLocaleString("en-IN")}
-        </span>
-        <span className="text-sm text-muted-foreground">
-          — fully adjusted into your design fee when you proceed
-        </span>
-      </div>
+      <p className="text-sm text-muted-foreground mb-4">
+        A nominal fee, fully adjusted into your design fee when you proceed.
+      </p>
 
       <ul className="space-y-2 mb-5">
         {inclusions.map((item) => (
