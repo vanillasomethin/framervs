@@ -18,6 +18,7 @@ interface AreaStepProps {
   onUnitChange: (unit: "sqft" | "sqm") => void;
   onBuiltUpAreaChange?: (builtUpArea: number) => void;
   onFSIComplianceChange?: (isCompliant: boolean) => void;
+  onFloorCountChange?: (floorCount: number) => void;
 }
 
 const AreaStep = ({
@@ -31,7 +32,8 @@ const AreaStep = ({
   onAreaChange,
   onUnitChange,
   onBuiltUpAreaChange,
-  onFSIComplianceChange
+  onFSIComplianceChange,
+  onFloorCountChange
 }: AreaStepProps) => {
   // Use area prop as the initial value, ensuring synchronization
   const [inputValue, setInputValue] = useState(area > 0 ? area.toString() : "");
@@ -181,6 +183,21 @@ const AreaStep = ({
   };
   
   const maxRange = getMaxRange();
+
+  // Max floors the plot can support while staying FSI-compliant, used both in
+  // the violation message and the inline "Fix it" button below.
+  const fsiMaxFloors = (() => {
+    if (!fsiValidation) return 0;
+    const areaInSqm = areaUnit === "sqft" ? area * 0.092903 : area;
+    let groundFloorPercentage = 0.75;
+    if (areaInSqm > 150) groundFloorPercentage = 0.70;
+    if (areaInSqm > 200) groundFloorPercentage = 0.68;
+    const groundFloorArea = areaInSqm * groundFloorPercentage;
+    const upperFloorArea = areaInSqm * 0.75;
+    const remainingArea = fsiValidation.maxAllowed - groundFloorArea;
+    const maxAdditionalFloors = Math.floor(remainingArea / upperFloorArea);
+    return maxAdditionalFloors + 1;
+  })();
 
   // Get dynamic title based on area input type
   const getTitle = () => {
@@ -453,29 +470,25 @@ const AreaStep = ({
               <div className="flex-1">
                 <h4 className="font-semibold text-red-900 mb-1">FSI Violation ⚠</h4>
                 <p className="text-sm text-red-800 mb-3">
-                  {fsiValidation.message}
+                  The proposed built-up area exceeds the maximum FSI of {fsiValidation.fsiMax} for {city}.
+                  Maximum allowed built-up area is{" "}
+                  {Math.round(areaUnit === "sqft" ? fsiValidation.maxAllowed / 0.092903 : fsiValidation.maxAllowed).toLocaleString()}{" "}
+                  {areaUnit}.
                 </p>
                 <div className="bg-white/60 p-3 rounded-lg">
                   <p className="text-xs text-red-700 font-medium mb-1">Recommendation:</p>
-                  <p className="text-sm text-red-900">
-                    {(() => {
-                      const areaInSqm = areaUnit === "sqft" ? area * 0.092903 : area;
-                      // Use same calculation as above
-                      let groundFloorPercentage = 0.75;
-                      if (areaInSqm > 150) groundFloorPercentage = 0.70;
-                      if (areaInSqm > 200) groundFloorPercentage = 0.68;
-                      const groundFloorArea = areaInSqm * groundFloorPercentage;
-                      const upperFloorArea = areaInSqm * 0.75;
-
-                      // Calculate max floors: ground + additional floors
-                      const remainingArea = fsiValidation.maxAllowed - groundFloorArea;
-                      const maxAdditionalFloors = Math.floor(remainingArea / upperFloorArea);
-                      const maxFloors = maxAdditionalFloors + 1;
-
-                      return `With your plot size, you can build up to ${maxFloors} floor${maxFloors > 1 ? 's' : ''} to comply with FSI regulations.
-                              Alternatively, increase the plot area or reduce the number of floors.`;
-                    })()}
+                  <p className="text-sm text-red-900 mb-3">
+                    With your plot size, you can build up to {fsiMaxFloors} floor{fsiMaxFloors > 1 ? 's' : ''} to comply with FSI regulations.
+                    Alternatively, increase the plot area or reduce the number of floors.
                   </p>
+                  {onFloorCountChange && fsiMaxFloors >= 1 && (
+                    <button
+                      onClick={() => onFloorCountChange(fsiMaxFloors)}
+                      className="text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors rounded-lg px-4 py-2"
+                    >
+                      Fix it — set to G+{fsiMaxFloors - 1}
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>

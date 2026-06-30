@@ -44,6 +44,15 @@ export type RoomConfiguration =
   | "Studio"
   | "Penthouse";
 
+// Granular room counts, set via sliders, that the RoomConfiguration label
+// above is derived from.
+export interface RoomCounts {
+  bedrooms: number;
+  hall: number;
+  kitchen: number;
+  washrooms: number;
+}
+
 // Landscape area types
 export type LandscapeArea =
   | "Front Yard"
@@ -93,7 +102,8 @@ export interface ProjectEstimate {
   // Project basics
   projectType: string;
   workTypes: ProjectSubcategory[]; // Multiple selection for type of work
-  roomConfiguration?: RoomConfiguration; // For Residential projects
+  roomConfiguration?: RoomConfiguration; // For Residential projects — derived from roomCounts
+  roomCounts?: RoomCounts; // Bedroom/hall/kitchen/washroom counts, set via sliders
   landscapeAreas?: LandscapeArea[]; // For Landscape work
 
   // Construction specific fields

@@ -5,6 +5,12 @@ const CursorAnimation = () => {
   const [isActive, setIsActive] = useState(false);
   
   useEffect(() => {
+    // Skip on touch devices — there's no mouse to drive it, so it just sits
+    // stuck at its default top-left position.
+    if (!window.matchMedia('(pointer: fine)').matches) {
+      return;
+    }
+
     // Create cursor element if it doesn't exist
     if (!document.querySelector('.cursor')) {
       const cursor = document.createElement('div');

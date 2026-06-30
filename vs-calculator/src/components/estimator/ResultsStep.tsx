@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ProjectEstimate, ComponentOption } from "@/types/estimator";
-import { Share, CheckCircle2, Download, IndianRupee, X } from "lucide-react";
+import { Share, CheckCircle2, Download, IndianRupee, Camera, Percent } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ImprovedCostVisualization from "./ImprovedCostVisualization";
 import CostTransparency from "./CostTransparency";
@@ -438,7 +438,7 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
         <h2 className="text-xl font-bold text-vs-dark text-center">Your Construction Estimate</h2>
 
         {/* Project Details */}
-        <div className="grid grid-cols-3 gap-4 pb-4 border-b border-gray-100">
+        <div className={`grid ${estimate.roomCounts ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-3"} gap-4 pb-4 border-b border-gray-100`}>
           <div>
             <h3 className="text-xs text-vs-dark/70 mb-1">Location</h3>
             <p className="font-semibold text-sm">{estimate.city}, {estimate.state}</p>
@@ -451,6 +451,14 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
             <h3 className="text-xs text-vs-dark/70 mb-1">Area</h3>
             <p className="font-semibold text-sm">{estimate.area.toLocaleString()} {estimate.areaUnit}</p>
           </div>
+          {estimate.roomCounts && (
+            <div>
+              <h3 className="text-xs text-vs-dark/70 mb-1">Configuration</h3>
+              <p className="font-semibold text-sm">
+                {estimate.roomCounts.bedrooms} Bed · {estimate.roomCounts.washrooms} Bath
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Total Estimated Project Cost — single authoritative figure. The
@@ -634,16 +642,41 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
               Schedule a consultation with our team to discuss your project in detail
             </DialogDescription>
           </DialogHeader>
+
+          {/* One-time offer — shown only on this exit-intent prompt, never repeated */}
+          <div className="bg-vs/5 border border-vs/20 rounded-xl p-4 mt-2">
+            <p className="text-sm text-vs-dark mb-3">
+              Before you go — we'd genuinely love to be part of how this turns out. So here's our
+              way of saying thanks for walking through your estimate with us:
+            </p>
+            <div className="space-y-2.5">
+              <div className="flex items-start gap-2.5">
+                <div className="flex items-center justify-center size-7 rounded-full bg-vs/10 text-vs flex-shrink-0">
+                  <Camera className="size-3.5" />
+                </div>
+                <p className="text-sm text-gray-700">
+                  A <span className="font-semibold text-vs-dark">complimentary professional photoshoot</span> of
+                  your finished project — on us, once it's done.
+                </p>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <div className="flex items-center justify-center size-7 rounded-full bg-vs/10 text-vs flex-shrink-0">
+                  <Percent className="size-3.5" />
+                </div>
+                <p className="text-sm text-gray-700">
+                  <span className="font-semibold text-vs-dark">5% off your total design fee</span>, if you book a
+                  call with us before you decide.
+                </p>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-3">
+              No pressure, no countdown timers — just an open invitation while it's on your mind.
+            </p>
+          </div>
+
           <div className="mt-4">
             <MeetingScheduler autoExpand={true} estimate={estimate} />
           </div>
-          <button
-            onClick={() => setShowConsultationPrompt(false)}
-            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
-            aria-label="Close"
-          >
-            <X className="size-5 text-gray-500" />
-          </button>
         </DialogContent>
       </Dialog>
 

@@ -34,16 +34,24 @@ const PhaseTimelineCost = ({ estimate }: PhaseTimelineCostProps) => {
 
     const numPhases = percentages.length;
 
-    // If we have fewer months than phases, only allocate to top phases
+    // If we have fewer months than phases, only allocate to top phases — but
+    // always reserve the final phase (e.g. "Final Inspection & Handover"),
+    // since it's typically the lowest-percentage entry and would otherwise be
+    // the first one silently dropped, even though it's the milestone users
+    // most want confirmation of.
     if (totalMonths < numPhases) {
       const durations = new Array(numPhases).fill(0);
-      // Sort by percentage to prioritize important phases
+      const lastIndex = numPhases - 1;
+      durations[lastIndex] = 1;
+
+      // Sort the remaining phases by percentage to prioritize important ones
       const sortedIndices = percentages
         .map((p, i) => ({ index: i, percent: p }))
+        .filter(({ index }) => index !== lastIndex)
         .sort((a, b) => b.percent - a.percent);
 
-      // Allocate 1 month to top N phases
-      for (let i = 0; i < totalMonths; i++) {
+      // Allocate remaining months to top phases
+      for (let i = 0; i < totalMonths - 1; i++) {
         durations[sortedIndices[i].index] = 1;
       }
       return durations;

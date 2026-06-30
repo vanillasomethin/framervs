@@ -15,6 +15,13 @@ const StepContent = () => {
   // ✅ FIX 1: Destructure handleOptionChange
   const { step, estimate, updateEstimate, handleReset, handleSaveEstimate, handleOptionChange } = useEstimator();
 
+  // Each step replaces the previous one's content in place, so without this
+  // the page keeps whatever scroll position the user was at on the prior
+  // step (e.g. landing on Results already scrolled to where Components left off).
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [step]);
+
   // Set default "standard" options when first reaching step 4
   useEffect(() => {
     if (step === 4) {
@@ -56,6 +63,7 @@ const StepContent = () => {
             selectedType={estimate.projectType}
             selectedWorkTypes={estimate.workTypes}
             selectedRoomConfig={estimate.roomConfiguration}
+            selectedRoomCounts={estimate.roomCounts}
             selectedLandscapeAreas={estimate.landscapeAreas}
             selectedConstructionSubtype={estimate.constructionSubtype}
             selectedProjectMode={estimate.projectMode}
@@ -65,6 +73,7 @@ const StepContent = () => {
             onSelectType={(type) => updateEstimate('projectType', type)}
             onSelectWorkTypes={(workTypes) => updateEstimate('workTypes', workTypes)}
             onSelectRoomConfig={(config) => updateEstimate('roomConfiguration', config)}
+            onSelectRoomCounts={(counts) => updateEstimate('roomCounts', counts)}
             onSelectLandscapeAreas={(areas) => updateEstimate('landscapeAreas', areas)}
             onSelectConstructionSubtype={(subtype) => updateEstimate('constructionSubtype', subtype)}
             onSelectProjectMode={(mode) => updateEstimate('projectMode', mode)}
@@ -87,6 +96,7 @@ const StepContent = () => {
             onUnitChange={(unit) => updateEstimate('areaUnit', unit)}
             onBuiltUpAreaChange={(builtUpArea) => updateEstimate('builtUpArea', builtUpArea)}
             onFSIComplianceChange={(isCompliant) => updateEstimate('fsiCompliant', isCompliant)}
+            onFloorCountChange={(floorCount) => updateEstimate('floorCount', floorCount)}
           />
         )}
 

@@ -102,11 +102,11 @@ const DetailedBreakdownSection = ({ estimate }: DetailedBreakdownSectionProps) =
     }));
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
+    <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
       <div className="flex items-start gap-2 mb-6">
         <Info className="size-5 text-vs mt-0.5 flex-shrink-0" />
         <div>
-          <h3 className="text-xl font-bold text-gray-900 mb-1">Detailed Cost Breakdown</h3>
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">Detailed Cost Breakdown</h3>
           <p className="text-sm text-gray-600">
             How your estimate is distributed across major work categories.
           </p>
@@ -124,39 +124,41 @@ const DetailedBreakdownSection = ({ estimate }: DetailedBreakdownSectionProps) =
             <div key={section.key} className="border border-gray-200 rounded-lg overflow-hidden">
               <button
                 onClick={() => toggleSection(section.key)}
-                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-between gap-2 p-3 sm:p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                   <span
                     className="size-3 rounded-sm flex-shrink-0"
                     style={{ backgroundColor: CATEGORY_COLOR[section.key] }}
                   />
-                  <div className="flex flex-col items-start">
-                    <span className="font-semibold text-gray-900">{section.category}</span>
+                  <div className="flex flex-col items-start min-w-0">
+                    <span className="font-semibold text-gray-900 text-sm sm:text-base truncate max-w-[40vw] sm:max-w-none">
+                      {section.category}
+                    </span>
                     <span className="text-xs text-gray-500">{section.percentage}% of total</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="font-bold text-vs">{formatCurrency(section.value)}</span>
+                <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                  <span className="font-bold text-vs text-sm sm:text-base whitespace-nowrap">{formatCurrency(section.value)}</span>
                   {isExpanded ? (
-                    <ChevronUp className="size-5 text-gray-600" />
+                    <ChevronUp className="size-5 text-gray-600 flex-shrink-0" />
                   ) : (
-                    <ChevronDown className="size-5 text-gray-600" />
+                    <ChevronDown className="size-5 text-gray-600 flex-shrink-0" />
                   )}
                 </div>
               </button>
 
               {isExpanded && (
                 <div className="bg-white border-t border-gray-200">
-                  <div className="p-4 space-y-2">
+                  <div className="p-3 sm:p-4 space-y-2">
                     {section.items.map((item, itemIndex) => (
                       <div
                         key={itemIndex}
-                        className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded"
+                        className="flex items-center justify-between gap-2 py-2 px-3 bg-gray-50 rounded"
                       >
-                        <span className="text-sm text-gray-700">{item.name}</span>
+                        <span className="text-sm text-gray-700 break-words">{item.name}</span>
                         {levelLabel(item.level) && (
-                          <span className="text-xs font-medium text-vs bg-vs/5 px-2 py-0.5 rounded">
+                          <span className="text-xs font-medium text-vs bg-vs/5 px-2 py-0.5 rounded flex-shrink-0 whitespace-nowrap">
                             {levelLabel(item.level)}
                           </span>
                         )}
@@ -171,15 +173,15 @@ const DetailedBreakdownSection = ({ estimate }: DetailedBreakdownSectionProps) =
       </div>
 
       {/* Total */}
-      <div className="mt-6 p-4 bg-vs/5 rounded-lg border border-vs/20">
-        <div className="flex items-center justify-between">
-          <div>
+      <div className="mt-6 p-3 sm:p-4 bg-vs/5 rounded-lg border border-vs/20">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
             <p className="text-sm text-gray-600 mb-1">Total Project Cost</p>
-            <p className="text-xs text-gray-500">Tap a category above to see what it covers</p>
+            <p className="text-xs text-gray-500 hidden sm:block">Tap a category above to see what it covers</p>
           </div>
-          <div className="flex items-center gap-1">
-            <IndianRupee className="size-5 text-vs" />
-            <span className="text-2xl font-bold text-vs">{formatCurrency(estimate.totalCost)}</span>
+          <div className="flex items-center gap-1 flex-shrink-0">
+            <IndianRupee className="size-4 sm:size-5 text-vs" />
+            <span className="text-xl sm:text-2xl font-bold text-vs whitespace-nowrap">{formatCurrency(estimate.totalCost)}</span>
           </div>
         </div>
       </div>

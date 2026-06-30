@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { Building2, Home, Building, Paintbrush, HardHat, Trees, Check, Layers, Hammer, Wrench, Mountain, TriangleRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AnimatedText from "@/components/AnimatedText";
-import { ProjectSubcategory, RoomConfiguration, LandscapeArea, ConstructionSubtype, AreaInputType, ProjectMode, FoundationType } from "@/types/estimator";
+import { ProjectSubcategory, RoomConfiguration, RoomCounts, LandscapeArea, ConstructionSubtype, AreaInputType, ProjectMode, FoundationType } from "@/types/estimator";
+import { Slider } from "@/components/ui/slider";
 
 type ProjectType = "residential" | "commercial" | "mixed-use";
 
@@ -22,12 +23,6 @@ interface WorkTypeOption {
   icon: React.ReactNode;
 }
 
-interface RoomConfigOption {
-  id: RoomConfiguration;
-  title: string;
-  description: string;
-}
-
 interface LandscapeAreaOption {
   id: LandscapeArea;
   title: string;
@@ -37,6 +32,7 @@ interface ProjectTypeStepProps {
   selectedType: string;
   selectedWorkTypes: ProjectSubcategory[];
   selectedRoomConfig?: RoomConfiguration;
+  selectedRoomCounts?: RoomCounts;
   selectedLandscapeAreas?: LandscapeArea[];
   selectedConstructionSubtype?: ConstructionSubtype;
   selectedProjectMode?: ProjectMode;
@@ -46,6 +42,7 @@ interface ProjectTypeStepProps {
   onSelectType: (type: ProjectType) => void;
   onSelectWorkTypes: (workTypes: ProjectSubcategory[]) => void;
   onSelectRoomConfig: (config: RoomConfiguration) => void;
+  onSelectRoomCounts: (counts: RoomCounts) => void;
   onSelectLandscapeAreas: (areas: LandscapeArea[]) => void;
   onSelectConstructionSubtype: (subtype: ConstructionSubtype) => void;
   onSelectProjectMode: (mode: ProjectMode) => void;
@@ -54,10 +51,23 @@ interface ProjectTypeStepProps {
   onSelectAreaInputType: (type: AreaInputType) => void;
 }
 
+// Derives the BHK label used for validation/display from granular room counts.
+const deriveRoomConfig = (counts: RoomCounts): RoomConfiguration => {
+  if (counts.bedrooms <= 0) return "Studio";
+  if (counts.bedrooms === 1) return "1BHK";
+  if (counts.bedrooms === 2) return "2BHK";
+  if (counts.bedrooms === 3) return "3BHK";
+  if (counts.bedrooms === 4) return "4BHK";
+  return "5BHK+";
+};
+
+const DEFAULT_ROOM_COUNTS: RoomCounts = { bedrooms: 2, hall: 1, kitchen: 1, washrooms: 2 };
+
 const ProjectTypeStep = ({
   selectedType,
   selectedWorkTypes,
   selectedRoomConfig,
+  selectedRoomCounts,
   selectedLandscapeAreas = [],
   selectedConstructionSubtype,
   selectedProjectMode,
@@ -67,6 +77,7 @@ const ProjectTypeStep = ({
   onSelectType,
   onSelectWorkTypes,
   onSelectRoomConfig,
+  onSelectRoomCounts,
   onSelectLandscapeAreas,
   onSelectConstructionSubtype,
   onSelectProjectMode,
@@ -92,6 +103,22 @@ const ProjectTypeStep = ({
       onSelectAreaInputType("builtup");
     }
   }, [selectedWorkTypes, selectedConstructionSubtype, selectedAreaInputType, onSelectAreaInputType]);
+
+  // Seed sensible defaults the first time a residential project reaches the
+  // room-count sliders, so the configuration is always valid without forcing
+  // an extra click before the sliders become meaningful.
+  useEffect(() => {
+    if (selectedType === "residential" && !selectedRoomCounts) {
+      onSelectRoomCounts(DEFAULT_ROOM_COUNTS);
+      onSelectRoomConfig(deriveRoomConfig(DEFAULT_ROOM_COUNTS));
+    }
+  }, [selectedType, selectedRoomCounts, onSelectRoomCounts, onSelectRoomConfig]);
+
+  const handleRoomCountChange = (key: keyof RoomCounts, value: number) => {
+    const counts = { ...(selectedRoomCounts || DEFAULT_ROOM_COUNTS), [key]: value };
+    onSelectRoomCounts(counts);
+    onSelectRoomConfig(deriveRoomConfig(counts));
+  };
 
   const projectOptions: ProjectOption[] = [
     {
@@ -133,16 +160,6 @@ const ProjectTypeStep = ({
       description: "Outdoor spaces, gardens, and landscaping",
       icon: <Trees className="size-5" />
     },
-  ];
-
-  const roomConfigOptions: RoomConfigOption[] = [
-    { id: "Studio", title: "Studio", description: "Open plan living space" },
-    { id: "1BHK", title: "1 BHK", description: "1 Bedroom, Hall, Kitchen" },
-    { id: "2BHK", title: "2 BHK", description: "2 Bedrooms, Hall, Kitchen" },
-    { id: "3BHK", title: "3 BHK", description: "3 Bedrooms, Hall, Kitchen" },
-    { id: "4BHK", title: "4 BHK", description: "4 Bedrooms, Hall, Kitchen" },
-    { id: "5BHK+", title: "5+ BHK", description: "5 or more Bedrooms" },
-    { id: "Penthouse", title: "Penthouse", description: "Luxury top-floor residence" },
   ];
 
   const landscapeAreaOptions: LandscapeAreaOption[] = [
@@ -399,33 +416,43 @@ const ProjectTypeStep = ({
             className="text-xl font-display mb-6 text-center"
           />
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {roomConfigOptions.map((option, index) => (
-              <motion.div
-                key={option.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: index * 0.03 }}
-                className={cn(
-                  "group flex flex-col items-center justify-center border rounded-lg p-4 cursor-pointer transition-all duration-300 hover:shadow-md",
-                  selectedRoomConfig === option.id
-                    ? "border-vs bg-vs/5 shadow-sm"
-                    : "border-primary/10 hover:border-primary/30"
-                )}
-                onClick={() => onSelectRoomConfig(option.id)}
-              >
-                <div className={cn(
-                  "w-full text-center py-2 px-3 rounded-md transition-colors mb-2",
-                  selectedRoomConfig === option.id
-                    ? "bg-vs text-white"
-                    : "bg-primary/5 text-primary/70 group-hover:bg-primary/10"
-                )}>
-                  <h4 className="text-base font-semibold">{option.title}</h4>
+          <p className="text-sm text-[#4f090c]/70 text-center mb-6 -mt-2">
+            Drag each slider to match your exact layout
+          </p>
+
+          <div className="max-w-md mx-auto space-y-6">
+            {([
+              { key: "bedrooms" as const, label: "Bedrooms", max: 8 },
+              { key: "hall" as const, label: "Hall / Living", max: 4 },
+              { key: "kitchen" as const, label: "Kitchen", max: 3 },
+              { key: "washrooms" as const, label: "Washrooms", max: 8 },
+            ]).map(({ key, label, max }) => {
+              const value = (selectedRoomCounts || DEFAULT_ROOM_COUNTS)[key];
+              return (
+                <div key={key}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-[#4f090c]">{label}</span>
+                    <span className="text-sm font-semibold text-vs bg-vs/10 px-2.5 py-0.5 rounded-full min-w-[2rem] text-center">
+                      {value}
+                    </span>
+                  </div>
+                  <Slider
+                    value={[value]}
+                    min={0}
+                    max={max}
+                    step={1}
+                    onValueChange={([v]) => handleRoomCountChange(key, v)}
+                  />
                 </div>
-                <p className="text-xs text-[#4f090c]/70 text-center">{option.description}</p>
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
+
+          {selectedRoomConfig && (
+            <p className="text-center text-sm text-[#4f090c]/70 mt-6">
+              That's a <span className="font-semibold text-vs-dark">{selectedRoomConfig === "5BHK+" ? `${(selectedRoomCounts || DEFAULT_ROOM_COUNTS).bedrooms}BHK` : selectedRoomConfig}</span> configuration
+            </p>
+          )}
         </motion.div>
       )}
 
@@ -594,15 +621,15 @@ const ProjectTypeStep = ({
                 className="mt-6 p-4 bg-vs/5 border border-vs/10 rounded-lg"
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <Layers className="size-5 text-purple-600" />
-                  <h5 className="font-semibold text-purple-900">G+{selectedFloorCount - 1} Structure</h5>
+                  <Layers className="size-5 text-vs" />
+                  <h5 className="font-semibold text-vs-dark">G+{selectedFloorCount - 1} Structure</h5>
                 </div>
-                <div className="grid grid-cols-2 gap-2 text-xs text-purple-800">
+                <div className="grid grid-cols-2 gap-2 text-xs text-vs-dark">
                   {Array.from({ length: selectedFloorCount }, (_, i) => selectedFloorCount - i).map((floor, index) => (
                     <div key={floor} className="flex items-center gap-2 py-1">
                       <div className={cn(
                         "size-2 rounded-sm",
-                        index === 0 ? "bg-purple-500" : "bg-blue-400"
+                        index === 0 ? "bg-vs" : "bg-vs/40"
                       )}></div>
                       <span className="font-medium text-xs">
                         {floor === 1 ? "Ground Floor" : `${floor - 1}${getOrdinalSuffix(floor - 1)} Floor`}

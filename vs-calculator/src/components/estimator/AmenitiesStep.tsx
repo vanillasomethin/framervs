@@ -84,8 +84,8 @@ const AmenitiesStep = ({
       <div className="mb-2">
         <h3 className="text-lg font-medium mb-2">Premium Amenities</h3>
         <p className="text-sm text-muted-foreground">
-          Optional lifestyle additions priced as fixed lump sums (not per sqft). Select any that apply —
-          figures are indicative and adjusted for your city.
+          Optional lifestyle additions priced as lump-sum installations (not per sqft). Select any that apply —
+          figures shown are for a ~2,500 sqft reference project and are adjusted for your project's actual size and city.
         </p>
       </div>
 
@@ -133,7 +133,7 @@ const AmenitiesStep = ({
             {selectedAmenities.length} amenit{selectedAmenities.length === 1 ? "y" : "ies"} selected
           </span>
           <span className="text-sm font-semibold text-vs">
-            ≈ {formatPrice(selectedTotal)} <span className="text-xs font-normal text-muted-foreground">(before city adjustment)</span>
+            ≈ {formatPrice(selectedTotal)} <span className="text-xs font-normal text-muted-foreground">(before size/city adjustment)</span>
           </span>
         </div>
       )}
