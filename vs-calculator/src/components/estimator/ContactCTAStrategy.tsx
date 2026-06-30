@@ -170,7 +170,7 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
             <p className="text-[10px] text-gray-700 font-medium">24hr Response</p>
           </div>
           <div className="bg-white p-2 rounded-lg text-center">
-            <Users className="w-5 h-5 text-purple-600 mx-auto mb-1" />
+            <Users className="w-5 h-5 text-vs mx-auto mb-1" />
             <p className="text-[10px] text-gray-700 font-medium">Expert Advice</p>
           </div>
         </div>

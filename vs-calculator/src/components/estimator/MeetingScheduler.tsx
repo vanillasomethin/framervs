@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { MessageCircle, Mail, Calendar, CheckCircle2, Clock } from "lucide-react";
+import { MessageCircle, Calendar, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getCalApi } from "@calcom/embed-react";
 
@@ -10,7 +10,7 @@ const CAL_NAMESPACE = "vs-booking";
 const CAL_LINK_15 = "hisham-khalid-qyohid/15min";
 const CAL_LINK_30 = "hisham-khalid-qyohid/30min";
 
-type MainOptionType = "schedule-intro" | "schedule-consultation" | "schedule-office" | "schedule-site";
+type MainOptionType = "schedule-consultation" | "schedule-site";
 
 interface MainOption {
   id: MainOptionType;
@@ -66,20 +66,15 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
   const whatsappNumber = "917411349844";
   const email = "hello@vanillasometh.in";
 
+  // Two clear primary paths — a scheduled call or an instant chat — rather
+  // than four similarly-weighted choices that made people pause to compare.
+  // The 15-min intro and email options still exist, just as lighter-weight
+  // text links underneath for the minority who specifically want them.
   const mainOptions: MainOption[] = [
     {
-      id: "schedule-intro",
-      title: "Book a 15-min intro call",
-      description: "Quick introduction & questions",
-      icon: <Clock className="size-6" />,
-      action: () => {
-        openCalWidget(CAL_LINK_15);
-      }
-    },
-    {
       id: "schedule-consultation",
-      title: "Book a 30-min consultation",
-      description: "In-depth project discussion",
+      title: "Book a call",
+      description: "30-min, in-depth project discussion",
       icon: <Calendar className="size-6" />,
       action: () => {
         openCalWidget(CAL_LINK_30);
@@ -87,21 +82,12 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
     },
     {
       id: "schedule-site",
-      title: "Request via WhatsApp",
+      title: "WhatsApp us",
       description: "Quick consultation request",
       icon: <MessageCircle className="size-6" />,
       action: () => {
         const message = `Hi! I'd like to schedule a consultation to discuss my project. Please let me know your availability.`;
         window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
-      }
-    },
-    {
-      id: "schedule-office",
-      title: "Contact via Email",
-      description: "Send detailed requirements",
-      icon: <Mail className="size-6" />,
-      action: () => {
-        window.location.href = `mailto:${email}?subject=${encodeURIComponent("Project Consultation Request")}&body=${encodeURIComponent("Hi! I'd like to schedule a consultation to discuss my project. Please let me know your availability.")}`;
       }
     },
   ];
@@ -197,6 +183,23 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
               </motion.div>
             ))}
           </motion.div>
+
+      <p className="text-center text-xs text-muted-foreground mt-5">
+        Short on time?{" "}
+        <button
+          onClick={() => openCalWidget(CAL_LINK_15)}
+          className="font-medium text-vs hover:underline"
+        >
+          Book a 15-min intro
+        </button>
+        {" "}· Prefer email?{" "}
+        <a
+          href={`mailto:${email}?subject=${encodeURIComponent("Project Consultation Request")}&body=${encodeURIComponent("Hi! I'd like to schedule a consultation to discuss my project. Please let me know your availability.")}`}
+          className="font-medium text-vs hover:underline"
+        >
+          Write to us
+        </a>
+      </p>
     </motion.div>
   );
 };

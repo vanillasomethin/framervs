@@ -135,12 +135,22 @@ const AMENITY_PRICING: Record<string, number> = {
   borewell: 250000,        // borewell + pump + plumbing
 };
 
+// Amenities are discrete installations, not per-sqft materials, but a pool or
+// home theatre in a 6,000 sqft villa is still bigger than one squeezed into a
+// 1,200 sqft apartment. Scale modestly off a reference project size, clamped
+// so a tiny extension isn't charged a token pool and a sprawling estate
+// doesn't balloon to an absurd multiple.
+const AMENITY_BASELINE_AREA_SQM = 230; // ~2,500 sqft reference project
+const AMENITY_SIZE_FACTOR_MIN = 0.6;
+const AMENITY_SIZE_FACTOR_MAX = 2.0;
+
 const initialEstimate: ProjectEstimate = {
   state: "",
   city: "",
   projectType: "",
   workTypes: [],
   roomConfiguration: undefined,
+  roomCounts: undefined,
   landscapeAreas: undefined,
   constructionSubtype: undefined,
   projectMode: "new",
@@ -549,13 +559,17 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
     );
     const combinedMultiplier = locationMultiplier * projectMultiplier;
 
-    // 4a. Premium amenities — fixed lump sums, scaled by location only (not
-    //     project-type/complexity/size, which don't apply to a discrete pool or
-    //     home theatre).
+    // 4a. Premium amenities — discrete installations, scaled by location and
+    //     modestly by project size (not project-type/complexity, which don't
+    //     apply to a pool or home theatre).
+    const amenitySizeFactor = Math.min(
+      AMENITY_SIZE_FACTOR_MAX,
+      Math.max(AMENITY_SIZE_FACTOR_MIN, areaInSqM / AMENITY_BASELINE_AREA_SQM)
+    );
     const amenitiesCost = (currentEstimate.amenities ?? []).reduce(
       (sum, amenity) => sum + (AMENITY_PRICING[amenity] ?? 0),
       0
-    ) * locationMultiplier;
+    ) * locationMultiplier * amenitySizeFactor;
 
     const subtotal = baseSubtotal * combinedMultiplier + amenitiesCost;
 
