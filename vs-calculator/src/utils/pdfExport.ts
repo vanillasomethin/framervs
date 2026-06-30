@@ -1,6 +1,20 @@
 import { jsPDF } from 'jspdf';
 import { ProjectEstimate, ComponentOption } from '@/types/estimator';
 
+// Mirrors ResultsStep's AMENITY_LABELS so the PDF lists amenities the same way the results page does.
+const AMENITY_LABELS: Record<string, string> = {
+  swimmingPool: "Swimming Pool",
+  homeGym: "Home Gym",
+  saunaSteam: "Sauna / Steam",
+  homeTheater: "Home Theater",
+  homeAutomation: "Home Automation",
+  solarPower: "Solar Power",
+  outdoorKitchen: "Outdoor Kitchen / BBQ",
+  jacuzziSpa: "Jacuzzi / Spa",
+  wineCellar: "Wine Cellar",
+  borewell: "Borewell",
+};
+
 export interface GenerateEstimatePDFOptions {
   /** When true (default), the PDF is downloaded via doc.save(). Set false to only build the doc. */
   save?: boolean;
@@ -89,6 +103,9 @@ export const generateEstimatePDF = (
     [`Location:`, `${estimate.city}, ${estimate.state}`],
     [`Project Type:`, `${toSentenceCase(estimate.projectType)} ${workTypesDisplay ? `(${workTypesDisplay})` : ''}`],
     [`Total Area:`, `${estimate.area.toLocaleString('en-IN')} ${estimate.areaUnit}`],
+    ...(estimate.roomCounts
+      ? [[`Configuration:`, `${estimate.roomCounts.bedrooms} Bed, ${estimate.roomCounts.hall} Hall, ${estimate.roomCounts.kitchen} Kitchen, ${estimate.roomCounts.washrooms} Bath`]]
+      : []),
     [`Date:`, new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })]
   ];
 
@@ -154,6 +171,53 @@ export const generateEstimatePDF = (
 
   yPos += 8;
 
+  // Market Rate Comparison
+  checkPageBreak(45);
+  addText('HOW YOUR RATE COMPARES', margin, yPos, 14, 'bold');
+  yPos += 10;
+  addLine(yPos);
+  yPos += 8;
+
+  const benchmarkBands: Record<string, { low: number; typical: number; high: number }> = {
+    residential: { low: 1800, typical: 2600, high: 4000 },
+    commercial: { low: 2200, typical: 3200, high: 5000 },
+    'mixed-use': { low: 2500, typical: 3600, high: 5500 },
+  };
+  const areaInSqft = estimate.areaUnit === 'sqft' ? estimate.area : estimate.area * 10.764;
+  const perSqft = areaInSqft > 0 ? estimate.totalCost / areaInSqft : 0;
+  const band = benchmarkBands[estimate.projectType] || benchmarkBands.residential;
+  let verdictText: string;
+  if (perSqft < band.low) {
+    verdictText = 'Below the typical market range - a lean, budget-conscious spec.';
+  } else if (perSqft <= band.typical) {
+    verdictText = 'In the value end of the market range for this project type.';
+  } else if (perSqft <= band.high) {
+    verdictText = 'In the premium end of the typical market range.';
+  } else {
+    verdictText = 'Above the typical range - a high-spec / luxury configuration.';
+  }
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(79, 9, 12);
+  doc.text(`Rs. ${Math.round(perSqft).toLocaleString('en-IN')} / sqft (all-in)`, margin + 5, yPos);
+  yPos += 7;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(60, 60, 60);
+  doc.text(
+    `Typical 2026 market band for ${toSentenceCase(estimate.projectType)} projects: Rs. ${band.low.toLocaleString('en-IN')} (lean) - Rs. ${band.typical.toLocaleString('en-IN')} (typical) - Rs. ${band.high.toLocaleString('en-IN')} (premium)`,
+    margin + 5,
+    yPos,
+    { maxWidth: pageWidth - 2 * margin - 5 }
+  );
+  yPos += 12;
+  doc.setFont('helvetica', 'italic');
+  doc.setTextColor(0, 0, 0);
+  doc.text(verdictText, margin + 5, yPos);
+  doc.setFont('helvetica', 'normal');
+  yPos += 12;
+
   // Timeline
   checkPageBreak(50);
   addText('PROJECT TIMELINE', margin, yPos, 14, 'bold');
@@ -167,7 +231,8 @@ export const generateEstimatePDF = (
     { label: 'Planning & Design', months: estimate.timeline.phases.planning },
     { label: 'Construction', months: estimate.timeline.phases.construction },
     { label: 'Interiors & Finishing', months: estimate.timeline.phases.interiors },
-  ];
+    { label: 'Landscape', months: estimate.timeline.phases.landscape },
+  ].filter(phase => phase.months > 0);
 
   phases.forEach(phase => {
     doc.setFontSize(9);
@@ -243,6 +308,25 @@ export const generateEstimatePDF = (
     doc.setFont('helvetica', 'normal');
     yPos += 8;
   });
+
+  // Premium Amenities (if any selected)
+  if (estimate.amenities && estimate.amenities.length > 0) {
+    yPos += 8;
+    checkPageBreak(30);
+    addText('PREMIUM AMENITIES', margin, yPos, 14, 'bold');
+    yPos += 10;
+    addLine(yPos);
+    yPos += 8;
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 0, 0);
+    estimate.amenities.forEach(a => {
+      checkPageBreak(8);
+      doc.text(`• ${AMENITY_LABELS[a] || a}`, margin + 10, yPos);
+      yPos += 6;
+    });
+  }
 
   // Disclaimer
   yPos += 12;
