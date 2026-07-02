@@ -343,7 +343,7 @@ export const generateEstimatePDF = (
   doc.setTextColor(60, 60, 60);
   yPos += 6;
   doc.setFontSize(9);
-  const disclaimerText = `• Total is inclusive of professional fees (architectural + documentation), contingency, and applicable GST\n• Actual costs may vary ±10% based on site conditions, material price fluctuations, and contractor rates\n• This is an indicative estimate based on current market rates for ${estimate.city}\n• Valid for 30 days from generation date. For detailed itemized quote, please contact our team.`;
+  const disclaimerText = `• Total is inclusive of professional fees (architectural + documentation), contingency, and applicable GST\n• Actual costs may vary +-10% based on site conditions, material price fluctuations, and contractor rates\n• This is indicative pricing only - a formal quote will be shared after a discovery call with our team\n• To schedule a discovery call: hello@vanillasometh.in | +91 741 134 9844`;
   const splitDisclaimer = doc.splitTextToSize(disclaimerText, pageWidth - 2 * margin - 10);
   doc.text(splitDisclaimer, margin + 5, yPos);
 
