@@ -19,6 +19,12 @@
 # alias redirect). A duplicate redirect here can ping-pong against that and
 # cause "too many redirects" loops, so it's intentionally left out.
 
+# /pricing is a canonical short URL for the estimator pricing page.
+[[redirects]]
+  from = "/pricing"
+  to = "/estimator"
+  status = 301
+
 # Client-side routing fallback for the estimator SPA. Real files (assets,
 # images, fonts) are served directly; unknown sub-paths fall back to the app
 # shell so deep links like /estimator/architect-fee work on refresh.
