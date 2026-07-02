@@ -144,9 +144,9 @@ const AreaStep = ({
     
     if (projectType === "residential") {
       return [
-        { label: `Small (${Math.round(1000 * multiplier)} ${areaUnit})`, value: Math.round(1000 * multiplier) },
-        { label: `Medium (${Math.round(2000 * multiplier)} ${areaUnit})`, value: Math.round(2000 * multiplier) },
-        { label: `Large (${Math.round(3500 * multiplier)} ${areaUnit})`, value: Math.round(3500 * multiplier) },
+        { label: `Small (${Math.round(2000 * multiplier)} ${areaUnit})`, value: Math.round(2000 * multiplier) },
+        { label: `Medium (${Math.round(5000 * multiplier)} ${areaUnit})`, value: Math.round(5000 * multiplier) },
+        { label: `Large (${Math.round(10000 * multiplier)} ${areaUnit})`, value: Math.round(10000 * multiplier) },
       ];
     } else if (projectType === "commercial") {
       return [
@@ -175,7 +175,7 @@ const AreaStep = ({
     const multiplier = areaUnit === "sqft" ? 1 : 0.092903;
     
     switch (projectType) {
-      case "residential": return Math.round(5000 * multiplier);
+      case "residential": return Math.round(15000 * multiplier);
       case "commercial": return Math.round(20000 * multiplier);
       case "mixed-use": return Math.round(50000 * multiplier);
       default: return Math.round(10000 * multiplier);
