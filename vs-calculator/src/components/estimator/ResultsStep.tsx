@@ -579,8 +579,7 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
             <li>The total is inclusive of professional fees, contingency and GST</li>
             <li>Actual costs may vary ±10% based on site conditions and material price fluctuations</li>
             <li>Detailed BOQ will be provided after site visit and requirement analysis</li>
-            <li>Final pricing subject to contractor quotes and material availability</li>
-            <li>This is an indicative estimate - please contact us for detailed quotation</li>
+            <li>This is <strong>indicative pricing only</strong> — a formal quote will be shared after a discovery call with our team</li>
           </ul>
         </div>
       </motion.div>
