@@ -71,8 +71,8 @@ const Navbar = () => {
   
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (window.location.pathname !== "/") {
-      window.location.href = "/";
+    if (window.location.pathname !== "/estimator/" && window.location.pathname !== "/estimator") {
+      window.location.href = "/estimator/";
     } else {
       window.scrollTo({
         top: 0,

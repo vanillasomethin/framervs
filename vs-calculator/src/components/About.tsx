@@ -3,8 +3,30 @@ import { cn } from "@/lib/utils";
 import AnimatedText from "./AnimatedText";
 import { motion } from "framer-motion";
 import StoryAnimation from "./StoryAnimation";
+import { getCalApi } from "@calcom/embed-react";
+import { useEffect } from "react";
+
+const CAL_NAMESPACE = "vs-booking";
+const CAL_LINK_30 = "hisham-khalid-qyohid/30min";
 
 const About = () => {
+  useEffect(() => {
+    (async () => {
+      const cal = await getCalApi({ namespace: CAL_NAMESPACE });
+      cal("ui", {
+        cssVarsPerTheme: { light: { "cal-brand": "#44080b" } },
+        hideEventTypeDetails: false,
+        layout: "month_view",
+        theme: "light",
+      });
+    })();
+  }, []);
+
+  const openCalModal = async () => {
+    const cal = await getCalApi({ namespace: CAL_NAMESPACE });
+    cal("modal", { calLink: CAL_LINK_30, config: { layout: "month_view" } });
+  };
+
   return (
     <section id="about" className="section py-12 md:py-20 bg-vs text-white">
       <div className="container-custom">
@@ -47,12 +69,12 @@ const About = () => {
               </div>
               
               <div className="pt-3">
-                <a 
-                  href="#contact" 
+                <button
+                  onClick={openCalModal}
                   className="inline-block px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-full text-sm uppercase tracking-wider transition-colors duration-300"
                 >
                   Get in Touch
-                </a>
+                </button>
               </div>
             </div>
           </div>
