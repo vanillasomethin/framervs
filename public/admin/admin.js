@@ -28,8 +28,10 @@
       team: [],
       services: [],
       caseStudies: [],
+      deals: [],
       contact: {},
     };
+    state.cms.deals = data.cms?.deals || [];
   };
 
   const createListItem = (fields, onRemove) => {
@@ -126,6 +128,91 @@
     });
   };
 
+  const getDealStatus = (deal) => {
+    if (deal.dealOver === true || (deal.dealOverCount || 0) >= 10) return "over";
+    if ((deal.dealOverCount || 0) >= 5) return "maybe-over";
+    return "active";
+  };
+
+  const renderDeals = () => {
+    const list = $("#deals-list");
+    list.innerHTML = "";
+    state.cms.deals.forEach((deal, index) => {
+      const wrapper = document.createElement("div");
+      const status = getDealStatus(deal);
+      wrapper.className = "list-item" + (status === "over" ? " deal-over-tile" : "");
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+
+      const fields = [
+        { label: "Title", key: "title", value: deal.title, type: "text" },
+        { label: "Description", key: "description", value: deal.description, type: "textarea", extraClass: "deal-description-textarea" },
+        { label: "Link", key: "link", value: deal.link, type: "text" },
+        { label: "Discount %", key: "discount", value: deal.discount, type: "text" },
+        { label: "Expiry Date", key: "expiry", value: deal.expiry, type: "date" },
+      ];
+
+      fields.forEach((field) => {
+        const container = document.createElement("div");
+        const label = document.createElement("label");
+        label.textContent = field.label;
+        const input = field.type === "textarea" ? document.createElement("textarea") : document.createElement("input");
+        if (field.type && field.type !== "textarea") input.type = field.type;
+        input.value = field.value || "";
+        input.dataset.key = field.key;
+        if (field.extraClass) input.classList.add(field.extraClass);
+        container.appendChild(label);
+        container.appendChild(input);
+        grid.appendChild(container);
+      });
+
+      const actionRow = document.createElement("div");
+      actionRow.className = "action-row";
+
+      const statusBadge = document.createElement("span");
+      statusBadge.className = "deal-status " + status;
+      statusBadge.textContent = status === "maybe-over" ? "Maybe Over" : status.charAt(0).toUpperCase() + status.slice(1);
+
+      const countBadge = document.createElement("span");
+      countBadge.className = "deal-count-badge";
+      countBadge.textContent = (deal.dealOverCount || 0) + " reports";
+
+      const toggleBtn = document.createElement("button");
+      toggleBtn.type = "button";
+      if (deal.dealOver) {
+        toggleBtn.className = "restore-btn";
+        toggleBtn.textContent = "Restore Deal";
+      } else {
+        toggleBtn.className = "deal-over-btn";
+        toggleBtn.textContent = "Mark Deal Over";
+      }
+      toggleBtn.addEventListener("click", () => {
+        state.cms.deals[index].dealOver = !state.cms.deals[index].dealOver;
+        syncStateFromUI();
+        renderDeals();
+      });
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "secondary";
+      removeBtn.textContent = "Remove";
+      removeBtn.addEventListener("click", () => {
+        state.cms.deals.splice(index, 1);
+        renderDeals();
+      });
+
+      actionRow.appendChild(statusBadge);
+      actionRow.appendChild(countBadge);
+      actionRow.appendChild(toggleBtn);
+      actionRow.appendChild(removeBtn);
+
+      wrapper.appendChild(grid);
+      wrapper.appendChild(actionRow);
+      list.appendChild(wrapper);
+    });
+  };
+
   const bindInputs = () => {
     $("#hero-headline").value = state.cms.homepage?.hero?.headline || "";
     $("#about-title").value = state.cms.homepage?.about?.title || "";
@@ -197,6 +284,13 @@
         src: item.image,
         alt: item.imageAlt,
       },
+    }));
+
+    state.cms.deals = collectList("#deals-list .list-item", ["title", "description", "link", "discount", "expiry"]).map((d, i) => ({
+      ...d,
+      id: state.cms.deals[i]?.id || Date.now() + "-" + i,
+      dealOver: state.cms.deals[i]?.dealOver || false,
+      dealOverCount: state.cms.deals[i]?.dealOverCount || 0,
     }));
 
     state.cms.contact = {
@@ -321,6 +415,20 @@
       renderCaseStudies();
     });
 
+    $("#add-deal").addEventListener("click", () => {
+      state.cms.deals.push({
+        id: Date.now() + "-" + state.cms.deals.length,
+        title: "",
+        description: "",
+        link: "",
+        discount: "",
+        expiry: "",
+        dealOver: false,
+        dealOverCount: 0,
+      });
+      renderDeals();
+    });
+
     $("#save-button").addEventListener("click", handleSave);
   };
 
@@ -331,6 +439,7 @@
     renderTeam();
     renderServices();
     renderCaseStudies();
+    renderDeals();
     bindActions();
   };
 

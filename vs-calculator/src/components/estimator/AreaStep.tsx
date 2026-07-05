@@ -10,6 +10,7 @@ interface AreaStepProps {
   area: number;
   areaUnit: "sqft" | "sqm";
   projectType: string;
+  workTypes?: string[];
   city: string;
   constructionSubtype?: ConstructionSubtype;
   floorCount?: number;
@@ -25,6 +26,7 @@ const AreaStep = ({
   area,
   areaUnit,
   projectType,
+  workTypes = [],
   city,
   constructionSubtype,
   floorCount,
@@ -35,6 +37,7 @@ const AreaStep = ({
   onFSIComplianceChange,
   onFloorCountChange
 }: AreaStepProps) => {
+  const isInteriorsOnly = workTypes.includes("interiors") && !workTypes.includes("construction");
   // Use area prop as the initial value, ensuring synchronization
   const [inputValue, setInputValue] = useState(area > 0 ? area.toString() : "");
   const [fsiValidation, setFsiValidation] = useState<{
@@ -141,8 +144,16 @@ const AreaStep = ({
 
   const getPresetOptions = () => {
     const multiplier = areaUnit === "sqft" ? 1 : 0.092903; // 1 sqft = 0.092903 sqm
-    
+
     if (projectType === "residential") {
+      // Interiors-only: show apartment-scale presets (typical flat carpet areas)
+      if (isInteriorsOnly) {
+        return [
+          { label: `1BHK (~${Math.round(650 * multiplier)} ${areaUnit})`, value: Math.round(650 * multiplier) },
+          { label: `2BHK (~${Math.round(1000 * multiplier)} ${areaUnit})`, value: Math.round(1000 * multiplier) },
+          { label: `3BHK (~${Math.round(1500 * multiplier)} ${areaUnit})`, value: Math.round(1500 * multiplier) },
+        ];
+      }
       return [
         { label: `Small (${Math.round(2000 * multiplier)} ${areaUnit})`, value: Math.round(2000 * multiplier) },
         { label: `Medium (${Math.round(5000 * multiplier)} ${areaUnit})`, value: Math.round(5000 * multiplier) },
@@ -161,7 +172,7 @@ const AreaStep = ({
         { label: `Large (${Math.round(30000 * multiplier)} ${areaUnit})`, value: Math.round(30000 * multiplier) },
       ];
     }
-    
+
     return [
       { label: `Small (${Math.round(1000 * multiplier)} ${areaUnit})`, value: Math.round(1000 * multiplier) },
       { label: `Medium (${Math.round(3000 * multiplier)} ${areaUnit})`, value: Math.round(3000 * multiplier) },
@@ -173,7 +184,7 @@ const AreaStep = ({
   
   const getMaxRange = () => {
     const multiplier = areaUnit === "sqft" ? 1 : 0.092903;
-    
+    if (projectType === "residential" && isInteriorsOnly) return Math.round(5000 * multiplier);
     switch (projectType) {
       case "residential": return Math.round(15000 * multiplier);
       case "commercial": return Math.round(20000 * multiplier);
@@ -303,16 +314,23 @@ const AreaStep = ({
         </div>
       </div>
       
-      <div className="mt-8 text-center text-[#4f090c]/70 text-sm">
-        <p>
+      <div className="mt-8 text-[#4f090c]/70 text-sm space-y-2">
+        <p className="text-center">
           {constructionSubtype === "house" && areaInputType === "plot"
             ? "Enter the plot/site area. We'll calculate the plinth (ground floor) area based on FSI rules."
             : areaInputType === "plinth"
             ? "Enter the ground floor area only. We'll calculate total built-up area based on the number of floors."
             : areaInputType === "builtup"
             ? "Enter the total built-up area across all floors."
+            : isInteriorsOnly
+            ? "Enter the total carpet area of the space you want to renovate."
             : "Enter the area or use the slider to set your project size. Toggle between square feet and square meters as needed."}
         </p>
+        {isInteriorsOnly && (
+          <p className="text-center text-xs bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 text-amber-800">
+            Doing only bedrooms or specific rooms? Enter just the area of those rooms — e.g. two 180 sqft bedrooms = 360 sqft. Set Hall/Kitchen/Washroom sliders to 0 on the previous step to exclude them from the configuration.
+          </p>
+        )}
       </div>
 
       {/* G+ Format Info Display */}

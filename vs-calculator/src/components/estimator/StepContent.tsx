@@ -88,6 +88,7 @@ const StepContent = () => {
             area={estimate.area}
             areaUnit={estimate.areaUnit}
             projectType={estimate.projectType}
+            workTypes={estimate.workTypes}
             city={estimate.city}
             constructionSubtype={estimate.constructionSubtype}
             floorCount={estimate.floorCount}
