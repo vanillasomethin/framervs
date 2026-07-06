@@ -12,8 +12,8 @@ import { ProjectEstimate, ComponentOption } from "@/types/estimator";
 // (so the site keeps working). Leads will NOT reach Zoho until you paste them.
 // ─────────────────────────────────────────────────────────────────────────────
 const ZOHO_WEBTOLEAD_ACTION = "https://crm.zoho.com/crm/WebToLeadForm";
-const ZOHO_XNQSJSDP = "PASTE_xnQsjsdp_VALUE"; // form identifier
-const ZOHO_XMIWTLD = "PASTE_xmIwtLD_VALUE"; // form auth token
+const ZOHO_XNQSJSDP = "f1596a2667e209acb7fce9cd8474239bcec47de03199399057f722f413f0a779";
+const ZOHO_XMIWTLD = "76444feeb0cbd0b574c44ac1b7cfe558b5675db8c6266a2721ecc95df8f7b6934f9acae80a11834409555ce438ba950e";
 
 // actionType "Leads" base64-encoded — constant for all Web-to-Lead Lead forms.
 const ZOHO_ACTION_TYPE = "TGVhZHM=";
