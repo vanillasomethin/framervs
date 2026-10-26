@@ -1,6 +1,14 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { CPWD_COST_INDEX } from "@/data/cpwdCostIndex";
+import {
+  DEFAULT_MULTIPLIER,
+  MARKET_MULTIPLIERS,
+  NON_METRO_FACTOR,
+  STATE_ANCHORS,
+  getLocationMultiplier,
+} from "@/utils/locationCost";
 
 interface Row {
   label: string;
@@ -62,24 +70,25 @@ const projectTypeMultiplierRows: Row[] = [
 ];
 
 const locationMultiplierRows: Row[] = [
-  { label: "Mumbai", values: [1.50] },
-  { label: "Navi Mumbai", values: [1.42] },
-  { label: "Thane", values: [1.40] },
-  { label: "Delhi / New Delhi", values: [1.35] },
-  { label: "Gurgaon", values: [1.30] },
-  { label: "Noida", values: [1.28] },
-  { label: "Pune", values: [1.22] },
-  { label: "Bangalore / Bengaluru", values: [1.20] },
-  { label: "Chandigarh", values: [1.15] },
-  { label: "Chennai", values: [1.13] },
-  { label: "Hyderabad", values: [1.05] },
-  { label: "Kolkata", values: [1.05] },
-  { label: "Jaipur / Kochi", values: [1.05] },
-  { label: "Ahmedabad", values: [1.03] },
-  { label: "Surat / Coimbatore / Indore / Vadodara", values: [1.00] },
-  { label: "Nagpur / Lucknow", values: [0.98] },
-  { label: "Visakhapatnam", values: [0.95] },
-  { label: "All other cities (default)", values: [0.92] },
+  // Market-rate cities, grouped by multiplier
+  ...Object.entries(
+    Object.entries(MARKET_MULTIPLIERS).reduce<Record<string, string[]>>((groups, [city, m]) => {
+      (groups[m.toFixed(2)] ||= []).push(city);
+      return groups;
+    }, {})
+  )
+    .sort(([a], [b]) => Number(b) - Number(a))
+    .map(([m, cities]) => ({ label: cities.join(" / "), values: [Number(m), "Market rate"] })),
+  // Formula examples for the core markets
+  ...([
+    ["Mangalore", "Karnataka"], ["Udupi", "Karnataka"], ["Mysore", "Karnataka"],
+    ["Kasaragod", "Kerala"], ["Kozhikode", "Kerala"], ["Thiruvananthapuram", "Kerala"],
+  ] as const).map(([city, state]) => ({
+    label: `${city}, ${state}`,
+    values: [getLocationMultiplier(city, state), `Formula (CPWD ${CPWD_COST_INDEX[state].asOf})`],
+  })),
+  { label: "States without a market anchor", values: [`${DEFAULT_MULTIPLIER} × CPWD index ÷ state median`, "Formula"] },
+  { label: "No CPWD data and no anchor", values: [DEFAULT_MULTIPLIER, "Default"] },
 ];
 
 const feesRows: Row[] = [
@@ -202,8 +211,8 @@ const sections: Table[] = [
   },
   {
     title: "5. Location multiplier (by city)",
-    note: "Applied to the full subtotal (construction + core + finishes + interiors). Calibrated against InfraLens 2026 metro standard rates relative to a ~₹2,100/sqft national baseline (multiplier 1.0). Cities not listed use the 0.92 default.",
-    columns: ["City", "Multiplier"],
+    note: `Applied to the full subtotal (construction + core + finishes + interiors), relative to a ~₹2,100/sqft national baseline (1.0). Market-rate cities are calibrated against InfraLens 2026 standard rates. Every other city: anchor-city multiplier × min(1, CPWD Building Cost Index of the town ÷ index of the anchor) × ${NON_METRO_FACTOR} non-metro factor (InfraLens Mangalore ₹2,324 ÷ Bangalore ₹2,520). Anchors: ${Object.entries(STATE_ANCHORS).map(([st, c]) => `${st} → ${c}`).join(", ")}. Towns without their own CPWD station use their district's station, else the state median.`,
+    columns: ["City", "Multiplier", "Source"],
     rows: locationMultiplierRows,
   },
   {
@@ -298,7 +307,8 @@ const EstimatorConstants = () => {
           </ul>
           <p className="text-xs text-muted-foreground mt-2">
             Sources: architects4design.com (Bangalore BOQ &amp; per-sqft rates), InfraLens 2026 construction-cost
-            calculator (multi-city, quality-graded), and Happho turnkey package pricing.
+            calculator (multi-city, quality-graded), Happho turnkey package pricing, and CPWD Building Cost Index
+            circulars for 30+ states/UTs (station-wise, compiled at nsrcivil.in) for non-metro location factors.
           </p>
         </div>
 

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Sparkles, TrendingUp, AlertCircle, CheckCircle2, IndianRupee } from "lucide-react";
 import { ComponentOption, ProjectEstimate } from "@/types/estimator";
+import { getLocationMultiplier } from "@/utils/locationCost";
 
 interface BudgetMatchingStepProps {
   budget: number;
@@ -33,18 +34,6 @@ interface ComponentSuggestion {
   artefacts: ComponentOption;
 }
 
-// Location-based cost multipliers (must match EstimatorContext)
-const LOCATION_MULTIPLIERS: Record<string, number> = {
-  "Mumbai": 1.30, "Navi Mumbai": 1.25, "Thane": 1.22,
-  "Delhi": 1.25, "New Delhi": 1.25, "Gurgaon": 1.28, "Noida": 1.22,
-  "Bangalore": 1.20, "Bengaluru": 1.20,
-  "Hyderabad": 1.15, "Chennai": 1.15, "Pune": 1.15,
-  "Ahmedabad": 1.10, "Surat": 1.08, "Jaipur": 1.10,
-  "Kochi": 1.05, "Coimbatore": 1.05, "Indore": 1.05,
-  "Chandigarh": 1.12, "Lucknow": 1.02,
-  "Visakhapatnam": 1.00, "Nagpur": 1.00, "Vadodara": 1.05,
-  "default": 0.95
-};
 
 // Component pricing per square meter (must match EstimatorContext - updated to 2025 market rates)
 const COMPONENT_PRICING: Record<string, Record<ComponentOption, number>> = {
@@ -105,10 +94,6 @@ const BudgetMatchingStep = ({
     return 1.0;
   };
 
-  const getLocationMultiplier = (): number => {
-    return LOCATION_MULTIPLIERS[estimate.city] || LOCATION_MULTIPLIERS["default"];
-  };
-
   const getProjectTypeMultiplier = (): number => {
     let baseMultiplier = 1.0;
     if (estimate.projectType === "commercial") baseMultiplier = 1.15;
@@ -119,7 +104,7 @@ const BudgetMatchingStep = ({
   };
 
   const sizeMultiplier = getSizeMultiplier(areaInSqM);
-  const locationMultiplier = getLocationMultiplier();
+  const locationMultiplier = getLocationMultiplier(estimate.city, estimate.state);
   const projectMultiplier = getProjectTypeMultiplier();
 
   // Calculate full cost with all multipliers
