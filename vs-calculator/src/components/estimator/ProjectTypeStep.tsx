@@ -1,7 +1,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect } from "react";
-import { Building2, Home, Building, Paintbrush, HardHat, Trees, Check, Layers, Hammer, Wrench, Mountain, TriangleRight } from "lucide-react";
+import { Building2, Home, Building, Paintbrush, HardHat, Trees, Check, Layers, Hammer, Wrench, Mountain, TriangleRight, Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AnimatedText from "@/components/AnimatedText";
 import { ProjectSubcategory, RoomConfiguration, RoomCounts, LandscapeArea, ConstructionSubtype, AreaInputType, ProjectMode, FoundationType } from "@/types/estimator";
@@ -417,7 +417,7 @@ const ProjectTypeStep = ({
           />
 
           <p className="text-sm text-[#4f090c]/70 text-center mb-6 -mt-2">
-            Drag each slider to match your exact layout
+            Drag the slider or tap − / + to match your exact layout
           </p>
 
           <div className="max-w-md mx-auto space-y-6">
@@ -436,13 +436,34 @@ const ProjectTypeStep = ({
                       {value}
                     </span>
                   </div>
-                  <Slider
-                    value={[value]}
-                    min={0}
-                    max={max}
-                    step={1}
-                    onValueChange={([v]) => handleRoomCountChange(key, v)}
-                  />
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      aria-label={`Decrease ${label}`}
+                      disabled={value <= 0}
+                      onClick={() => handleRoomCountChange(key, value - 1)}
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-vs/30 text-vs transition-colors hover:bg-vs/10 disabled:opacity-30 disabled:pointer-events-none"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <Slider
+                      value={[value]}
+                      min={0}
+                      max={max}
+                      step={1}
+                      aria-label={label}
+                      onValueChange={([v]) => handleRoomCountChange(key, v)}
+                    />
+                    <button
+                      type="button"
+                      aria-label={`Increase ${label}`}
+                      disabled={value >= max}
+                      onClick={() => handleRoomCountChange(key, value + 1)}
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-vs/30 text-vs transition-colors hover:bg-vs/10 disabled:opacity-30 disabled:pointer-events-none"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               );
             })}
