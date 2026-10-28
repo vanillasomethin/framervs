@@ -224,7 +224,8 @@ const LocationStep = ({ selectedState, selectedCity, onStateSelect, onCitySelect
                   <p className="px-3 pt-3 pb-1 text-xs text-[#4f090c]/60">
                     Not in our list? Use your town anyway:
                   </p>
-                  {["Karnataka", "Kerala"].map((state) => (
+                  {/* "Other state" has no state-specific data, so it prices at the default rate */}
+                  {["Karnataka", "Kerala", "Other state"].map((state) => (
                     <div
                       key={state}
                       className="flex items-center gap-2 p-3 hover:bg-vs/5 cursor-pointer transition-colors border-b border-primary/5 last:border-b-0"
