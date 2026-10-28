@@ -41,8 +41,38 @@ const LocationStep = ({ selectedState, selectedCity, onStateSelect, onCitySelect
     "Haryana": ["Faridabad", "Gurgaon", "Panipat", "Ambala", "Yamunanagar", "Rohtak", "Hisar", "Karnal", "Sonipat", "Panchkula"],
     "Himachal Pradesh": ["Shimla", "Dharamshala", "Solan", "Mandi", "Palampur", "Kullu", "Hamirpur", "Una", "Nahan", "Bilaspur"],
     "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Hazaribagh", "Deoghar", "Giridih", "Ramgarh", "Dumka", "Phusro"],
-    "Karnataka": ["Bangalore", "Mysore", "Hubli", "Mangalore", "Belgaum", "Gulbarga", "Davanagere", "Bellary", "Bijapur", "Shimoga"],
-    "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Kollam", "Palakkad", "Alappuzha", "Kannur", "Kottayam", "Malappuram"],
+    "Karnataka": [
+      "Bangalore", "Mangalore", "Mysore", "Hubli", "Dharwad", "Belgaum", "Gulbarga", "Davanagere", "Bellary", "Bijapur", "Shimoga", "Udupi", "Tumkur",
+      "Bagalkot", "Bidar", "Chamarajanagar", "Chikkaballapur", "Chikmagalur", "Chitradurga", "Gadag", "Hassan", "Haveri", "Madikeri", "Kolar", "Koppal",
+      "Mandya", "Raichur", "Ramanagara", "Karwar", "Yadgir", "Hospet", "Doddaballapur",
+      "Puttur", "Bantwal", "Moodbidri", "Ullal", "Surathkal", "Mulki", "Belthangady", "Sullia", "Vitla", "Dharmasthala", "Subramanya",
+      "Manipal", "Kundapura", "Karkala", "Kaup", "Brahmavar", "Byndoor", "Bhatkal", "Kumta", "Honnavar", "Ankola", "Gokarna", "Sirsi", "Dandeli", "Yellapur",
+      "Bhadravati", "Sagara", "Shikaripura", "Thirthahalli", "Sorab", "Hosanagara", "Sringeri", "Mudigere", "Kadur", "Tarikere",
+      "Kushalnagar", "Virajpet", "Somwarpet", "Sakleshpur", "Belur", "Arsikere", "Channarayapatna", "Holenarasipur",
+      "Hosakote", "Nelamangala", "Anekal", "Devanahalli", "Kanakapura", "Channapatna", "Magadi", "Maddur", "Malavalli", "Srirangapatna", "Krishnarajpet",
+      "Nanjangud", "Hunsur", "Kollegal", "Tiptur", "Sira", "Kunigal", "Gubbi", "Chintamani", "Gauribidanur", "Sidlaghatta", "Kolar Gold Fields", "Mulbagal", "Malur",
+      "Hiriyur", "Challakere", "Holalkere", "Harihar", "Ranebennur", "Byadgi", "Savanur", "Gokak", "Chikkodi", "Athani", "Nipani", "Bailhongal", "Saundatti", "Khanapur",
+      "Jamkhandi", "Ilkal", "Badami", "Mudhol", "Gangavathi", "Sindhanur", "Lingasugur", "Manvi", "Basavakalyan", "Bhalki", "Humnabad", "Aurad",
+      "Shahapur", "Shorapur", "Sedam", "Chittapur", "Jewargi", "Sindagi", "Indi", "Muddebihal", "Lakshmeshwar", "Nargund", "Kalghatgi"
+    ],
+    "Kerala": [
+      "Kochi", "Thiruvananthapuram", "Kozhikode", "Thrissur", "Kannur", "Kasaragod", "Kollam", "Palakkad", "Alappuzha", "Kottayam", "Malappuram",
+      "Pathanamthitta", "Kalpetta", "Painavu", "Ernakulam",
+      "Kanhangad", "Nileshwar", "Manjeshwar", "Uppala", "Kumbla", "Cheruvathur", "Trikaripur", "Bekal", "Badiadka",
+      "Payyanur", "Thalassery", "Taliparamba", "Iritty", "Mattannur", "Kuthuparamba", "Panoor", "Sreekandapuram", "Anthoor",
+      "Vadakara", "Koyilandy", "Feroke", "Ramanattukara", "Mukkam", "Thamarassery", "Kunnamangalam", "Balussery", "Perambra", "Nadapuram",
+      "Mananthavady", "Sulthan Bathery", "Vythiri", "Meppadi",
+      "Manjeri", "Tirur", "Perinthalmanna", "Ponnani", "Kondotty", "Nilambur", "Kottakkal", "Valanchery", "Tanur", "Parappanangadi", "Tirurangadi", "Edappal",
+      "Ottapalam", "Shoranur", "Chittur", "Mannarkkad", "Pattambi", "Alathur", "Cherpulassery", "Vadakkencherry",
+      "Guruvayur", "Kunnamkulam", "Chalakudy", "Irinjalakuda", "Kodungallur", "Wadakkanchery", "Chavakkad", "Kodakara",
+      "Aluva", "Angamaly", "Perumbavoor", "Muvattupuzha", "Kothamangalam", "Kalamassery", "Thrippunithura", "Kakkanad", "Edappally", "North Paravur", "Fort Kochi", "Piravom", "Koothattukulam",
+      "Thodupuzha", "Kattappana", "Munnar", "Adimali", "Nedumkandam", "Kumily",
+      "Pala", "Changanassery", "Vaikom", "Ettumanoor", "Kanjirappally", "Erattupetta",
+      "Cherthala", "Kayamkulam", "Haripad", "Mavelikkara", "Chengannur", "Ambalappuzha",
+      "Thiruvalla", "Adoor", "Pandalam", "Ranni", "Konni",
+      "Karunagappally", "Punalur", "Kottarakkara", "Paravur", "Chathannoor", "Anchal",
+      "Neyyattinkara", "Nedumangad", "Attingal", "Varkala", "Kovalam", "Kazhakoottam", "Vizhinjam"
+    ],
     "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior", "Ujjain", "Sagar", "Dewas", "Satna", "Ratlam", "Rewa"],
     "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad", "Solapur", "Kolhapur", "Amravati", "Nanded"],
     "Manipur": ["Imphal", "Thoubal", "Bishnupur", "Churachandpur", "Ukhrul", "Senapati", "Chandel", "Tamenglong", "Jiribam", "Kakching"],
@@ -69,46 +99,62 @@ const LocationStep = ({ selectedState, selectedCity, onStateSelect, onCitySelect
     "Puducherry": ["Puducherry", "Karaikal", "Yanam", "Mahe", "Villianur", "Ozhukarai", "Ariyankuppam", "Bahour", "Mannadipet", "Nettapakkam"]
   };
 
+  // Alternate / older spellings people commonly type, mapped to the name used
+  // in the list above (which is also the key for pricing and FSI lookups).
+  const cityAliases: Record<string, string> = {
+    "bengaluru": "Bangalore", "mangaluru": "Mangalore", "mysuru": "Mysore", "hubballi": "Hubli",
+    "belagavi": "Belgaum", "kalaburagi": "Gulbarga", "ballari": "Bellary", "vijayapura": "Bijapur",
+    "shivamogga": "Shimoga", "tumakuru": "Tumkur", "chikkamagaluru": "Chikmagalur", "hosapete": "Hospet",
+    "coorg": "Madikeri", "kodagu": "Madikeri", "kgf": "Kolar Gold Fields", "karkal": "Karkala", "kundapur": "Kundapura",
+    "cochin": "Kochi", "trivandrum": "Thiruvananthapuram", "calicut": "Kozhikode", "trichur": "Thrissur",
+    "alleppey": "Alappuzha", "quilon": "Kollam", "cannanore": "Kannur", "palghat": "Palakkad", "tellicherry": "Thalassery",
+    "kasargod": "Kasaragod", "kasaragode": "Kasaragod", "kasarkod": "Kasaragod",
+    "wayanad": "Kalpetta", "idukki": "Painavu", "badagara": "Vadakara", "quilandy": "Koyilandy", "alwaye": "Aluva",
+    "palai": "Pala", "tiruvalla": "Thiruvalla", "guruvayoor": "Guruvayur", "sultan bathery": "Sulthan Bathery"
+  };
+
   // Generate location suggestions based on search query
   useEffect(() => {
-    if (searchQuery.length > 1) {
-      const query = searchQuery.toLowerCase();
-      const results: {state: string, city: string}[] = [];
+    // Don't reopen the dropdown for the "City, State" text we just filled in
+    if (selectedCity && searchQuery === `${selectedCity}, ${selectedState}`) {
+      setShowSuggestions(false);
+      return;
+    }
+    if (searchQuery.trim().length > 1) {
+      const query = searchQuery.trim().toLowerCase();
+      // Rank: city starts with query > city contains query > alias match > state match
+      const scored: {state: string, city: string, score: number}[] = [];
+      const aliasTargets = new Set(
+        Object.entries(cityAliases)
+          .filter(([alias]) => alias.startsWith(query) || query.startsWith(alias))
+          .map(([, city]) => city)
+      );
 
-      // Check for direct matches in city names and state combinations
       states.forEach(state => {
         const cities = citiesByState[state] || [];
         cities.forEach(city => {
-          const fullLocation = `${city}, ${state}`.toLowerCase();
-          if (fullLocation.includes(query) || 
-              city.toLowerCase().includes(query) || 
-              state.toLowerCase().includes(query)) {
-            results.push({ state, city });
-          }
+          const name = city.toLowerCase();
+          let score = 0;
+          if (name.startsWith(query)) score = 4;
+          else if (name.includes(query)) score = 3;
+          else if (aliasTargets.has(city)) score = 2;
+          else if (state.toLowerCase().includes(query) || `${city}, ${state}`.toLowerCase().includes(query)) score = 1;
+          if (score > 0) scored.push({ state, city, score });
         });
       });
 
-      // Find nearest matches if exact city not found
-      if (results.length === 0) {
-        states.forEach(state => {
-          if (state.toLowerCase().includes(query)) {
-            // If state matches but no city specified, add the capital or first major city
-            const cities = citiesByState[state] || [];
-            if (cities.length > 0) {
-              results.push({ state, city: cities[0] });
-            }
-          }
-        });
-      }
+      const results = scored
+        .sort((a, b) => b.score - a.score)
+        .map(({ state, city }) => ({ state, city }));
 
       // Limit results to top 10
       setSuggestions(results.slice(0, 10));
-      setShowSuggestions(results.length > 0);
+      setShowSuggestions(true);
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
     }
-  }, [searchQuery]);
+  }, [searchQuery, selectedCity, selectedState]);
 
   const handleSuggestionClick = (state: string, city: string) => {
     onStateSelect(state);
@@ -125,6 +171,12 @@ const LocationStep = ({ selectedState, selectedCity, onStateSelect, onCitySelect
     }
   };
 
+  // Title-cased version of what the user typed, for towns not in the list
+  const customCityName = searchQuery
+    .trim()
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+
   return (
     <div>
       <AnimatedText 
@@ -139,7 +191,7 @@ const LocationStep = ({ selectedState, selectedCity, onStateSelect, onCitySelect
           </div>
           <input
             type="text"
-            placeholder="Type city name (e.g., Mumbai, Bangalore, Delhi)"
+            placeholder="Type your city or town (e.g., Mangalore, Kasaragod, Kochi)"
             className="w-full pl-10 pr-4 py-3 rounded-lg border border-primary/20 bg-white bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-vs/50 focus:border-transparent"
             value={searchQuery}
             onChange={handleSearchInputChange}
@@ -167,6 +219,24 @@ const LocationStep = ({ selectedState, selectedCity, onStateSelect, onCitySelect
                   <span>{suggestion.city}, {suggestion.state}</span>
                 </div>
               ))}
+              {suggestions.length === 0 && (
+                <>
+                  <p className="px-3 pt-3 pb-1 text-xs text-[#4f090c]/60">
+                    Not in our list? Use your town anyway:
+                  </p>
+                  {/* "Other state" has no state-specific data, so it prices at the default rate */}
+                  {["Karnataka", "Kerala", "Other state"].map((state) => (
+                    <div
+                      key={state}
+                      className="flex items-center gap-2 p-3 hover:bg-vs/5 cursor-pointer transition-colors border-b border-primary/5 last:border-b-0"
+                      onMouseDown={() => handleSuggestionClick(state, customCityName)}
+                    >
+                      <MapPin className="h-4 w-4 text-vs" />
+                      <span>{customCityName}, {state}</span>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           )}
         </div>

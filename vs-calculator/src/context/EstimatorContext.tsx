@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { ProjectEstimate, ComponentOption } from "@/types/estimator";
 import { useToast } from "@/hooks/use-toast";
+import { getLocationMultiplier } from "@/utils/locationCost";
 
 interface EstimatorContextType {
   step: number;
@@ -18,43 +19,9 @@ interface EstimatorContextType {
 
 const EstimatorContext = createContext<EstimatorContextType | undefined>(undefined);
 
-// Location-based cost multipliers.
-// Calibrated against InfraLens 2026 metro standard rates (₹/sqft): Mumbai 3150,
-// Delhi 2835, Gurgaon 2730, Pune 2573, Bangalore 2520, Chennai 2363, Hyderabad
-// 2205, Kolkata 2205, Ahmedabad 2153 — expressed relative to a national
-// baseline of ~₹2,100/sqft (multiplier 1.0). Bangalore anchors at 1.20.
-const LOCATION_MULTIPLIERS: Record<string, number> = {
-  // Tier 1 Cities - High cost
-  "Mumbai": 1.50,
-  "Navi Mumbai": 1.42,
-  "Thane": 1.40,
-  "Delhi": 1.35,
-  "New Delhi": 1.35,
-  "Gurgaon": 1.30,
-  "Noida": 1.28,
-  "Bangalore": 1.20,
-  "Bengaluru": 1.20,
-  "Pune": 1.22,
-  "Hyderabad": 1.05,
-  "Chennai": 1.13,
-  "Kolkata": 1.05,
-
-  // Tier 2 Cities - Medium cost
-  "Ahmedabad": 1.03,
-  "Surat": 1.00,
-  "Jaipur": 1.05,
-  "Kochi": 1.05,
-  "Coimbatore": 1.00,
-  "Indore": 1.00,
-  "Chandigarh": 1.15,
-  "Lucknow": 0.98,
-  "Visakhapatnam": 0.95,
-  "Nagpur": 0.98,
-  "Vadodara": 1.00,
-
-  // Tier 3 and others - Base cost
-  "default": 0.92
-};
+// Location multipliers come from getLocationMultiplier (utils/locationCost.ts):
+// market-rate cities directly, every other city via its state anchor scaled by
+// the CPWD Building Cost Index.
 
 // Component pricing per square meter (in INR).
 // Standard-tier rates reflect 2025-26 market research; premium and luxury tiers
@@ -215,10 +182,6 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
   const totalSteps = 5;
 
   // Get location multiplier
-  const getLocationMultiplier = useCallback((city: string): number => {
-    return LOCATION_MULTIPLIERS[city] || LOCATION_MULTIPLIERS["default"];
-  }, []);
-
   // Get project type multiplier
   const getProjectTypeMultiplier = useCallback((projectType: string, complexity: number): number => {
     // Kept modest because the typology cost difference is mostly already carried
@@ -552,7 +515,7 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
     const baseSubtotal = constructionCost + demolitionCost + core + finishes + interiors;
 
     // 4. Location + project-type/complexity multipliers
-    const locationMultiplier = getLocationMultiplier(currentEstimate.city);
+    const locationMultiplier = getLocationMultiplier(currentEstimate.city, currentEstimate.state);
     const projectMultiplier = getProjectTypeMultiplier(
       currentEstimate.projectType,
       currentEstimate.complexity
@@ -645,7 +608,7 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
       },
       timeline,
     };
-  }, [calculateConstructionCost, calculateComponentCosts, getLocationMultiplier, getProjectTypeMultiplier, getFoundationMultiplier, getArchitectFeeRate, calculateTimeline]);
+  }, [calculateConstructionCost, calculateComponentCosts, getProjectTypeMultiplier, getFoundationMultiplier, getArchitectFeeRate, calculateTimeline]);
 
   // Auto-adjust component selections based on work types
   useEffect(() => {
