@@ -5,7 +5,9 @@
 # public/estimator/ so it ships alongside the static export.
 [build]
   publish = "public"
-  command = "cd vs-calculator && npm ci && npm run build && rm -rf ../public/estimator && cp -r dist ../public/estimator"
+  # build-cms.mjs generates /blog, /projects and /updates from public/content.json
+  # (edited through /admin).
+  command = "node scripts/build-cms.mjs && cd vs-calculator && npm ci && npm run build && rm -rf ../public/estimator && cp -r dist ../public/estimator"
 
 [build.environment]
   NODE_VERSION = "20"
@@ -32,6 +34,18 @@
   from = "/estimator/*"
   to = "/estimator/index.html"
   status = 200
+
+# Shared renderer is imported as an ES module by the admin
+[[headers]]
+  for = "/cms/*"
+  [headers.values]
+    Content-Type = "text/javascript; charset=utf-8"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+    Cache-Control = "no-cache"
 
 # Serve the admin SPA, same as the rewrites in vercel.json
 [[redirects]]
