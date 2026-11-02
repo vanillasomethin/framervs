@@ -19,3 +19,4 @@ vs-calculator/dist/
 public/blog/
 public/projects/
 public/updates/
+!erp/.env.example
