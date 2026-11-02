@@ -1,0 +1,89 @@
+# OpenConstructionERP for the Vanilla & Somethin studio, served at
+# https://erp.vanillasometh.in (see erp/README.md for the full setup).
+#
+# Runs the project's own published image, unmodified, behind Caddy (automatic
+# HTTPS). Only Caddy is reachable from the internet; the app and database are
+# on the private compose network.
+#
+# Start with ./setup.sh the first time (it generates secrets and creates the
+# admin account before the site goes public). Afterwards: docker compose up -d
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: oe
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run ./setup.sh first}
+      POSTGRES_DB: openestimate
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oe -d openestimate"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  app:
+    # Pinned so an upstream release never changes the studio's system
+    # unannounced. To update, change the tag (see README) and re-run.
+    image: ghcr.io/datadrivenconstruction/openconstructionerp:${OE_IMAGE_TAG:-18.9.0}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      OE_DB_HOST: postgres
+      OE_DB_PORT: "5432"
+      OE_DB_USER: oe
+      OE_DB_NAME: openestimate
+      OE_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      # Older published images read the finished URLs instead of the parts.
+      # setup.sh generates a hex password, so it is URL-safe as-is.
+      DATABASE_URL: postgresql+asyncpg://oe:${POSTGRES_PASSWORD}@postgres:5432/openestimate
+      DATABASE_SYNC_URL: postgresql://oe:${POSTGRES_PASSWORD}@postgres:5432/openestimate
+      JWT_SECRET: ${JWT_SECRET:?Run ./setup.sh first}
+      APP_ENV: production
+      APP_DEBUG: "false"
+      SERVE_FRONTEND: "true"
+      ALLOWED_ORIGINS: https://${ERP_DOMAIN:?Set ERP_DOMAIN in .env}
+      OE_DATA_DIR: /data
+      VECTOR_BACKEND: lancedb
+      # Only an admin can let new people in: sign-ups wait for approval
+      # (or set "closed" to allow only admin-created accounts).
+      OE_REGISTRATION_MODE: ${OE_REGISTRATION_MODE:-admin-approve}
+      OE_DEFAULT_REGISTRATION_ROLE: ${OE_DEFAULT_REGISTRATION_ROLE:-editor}
+    volumes:
+      - app_data:/data
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      ERP_DOMAIN: ${ERP_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  pg_data:
+  app_data:
+  caddy_data:
+  caddy_config:
