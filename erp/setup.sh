@@ -45,7 +45,8 @@ docker compose up -d postgres app
 
 printf 'Waiting for the app to be ready'
 for _ in $(seq 1 120); do
-  if docker compose exec -T app curl -fsS http://localhost:8080/api/health >/dev/null 2>&1; then ready=1; break; fi
+  # </dev/null: exec would otherwise swallow whatever is typed while we wait
+  if docker compose exec -T app curl -fsS http://localhost:8080/api/health </dev/null >/dev/null 2>&1; then ready=1; break; fi
   printf '.'; sleep 5
 done
 echo
@@ -68,9 +69,9 @@ else
   body=$(NAME="$name" EMAIL="$email" PASSWORD="$password" python3 -c \
     'import json,os; print(json.dumps({"full_name": os.environ["NAME"], "email": os.environ["EMAIL"], "password": os.environ["PASSWORD"]}))')
   status=$(docker compose exec -T app curl -s -o /tmp/register.json -w '%{http_code}' \
-    -H 'Content-Type: application/json' -d "$body" http://localhost:8080/api/v1/users/auth/register/)
+    -H 'Content-Type: application/json' -d "$body" http://localhost:8080/api/v1/users/auth/register/ </dev/null)
   if [[ "$status" != "201" ]]; then
-    docker compose exec -T app cat /tmp/register.json || true
+    docker compose exec -T app cat /tmp/register.json </dev/null || true
     die "Creating the admin account failed (HTTP $status)."
   fi
   touch .admin-created

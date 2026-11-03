@@ -54,6 +54,11 @@ services:
       # (or set "closed" to allow only admin-created accounts).
       OE_REGISTRATION_MODE: ${OE_REGISTRATION_MODE:-admin-approve}
       OE_DEFAULT_REGISTRATION_ROLE: ${OE_DEFAULT_REGISTRATION_ROLE:-editor}
+      # Never create the built-in demo accounts. With seeding on, the app makes
+      # demo admin/manager/estimator users and a password-free "demo login"
+      # for them, which on an internet-facing install hands out manager
+      # sessions to anyone. Setting it here (not in .env) so it can't be undone.
+      SEED_DEMO: "false"
     volumes:
       - app_data:/data
     expose:

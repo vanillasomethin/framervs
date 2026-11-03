@@ -39,6 +39,8 @@ sudo ./setup.sh
 
 The order matters. On a fresh install, the first account ever registered becomes the admin, so setup claims it before anyone else can reach the site.
 
+The app's built-in demo accounts and password-free "demo login" are switched off (`SEED_DEMO: "false"` in `docker-compose.yml`). Left on, they would let anyone who opens the site sign in as a manager. Keep it off.
+
 **Save the contents of `.env` in your password manager.** Without it, backups can't be restored on a new server.
 
 Then open https://erp.vanillasometh.in, log in, and follow the app's guided onboarding (company type, country, currency INR, cost database).
