@@ -767,7 +767,7 @@ const imageInner = (image) =>
 
 const galleryInner = (gallery) => `<div class="gallery-grid">
     ${gallery.map((g, i) => {
-      const isPDF = g.mediaType === "application/pdf" || /\\.pdf(?:$|[?#])/i.test(g.src || "");
+      const isPDF = g.mediaType === "application/pdf" || (g.src || "").toLowerCase().split("?")[0].endsWith(".pdf");
       const preview = isPDF
         ? `<a class="gallery-document" href="${escapeHTML(resolveSrc(g.src))}" target="_blank" rel="noopener"><strong>PDF</strong><span>${escapeHTML(g.alt || "Open drawing")}</span></a>`
         : `<img src="${escapeHTML(resolveSrc(g.src))}" alt="${escapeHTML(g.alt || "")}">`;
