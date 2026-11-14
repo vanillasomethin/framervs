@@ -7,7 +7,7 @@ Build qualified organic visibility for architecture and interior design enquirie
 - Replaces the placeholder `/seo` SEO explainer with a public, crawlable studio service landing page.
 - Adds distinct location-intent landing pages for Mangalore, Kasaragod, coastal Karnataka and Kerala; each has unique copy, self-canonical, Open Graph, internal links, and truthful LocalBusiness/ProfessionalService schema without invented street addresses, map coordinates, hours, ratings or office locations.
 - Replaces the stale sitemap with a sitemap index and separate service, location and portfolio sitemaps.
-- Adds `lastmod` values derived from the source export rather than stale 2026-01-03 timestamps.
+- Removes the stale `/canonical-url` entry and old hard-coded modification dates.
 - Improves `llms.txt` as supplementary machine-readable navigation, not a Google ranking signal.
 - Adds a repeatable static audit script for sitemap validity, unique canonical URLs, title/description presence, JSON-LD parseability and required internal pages.
 - Keeps the static-export / Netlify build architecture; no client-only metadata injection.
