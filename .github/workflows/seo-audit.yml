@@ -9,6 +9,7 @@ on:
       - "public/cms/**"
       - "public/admin/**"
       - "netlify/functions/cms.js"
+      - "vs-calculator/**"
       - ".github/workflows/seo-audit.yml"
   push:
     branches: [main]
@@ -17,6 +18,7 @@ on:
       - "scripts/audit-seo.mjs"
       - "scripts/build-cms.mjs"
       - "netlify/functions/cms.js"
+      - "vs-calculator/**"
 
 jobs:
   static-seo-audit:
@@ -32,6 +34,8 @@ jobs:
           node --check scripts/build-cms.mjs
           node --check netlify/functions/cms.js
           node --input-type=module --check < public/admin/admin.js
+      - name: Build estimator app
+        run: cd vs-calculator && npm ci && npm run build
       - name: Generate CMS pages and sitemap
         run: node scripts/build-cms.mjs
       - name: Audit static SEO metadata and sitemaps
