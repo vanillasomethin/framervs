@@ -34,3 +34,26 @@ Build qualified organic visibility for architecture and interior design enquirie
 - https://github.com/AgriciDaniel/claude-seo — technical, content, schema, local/map, backlink, visibility audit concepts.
 - https://github.com/every-app/open-seo — keyword research, competitors, rank tracking, backlinks and site audit workflow.
 - https://github.com/i365dev/awesome-seo — Search Console, Google Search Essentials, structured data, crawlability and measurement.
+
+
+## NRI search strategy
+- Dedicated landing page: `/nri-home-design/`, linked from the studio service page, sitemap and `llms.txt`.
+- Target intent: NRI / overseas Indian families planning a home or renovation in Mangalore, Dakshina Kannada, Kasaragod and Kerala while based in the GCC, UK, Europe, North America or Australia.
+- Page explains online briefing, required site information, design review milestones, nominated local family contact, and the limits of remote delivery. It does not promise construction management, continuous supervision or site visits unless separately agreed.
+- Follow-up content should be built around genuine NRI project case studies, documented remote design workflows, project-specific FAQs and actual delivery arrangements. Avoid generic country doorway pages (e.g. one near-identical page per GCC country).
+
+## Competitor benchmark: The Architecture Corporation
+Publicly visible signals reviewed in November 2026:
+- Official website presents architecture, interior design and featured project/sector content: https://thearchitecturecorporation.com/
+- Its LinkedIn company profile describes an Mangaluru practice, founded 2023, with India/UAE service positioning and location entries for Mangaluru and Dubai: https://in.linkedin.com/company/the-architecture-corporation
+- Public LinkedIn posts directly address clients living abroad who want to build or renovate in Mangalore, and describe remote coordination and site updates.
+- Third-party discovery surfaces include Houzz and Magicpin listings. These are evidence of off-site brand presence, not proof that a particular listing caused a Google ranking.
+- The competitor's apparent ranking position and exact SEO tactics cannot be established from a website inspection or search snippets alone. No claims are made about their private Search Console data, paid campaigns, backlink strategy or ranking causality.
+
+### What Vanilla & Somethin' should learn (without copying)
+1. Own the NRI intent explicitly with a clear service page and real project proof.
+2. Publish a strong case study for each actual NRI commission, stating the client's country only with consent and the project location, scope, process, milestones and delivered outputs.
+3. Build accurate business profiles and relevant local/industry citations; keep name, address and phone consistent.
+4. Publish useful project stories around Mangalore's climate, materials, planning and local building conditions.
+5. Make remote-work promises operationally true: specify communication channels, time-zone meeting windows, approval records, site-visit frequency, responsible parties and exclusions in proposals.
+6. Track NRI and local-intent queries separately in Search Console and qualified enquiry records.
