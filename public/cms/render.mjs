@@ -452,9 +452,9 @@ export const renderProject = (cms, project) => {
       return isPDF
         ? `<a class="document-card" href="${escapeHTML(href)}" target="_blank" rel="noopener"><span>PDF DOCUMENT</span><strong>${escapeHTML(g.alt || label)}</strong><small>Open drawing or document ↗</small></a>`
         : `<a class="media-item" href="${escapeHTML(href)}" target="_blank" rel="noopener">${img(g)}<span class="media-caption">${escapeHTML(g.alt || label)}</span></a>`;
-    }).join("\\n");
+    }).join("\n");
     return `<section class="project-media-group"><h2>${label}</h2><div class="gallery">${content}</div></section>`;
-  }).join("\\n");
+  }).join("\n");
   return layout({
     cms,
     section: "projects",
