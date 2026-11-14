@@ -1,4 +1,4 @@
-# Local SEO implementation notes — Vanilla & Somethin'
+# Local SEO implementation notes ,  Vanilla & Somethin'
 
 ## Objective
 Build qualified organic visibility for architecture and interior design enquiries in Mangalore / Dakshina Kannada, Kasaragod and other genuinely served areas of coastal Karnataka and Kerala. No implementation can guarantee position one.
@@ -33,9 +33,9 @@ Build qualified organic visibility for architecture and interior design enquirie
 8. Track local-intent queries separately for Mangalore, Kasaragod, coastal Karnataka and Kerala; revise based on Search Console and qualified enquiries.
 
 ## Reference projects consulted
-- https://github.com/AgriciDaniel/claude-seo — technical, content, schema, local/map, backlink, visibility audit concepts.
-- https://github.com/every-app/open-seo — keyword research, competitors, rank tracking, backlinks and site audit workflow.
-- https://github.com/i365dev/awesome-seo — Search Console, Google Search Essentials, structured data, crawlability and measurement.
+- https://github.com/AgriciDaniel/claude-seo ,  technical, content, schema, local/map, backlink, visibility audit concepts.
+- https://github.com/every-app/open-seo ,  keyword research, competitors, rank tracking, backlinks and site audit workflow.
+- https://github.com/i365dev/awesome-seo ,  Search Console, Google Search Essentials, structured data, crawlability and measurement.
 
 
 ## NRI search strategy
@@ -65,6 +65,15 @@ Publicly visible signals reviewed in November 2026:
 - Dedicated commercial landing page: `/commercial-design/`, covering commercial buildings, cafes, restaurants, kiosks, showrooms, retail stores, supermarkets, offices and workplaces.
 - The main architecture/interior design page links to commercial design and the estimator; the commercial page links directly to the estimator.
 - The estimator app is served under `/estimator/`. It supports residential, commercial and mixed-use project categories, construction/interiors/landscape work scopes, location and area inputs, specification selections, a preliminary cost breakdown, and a separate architect-fee calculator.
-- Position estimator outputs as indicative early-stage planning references only—not contractor quotations, BOQs, tender prices or guarantees. Actual costs depend on site conditions, drawings, specifications, consultant scope, equipment and exclusions.
+- Position estimator outputs as indicative early-stage planning references only, not contractor quotations, BOQs, tender prices or guarantees. Actual costs depend on site conditions, drawings, specifications, consultant scope, equipment and exclusions.
 - Keep the estimator's commercial category and supported inputs accurate; do not claim it separately prices every cafe kitchen system, specialist equipment, fire/MEP package, statutory fee or fit-out item unless the calculation engine explicitly models it.
 - Add real commercial case studies for hospitality, retail, office and kiosk work as source material becomes available. Each should identify the project type, location, scope, design constraints, delivered services and original imagery with client permission.
+
+
+## Landscape design, Marian collaboration and digital project delivery
+- Added a dedicated `/landscape-design/` service page for gardens, courtyards, terraces, rooftop spaces, planting, hardscape, outdoor lighting and site-responsive landscape concepts.
+- Added a `/project-management/` page describing AI-assisted workflows and in-house project dashboards. The copy limits AI to supporting tasks and keeps design judgement, technical review and approvals with the project team.
+- Dashboard copy describes project milestones, task ownership, progress updates, review comments, approvals, budget allocations and revisions. It does not claim automatic live tracking; project data reflects updates entered by the team.
+- Added a homepage collaboration panel using the Marian logo image hosted on the official Marian Projects website. Public brand naming on the official site is Marian Projects Private Limited. Confirm the exact partnership wording and logo-use permission before production publication.
+- Removed the unsupported satisfaction percentage and replaced it with a qualitative client-relationship statement. Keep client satisfaction metrics off the site unless supported by a documented survey method and actual results.
+- Remove em dashes from the public homepage and service copy. Preserve a no-em-dash check in the static SEO audit.
