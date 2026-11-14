@@ -33,7 +33,7 @@ const clone = (value) => JSON.parse(JSON.stringify(value));
 // Content types
 // ---------------------------------------------------------------------------
 
-const PROJECT_TYPES = ["Residential", "Residential - Apartment", "Residential - Interiors", "Commercial - Office", "Commercial - Retail", "Commercial - Cafe", "Hospitality", "Landscape", "Interiors", "Urban Design"];
+const PROJECT_TYPES = ["Residential", "Residential - Apartment", "Residential - Interiors", "Residential - Renovation", "Hospitality - Airbnb / Short Stay", "Hospitality - Homestay / Serviced Villa", "Commercial - Office", "Commercial - Retail", "Commercial - Cafe", "Commercial - Healthcare", "Commercial - Restaurant", "Landscape", "Landscape & Public Realm", "Sports & Recreation", "Interiors", "Urban Design", "Building Permit / Compliance Documentation"];
 
 const TYPES = {
   blog: {
@@ -66,7 +66,7 @@ const TYPES = {
     livePath: (item) => `/projects/${item.slug}/`,
     indexPath: "/projects/",
     manualOrder: true,
-    create: () => ({ id: uid(), title: "", slug: "", status: "draft", category: "", location: "", year: String(new Date().getFullYear()), client: "", area: "", projectStatus: "Completed", summary: "", cover: { src: "", alt: "" }, body: "", gallery: [] }),
+    create: () => ({ id: uid(), title: "", slug: "", status: "draft", category: "", location: "", year: "", client: "", area: "", projectStatus: "Scope to confirm", summary: "", seoDescription: "", cover: { src: "", alt: "" }, body: "", tags: [], gallery: [] }),
     preview: (c, item) => renderProject(c, item),
     fields: [
       { key: "title", type: "title", placeholder: "Project name" },
@@ -78,13 +78,15 @@ const TYPES = {
       { row: [
         { key: "year", type: "text", label: "Year" },
         { key: "area", type: "text", label: "Area", placeholder: "e.g. 3,200 sq ft" },
-        { key: "projectStatus", type: "select", label: "Stage", options: ["Completed", "Under construction", "In design", "Concept"] },
+        { key: "projectStatus", type: "select", label: "Stage", options: ["Scope to confirm", "Completed", "Under construction", "In design", "Concept"] },
       ] },
       { key: "client", type: "text", label: "Client (optional)" },
       { key: "summary", type: "textarea", label: "One-line summary", hint: "Shown on the project card and under the title.", rows: 2 },
+      { key: "seoDescription", type: "textarea", label: "Search description (optional)", hint: "A factual 150 to 160 character description for search results.", rows: 2 },
+      { key: "tags", type: "tags", label: "Project keywords", hint: "Relevant services and project terms, separated by commas." },
       { key: "cover", type: "image", label: "Main photo" },
-      { key: "body", type: "markdown", label: "Project story", hint: "The brief, the idea, materials, challenges — whatever tells the story." },
-      { key: "gallery", type: "gallery", label: "Photo gallery", hint: "Add as many photos as you like. Use the arrows to reorder." },
+      { key: "body", type: "markdown", label: "Project story", hint: "Brief, design approach, materials, challenges, services and project outcome." },
+      { key: "gallery", type: "gallery", label: "Project media", hint: "Upload multiple photos, renders, plans, technical drawings and PDF sheets. Choose a category for each item." },
     ],
   },
   updates: {
@@ -284,19 +286,31 @@ const blobToBase64 = (blob) =>
   });
 
 // Compresses, uploads and returns the public URL of an image
-const uploadImage = async (file) => {
-  const { blob, type } = await prepareImage(file);
+const uploadBlob = async (file, blob, type) => {
   const result = await api({ action: "upload", name: file.name, type, data: await blobToBase64(blob) });
   state.pending.set(result.url, { path: result.path, sha: result.sha });
   state.previews.set(result.url, URL.createObjectURL(blob));
   return result.url;
 };
 
+const uploadImage = async (file) => {
+  const { blob, type } = await prepareImage(file);
+  return uploadBlob(file, blob, type);
+};
+
+const uploadPDF = async (file) => {
+  if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) throw new Error(`${file.name} is not a PDF.`);
+  if (file.size > 4 * 1024 * 1024) throw new Error(`${file.name} is larger than 4 MB. Please optimise the PDF first.`);
+  const header = new Uint8Array(await file.slice(0, 5).arrayBuffer());
+  if (String.fromCharCode(...header) !== "%PDF-") throw new Error(`${file.name} is not a valid PDF file.`);
+  return uploadBlob(file, file, "application/pdf");
+};
+
 const pickFiles = (multiple) =>
   new Promise((resolve) => {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = "image/jpeg,image/png,image/webp,image/gif,image/avif";
+    input.accept = "image/jpeg,image/png,image/webp,image/gif,image/avif,application/pdf,.pdf";
     input.multiple = multiple;
     input.onchange = () => resolve(Array.from(input.files || []));
     input.click();
@@ -752,13 +766,17 @@ const imageInner = (image) =>
     : `<div class="image-drop" data-image-pick><strong>Click to upload</strong> or drag a photo here<span>JPG, PNG or WebP — large photos are resized automatically</span></div>`;
 
 const galleryInner = (gallery) => `<div class="gallery-grid">
-    ${gallery
-      .map(
-        (g, i) => `<div class="gallery-item"><img src="${escapeHTML(resolveSrc(g.src))}" alt="${escapeHTML(g.alt || "")}">
-          <div class="gallery-actions"><span><button type="button" title="Move left" data-gallery-move="-1" data-index="${i}">←</button> <button type="button" title="Move right" data-gallery-move="1" data-index="${i}">→</button></span><button type="button" title="Remove" data-gallery-remove="${i}">✕</button></div></div>`
-      )
-      .join("")}
-    <div class="gallery-add" data-gallery-add>＋ Add photos<br>or drag them here</div>
+    ${gallery.map((g, i) => {
+      const isPDF = g.mediaType === "application/pdf" || /\\.pdf(?:$|[?#])/i.test(g.src || "");
+      const preview = isPDF
+        ? `<a class="gallery-document" href="${escapeHTML(resolveSrc(g.src))}" target="_blank" rel="noopener"><strong>PDF</strong><span>${escapeHTML(g.alt || "Open drawing")}</span></a>`
+        : `<img src="${escapeHTML(resolveSrc(g.src))}" alt="${escapeHTML(g.alt || "")}">`;
+      return `<div class="gallery-item">${preview}
+        <label class="gallery-kind-label">Media type<select data-gallery-kind="${i}">${[["photo","Photo"],["render","3D render"],["plan","Plan"],["drawing","Technical drawing"],["document","Document"]].map(([v,l]) => `<option value="${v}" ${(g.kind || "photo") === v ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+        <label class="gallery-alt-label">Caption / alt text<input type="text" data-gallery-alt="${i}" value="${escapeHTML(g.alt || "")}" placeholder="Describe this image or drawing"></label>
+        <div class="gallery-actions"><span><button type="button" title="Move left" data-gallery-move="-1" data-index="${i}">←</button> <button type="button" title="Move right" data-gallery-move="1" data-index="${i}">→</button></span><button type="button" title="Remove" data-gallery-remove="${i}">✕</button></div></div>`;
+    }).join("")}
+    <div class="gallery-add" data-gallery-add>＋ Add photos or PDFs<br>or drag them here</div>
   </div>`;
 
 const renderEditor = (view, type, id) => {
@@ -987,8 +1005,9 @@ const renderEditor = (view, type, id) => {
       box.classList.add("uploading");
       for (const file of files) {
         try {
-          const url = await uploadImage(file);
-          list().push({ src: url, alt: altFromName(file.name) });
+          const isPDF = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+          const url = isPDF ? await uploadPDF(file) : await uploadImage(file);
+          list().push({ src: url, alt: altFromName(file.name), kind: isPDF ? "drawing" : "photo", mediaType: isPDF ? "application/pdf" : file.type });
           touch();
           draw();
         } catch (error) {
@@ -1000,7 +1019,9 @@ const renderEditor = (view, type, id) => {
     const draw = () => {
       box.innerHTML = galleryInner(list());
       $("[data-gallery-add]", box).addEventListener("click", async () => add(await pickFiles(true)));
-      $$("[data-gallery-remove]", box).forEach((b) =>
+      $("[data-gallery-kind]", box).forEach((select) => select.addEventListener("change", () => { list()[Number(select.dataset.galleryKind)].kind = select.value; touch(); }));
+      $("[data-gallery-alt]", box).forEach((input) => input.addEventListener("input", () => { list()[Number(input.dataset.galleryAlt)].alt = input.value; touch(); }));
+      $("[data-gallery-remove]", box).forEach((b) =>
         b.addEventListener("click", () => {
           list().splice(Number(b.dataset.galleryRemove), 1);
           touch();
