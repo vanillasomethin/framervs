@@ -5,6 +5,10 @@ on:
     paths:
       - "public/**"
       - "scripts/audit-seo.mjs"
+      - "scripts/build-cms.mjs"
+      - "public/cms/**"
+      - "public/admin/**"
+      - "netlify/functions/cms.js"
       - ".github/workflows/seo-audit.yml"
   push:
     branches: [main]
@@ -20,5 +24,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Generate CMS pages and sitemap
+        run: node scripts/build-cms.mjs
       - name: Audit static SEO metadata and sitemaps
         run: node scripts/audit-seo.mjs
