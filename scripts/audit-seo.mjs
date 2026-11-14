@@ -63,6 +63,17 @@ for (const file of htmlFiles) {
   if (!/<h1\b/i.test(html)) warnings.push(`${file}: no H1 in server-rendered HTML`);
 }
 
+const cmsContent = JSON.parse(read("content.json"));
+const cmsProjects = cmsContent.cms?.projects || [];
+for (const title of ["King Abdullah Park", "Aestra Clinic", "Mezze Cafe"]) {
+  if (!cmsProjects.some((project) => project.title === title)) errors.push(`CMS project draft missing: ${title}`);
+}
+const adminSource = read("admin/admin.js");
+if (!adminSource.includes("uploadPDF") || !adminSource.includes("data-gallery-kind")) errors.push("Project editor is missing PDF upload or media categorisation controls");
+const projectRenderer = read("cms/render.mjs");
+for (const kind of ["Project photography", "3D visualisations", "Plans", "Technical drawings", "Project documents"]) {
+  if (!projectRenderer.includes(kind)) errors.push(`Project renderer missing media group: ${kind}`);
+}
 const estimatorHtml = path.resolve(process.cwd(), "vs-calculator/index.html");
 if (!fs.existsSync(estimatorHtml)) errors.push("Missing estimator app entry: vs-calculator/index.html");
 else {
