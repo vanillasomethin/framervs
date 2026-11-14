@@ -77,3 +77,14 @@ Publicly visible signals reviewed in November 2026:
 - Added a homepage collaboration panel using the Marian logo image hosted on the official Marian Projects website. Public brand naming on the official site is Marian Projects Private Limited. Confirm the exact partnership wording and logo-use permission before production publication.
 - Removed the unsupported satisfaction percentage and replaced it with a qualitative client-relationship statement. Keep client satisfaction metrics off the site unless supported by a documented survey method and actual results.
 - Remove em dashes from the public homepage and service copy. Preserve a no-em-dash check in the static SEO audit.
+
+
+## New portfolio and niche search opportunities (November 2026)
+- Added draft CMS project records for King Abdullah Park (Riyadh), Aestra Clinic (Riyadh) and Mezze Cafe (Khobar). They remain drafts until the team supplies approved photographs, drawings, accurate project scope, dates, client attribution and publication permission.
+- King Abdullah Park's record preserves the known MUGA Court and Football Court shop-drawing/design-coordination appointment for ARSA Contracting Company. The landscape work should be described from the actual package and drawings before publication.
+- Expanded the project editor media gallery to support multiple photos, 3D renders, plans, technical drawings and PDF documents. Each asset has a media category and caption/alt text. PDFs are limited to 4 MB and are stored in the site's uploads directory.
+- Project pages group media into photography, visualisations, plans, technical drawings and documents. The CMS project record includes search description and project keywords.
+- Added service landing pages for home renovation and short-stay accommodation design, plus building permit documentation and licensing coordination.
+- Niche targets include whole-home renovation, extensions, apartment renovation, NRI renovation, Airbnb/holiday homes, homestays, serviced villas, clinic design, cafe/restaurant fit-outs, landscape/public realm, building permit drawings, K-SMART building permissions and commercial fit-out documentation.
+- Regulatory language is intentionally limited to design documentation and coordination. The studio does not claim to issue licences, certify compliance or guarantee statutory approvals. K-SMART, Karnataka local-authority processes, Kerala Tourism and Saudi Balady/Tourism are authority-led processes whose requirements depend on location and activity.
+- Fixed the CMS sitemap generation to create `sitemap-cms.xml` and register it in the sitemap index. The SEO workflow now runs the CMS build before auditing the generated pages and sitemap.
