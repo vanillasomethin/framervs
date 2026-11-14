@@ -448,7 +448,7 @@ export const renderProject = (cms, project) => {
     if (!items.length) return "";
     const content = items.map((g) => {
       const href = safeUrl(g.src);
-      const isPDF = g.mediaType === "application/pdf" || /\\.pdf(?:$|[?#])/i.test(href);
+      const isPDF = g.mediaType === "application/pdf" || href.toLowerCase().split("?")[0].endsWith(".pdf");
       return isPDF
         ? `<a class="document-card" href="${escapeHTML(href)}" target="_blank" rel="noopener"><span>PDF DOCUMENT</span><strong>${escapeHTML(g.alt || label)}</strong><small>Open drawing or document ↗</small></a>`
         : `<a class="media-item" href="${escapeHTML(href)}" target="_blank" rel="noopener">${img(g)}<span class="media-caption">${escapeHTML(g.alt || label)}</span></a>`;
