@@ -4,7 +4,9 @@
 Build qualified organic visibility for architecture and interior design enquiries in Mangalore / Dakshina Kannada, Kasaragod and other genuinely served areas of coastal Karnataka and Kerala. No implementation can guarantee position one.
 
 ## What this branch changes
-- Adds an NRI home-design landing page focused on overseas Indian families planning residential projects in the studio’s practical service area. Copy explains remote briefing and clearly limits site supervision / construction management claims.
+- Adds an NRI home-design landing page focused on overseas Indian families planning residential projects in the studio’s practical service area.
+- Adds/strengthens a dedicated commercial architecture and interiors landing page for commercial buildings, cafes, restaurants, kiosks, showrooms, retail stores, supermarkets, offices and workplaces; links it from the main service page and sitemap.
+- Improves the project estimator search entry point: metadata describes its residential, commercial and mixed-use estimate use cases, and service pages explain its preliminary budget-planning role and limitations. Copy explains remote briefing and clearly limits site supervision / construction management claims.
 - Replaces the placeholder `/seo` SEO explainer with a public, crawlable studio service landing page.
 - Adds distinct location-intent landing pages for Mangalore, Kasaragod, coastal Karnataka and Kerala; each has unique copy, self-canonical, Open Graph, internal links, and truthful LocalBusiness/ProfessionalService schema without invented street addresses, map coordinates, hours, ratings or office locations.
 - Replaces the stale sitemap with a sitemap index and separate service, location and portfolio sitemaps.
@@ -57,3 +59,12 @@ Publicly visible signals reviewed in November 2026:
 4. Publish useful project stories around Mangalore's climate, materials, planning and local building conditions.
 5. Make remote-work promises operationally true: specify communication channels, time-zone meeting windows, approval records, site-visit frequency, responsible parties and exclusions in proposals.
 6. Track NRI and local-intent queries separately in Search Console and qualified enquiry records.
+
+
+## Commercial design and project estimator SEO
+- Dedicated commercial landing page: `/commercial-design/`, covering commercial buildings, cafes, restaurants, kiosks, showrooms, retail stores, supermarkets, offices and workplaces.
+- The main architecture/interior design page links to commercial design and the estimator; the commercial page links directly to the estimator.
+- The estimator app is served under `/estimator/`. It supports residential, commercial and mixed-use project categories, construction/interiors/landscape work scopes, location and area inputs, specification selections, a preliminary cost breakdown, and a separate architect-fee calculator.
+- Position estimator outputs as indicative early-stage planning references only—not contractor quotations, BOQs, tender prices or guarantees. Actual costs depend on site conditions, drawings, specifications, consultant scope, equipment and exclusions.
+- Keep the estimator's commercial category and supported inputs accurate; do not claim it separately prices every cafe kitchen system, specialist equipment, fire/MEP package, statutory fee or fit-out item unless the calculation engine explicitly models it.
+- Add real commercial case studies for hospitality, retail, office and kiosk work as source material becomes available. Each should identify the project type, location, scope, design constraints, delivered services and original imagery with client permission.
