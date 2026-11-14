@@ -205,9 +205,9 @@
         "0",
         "Years Experiences",
         "Years of shaping spaces, stories and identities. Our practice continues to evolve through vision, collaboration and considered design thinking.",
-        "" ,
-        "" ,
-        "" ,
+        "",
+        "",
+        "",
         "Client relationships",
         "We value clear communication, thoughtful decisions and a collaborative process from the first brief to project handover.",
         "0",
@@ -2761,6 +2761,94 @@
           "url": "https://www.linkedin.com/company/vanilla-and-somethin"
         }
       ]
+    },
+    "projects": [
+      {
+        "id": "king-abdullah-park-riyadh",
+        "title": "King Abdullah Park",
+        "slug": "king-abdullah-park-riyadh",
+        "status": "draft",
+        "category": "Landscape & Public Realm",
+        "location": "Riyadh, Saudi Arabia",
+        "year": "2026",
+        "client": "ARSA Contracting Company",
+        "area": "",
+        "projectStatus": "Scope to confirm",
+        "summary": "Landscape and outdoor recreation project, including MUGA and football court design coordination.",
+        "seoDescription": "Landscape and outdoor recreation design coordination at King Abdullah Park, Riyadh, including sports court documentation.",
+        "cover": {
+          "src": "",
+          "alt": ""
+        },
+        "body": "## Project overview\nKing Abdullah Park, Riyadh.\n\nThe available project record confirms Vanilla & Somethin' as design consultant to ARSA Contracting Company for MUGA court and football court shop drawings and design coordination.\n\nLandscape package scope, project photography, plans and final deliverables should be added to this case study before publication.",
+        "tags": [
+          "Landscape architecture",
+          "Public realm",
+          "Sports courts",
+          "MUGA court",
+          "Football court",
+          "Riyadh"
+        ],
+        "gallery": []
+      },
+      {
+        "id": "aestra-clinic-riyadh",
+        "title": "Aestra Clinic",
+        "slug": "aestra-clinic-riyadh",
+        "status": "draft",
+        "category": "Commercial - Healthcare",
+        "location": "Riyadh, Saudi Arabia",
+        "year": "",
+        "client": "",
+        "area": "",
+        "projectStatus": "Scope to confirm",
+        "summary": "Healthcare and clinic project in Riyadh.",
+        "seoDescription": "Aestra Clinic project in Riyadh by Vanilla & Somethin'. Project details and design scope to be confirmed.",
+        "cover": {
+          "src": "",
+          "alt": ""
+        },
+        "body": "Project scope, client attribution, year, services delivered and approved project imagery to be added before publication.",
+        "tags": [
+          "Clinic design",
+          "Healthcare interiors",
+          "Medical fit-out",
+          "Riyadh"
+        ],
+        "gallery": []
+      },
+      {
+        "id": "mezze-cafe-khobar",
+        "title": "Mezze Cafe",
+        "slug": "mezze-cafe-khobar",
+        "status": "draft",
+        "category": "Commercial - Cafe",
+        "location": "Khobar, Saudi Arabia",
+        "year": "",
+        "client": "",
+        "area": "",
+        "projectStatus": "Scope to confirm",
+        "summary": "Cafe project in Khobar, Saudi Arabia.",
+        "seoDescription": "Mezze Cafe project in Khobar by Vanilla & Somethin'. Project details and design scope to be confirmed.",
+        "cover": {
+          "src": "",
+          "alt": ""
+        },
+        "body": "Project scope, client attribution, year, services delivered and approved project imagery to be added before publication.",
+        "tags": [
+          "Cafe design",
+          "Restaurant interiors",
+          "Food and beverage",
+          "Khobar"
+        ],
+        "gallery": []
+      }
+    ],
+    "pagesIntro": {
+      "projects": {
+        "title": "Selected Projects",
+        "description": "Architecture, interiors, landscape and project delivery across residential, commercial and public-realm environments."
+      }
     }
   }
 }
