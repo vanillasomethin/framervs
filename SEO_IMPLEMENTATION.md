@@ -4,6 +4,7 @@
 Build qualified organic visibility for architecture and interior design enquiries in Mangalore / Dakshina Kannada, Kasaragod and other genuinely served areas of coastal Karnataka and Kerala. No implementation can guarantee position one.
 
 ## What this branch changes
+- Adds an NRI home-design landing page focused on overseas Indian families planning residential projects in the studio’s practical service area. Copy explains remote briefing and clearly limits site supervision / construction management claims.
 - Replaces the placeholder `/seo` SEO explainer with a public, crawlable studio service landing page.
 - Adds distinct location-intent landing pages for Mangalore, Kasaragod, coastal Karnataka and Kerala; each has unique copy, self-canonical, Open Graph, internal links, and truthful LocalBusiness/ProfessionalService schema without invented street addresses, map coordinates, hours, ratings or office locations.
 - Replaces the stale sitemap with a sitemap index and separate service, location and portfolio sitemaps.
