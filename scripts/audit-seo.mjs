@@ -11,7 +11,7 @@ const errors = [];
 const warnings = [];
 const read = (p) => fs.readFileSync(path.join(root, p), "utf8");
 const required = [
-  "index.html", "seo/index.html", "nri-home-design/index.html",
+  "index.html", "seo/index.html", "commercial-design/index.html", "nri-home-design/index.html",
   "locations/mangalore/index.html", "locations/kasaragod/index.html",
   "locations/coastal-karnataka/index.html", "locations/kerala/index.html",
   "sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml"
@@ -62,9 +62,20 @@ for (const file of htmlFiles) {
   if (!/<h1\b/i.test(html)) warnings.push(`${file}: no H1 in server-rendered HTML`);
 }
 
+const estimatorHtml = path.resolve(process.cwd(), "vs-calculator/index.html");
+if (!fs.existsSync(estimatorHtml)) errors.push("Missing estimator app entry: vs-calculator/index.html");
+else {
+  const html = fs.readFileSync(estimatorHtml, "utf8");
+  if (!/<title>[^<]+<\/title>/i.test(html) || !/project cost estimator/i.test(html)) errors.push("Estimator app: descriptive project-cost title missing");
+  if (!/name="description" content="[^"]{40,}"/i.test(html)) errors.push("Estimator app: descriptive meta description missing");
+  if (!/rel="canonical"/i.test(html)) errors.push("Estimator app: canonical missing");
+}
+
 const rootSitemap = fs.existsSync(path.join(root, "sitemap.xml")) ? read("sitemap.xml") : "";
 const locations = fs.existsSync(path.join(root, "sitemap-locations.xml")) ? read("sitemap-locations.xml") : "";
 if (!rootSitemap.includes("sitemap-locations.xml")) errors.push("Sitemap index does not reference location sitemap");
+const pages = fs.existsSync(path.join(root, "sitemap-pages.xml")) ? read("sitemap-pages.xml") : "";
+if (!pages.includes("/commercial-design/")) errors.push("Pages sitemap missing commercial design landing page");
 for (const slug of ["mangalore", "kasaragod", "coastal-karnataka", "kerala"]) {
   if (!locations.includes(`/locations/${slug}/`)) errors.push(`Location sitemap missing ${slug}`);
 }
