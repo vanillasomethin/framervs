@@ -11,17 +11,17 @@ const errors = [];
 const warnings = [];
 const read = (p) => fs.readFileSync(path.join(root, p), "utf8");
 const required = [
-  "index.html", "seo/index.html", "commercial-design/index.html", "landscape-design/index.html", "project-management/index.html", "nri-home-design/index.html",
+  "index.html", "seo/index.html", "commercial-design/index.html", "landscape-design/index.html", "project-management/index.html", "renovation-and-short-stay-design/index.html", "permits-and-licensing-support/index.html", "nri-home-design/index.html",
   "locations/mangalore/index.html", "locations/kasaragod/index.html",
   "locations/coastal-karnataka/index.html", "locations/kerala/index.html",
-  "sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml"
+  "sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml", "sitemap-cms.xml"
 ];
 
 for (const file of required) {
   if (!fs.existsSync(path.join(root, file))) errors.push(`Missing required file: public/${file}`);
 }
 
-const sitemapFiles = ["sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml"];
+const sitemapFiles = ["sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml", "sitemap-cms.xml"];
 for (const file of sitemapFiles) {
   if (!fs.existsSync(path.join(root, file))) continue;
   const xml = read(file);
@@ -75,9 +75,10 @@ else {
 const rootSitemap = fs.existsSync(path.join(root, "sitemap.xml")) ? read("sitemap.xml") : "";
 const locations = fs.existsSync(path.join(root, "sitemap-locations.xml")) ? read("sitemap-locations.xml") : "";
 if (!rootSitemap.includes("sitemap-locations.xml")) errors.push("Sitemap index does not reference location sitemap");
+if (!rootSitemap.includes("sitemap-cms.xml")) errors.push("Sitemap index does not reference CMS sitemap");
 const pages = fs.existsSync(path.join(root, "sitemap-pages.xml")) ? read("sitemap-pages.xml") : "";
 if (!pages.includes("/commercial-design/")) errors.push("Pages sitemap missing commercial design landing page");
-for (const slug of ["landscape-design", "project-management"]) {
+for (const slug of ["landscape-design", "project-management", "renovation-and-short-stay-design", "permits-and-licensing-support"]) {
   if (!pages.includes(`/${slug}/`)) errors.push(`Pages sitemap missing ${slug}`);
 }
 for (const slug of ["mangalore", "kasaragod", "coastal-karnataka", "kerala"]) {
