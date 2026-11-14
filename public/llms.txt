@@ -9,6 +9,8 @@ This file is supplementary machine-readable site navigation. It is not a substit
 - [Homepage](https://www.vanillasometh.in/): Overview of the studio, its approach and selected work.
 - [Architecture and interior design](https://www.vanillasometh.in/seo): Studio-wide service overview, residential and commercial design, NRI enquiries, project cost planning and regional coverage.
 - [Commercial architecture and interiors](https://www.vanillasometh.in/commercial-design/): Commercial buildings, cafes, restaurants, kiosks, showrooms, retail stores, supermarkets, offices and workplace design.
+- [Landscape design](https://www.vanillasometh.in/landscape-design/): Gardens, courtyards, terraces, rooftop landscapes, planting, hardscape and outdoor spaces.
+- [AI-assisted project management](https://www.vanillasometh.in/project-management/): AI-supported workflows and in-house dashboards for project milestones, progress updates, approvals and budget tracking.
 - [Team](https://www.vanillasometh.in/team.html): Studio leadership and team.
 - [Contact](https://www.vanillasometh.in/contact/): Project enquiry form and contact details.
 - [Project Cost Estimator](https://www.vanillasometh.in/estimator/): Interactive preliminary construction/interiors cost estimator for residential, commercial and mixed-use projects, plus a separate architect-fee calculator. Results are indicative planning references, not quotations or BOQs.
