@@ -74,6 +74,14 @@ const projectRenderer = read("cms/render.mjs");
 for (const kind of ["Project photography", "3D visualisations", "Plans", "Technical drawings", "Project documents"]) {
   if (!projectRenderer.includes(kind)) errors.push(`Project renderer missing media group: ${kind}`);
 }
+const locationSource = fs.readFileSync(path.resolve(process.cwd(), "vs-calculator/src/components/estimator/LocationStep.tsx"), "utf8");
+const locationCostSource = fs.readFileSync(path.resolve(process.cwd(), "vs-calculator/src/utils/locationCost.ts"), "utf8");
+const cpwdSource = fs.readFileSync(path.resolve(process.cwd(), "vs-calculator/src/data/cpwdCostIndex.ts"), "utf8");
+if (!locationSource.includes('"Kasaragod"')) errors.push("Estimator location picker missing Kasaragod");
+if (!cpwdSource.includes('"Kasaragod": 134')) errors.push("CPWD location index missing Kasaragod");
+if (!locationCostSource.includes('"Kanhangad": "Kasaragod"')) errors.push("Kasaragod district town mapping missing");
+if (locationSource.includes("max-h-60 overflow-auto")) errors.push("Location suggestions create an inner scroll region");
+if (read("../vs-calculator/src/components/estimator/ResultsStep.tsx").includes("max-h-[90vh] overflow-y-auto")) errors.push("Consultation modal creates an inner scroll region");
 const estimatorHtml = path.resolve(process.cwd(), "vs-calculator/index.html");
 if (!fs.existsSync(estimatorHtml)) errors.push("Missing estimator app entry: vs-calculator/index.html");
 else {
