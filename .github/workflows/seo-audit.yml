@@ -15,6 +15,8 @@ on:
     paths:
       - "public/**"
       - "scripts/audit-seo.mjs"
+      - "scripts/build-cms.mjs"
+      - "netlify/functions/cms.js"
 
 jobs:
   static-seo-audit:
