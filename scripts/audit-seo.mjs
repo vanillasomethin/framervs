@@ -11,7 +11,7 @@ const errors = [];
 const warnings = [];
 const read = (p) => fs.readFileSync(path.join(root, p), "utf8");
 const required = [
-  "index.html", "seo/index.html",
+  "index.html", "seo/index.html", "nri-home-design/index.html",
   "locations/mangalore/index.html", "locations/kasaragod/index.html",
   "locations/coastal-karnataka/index.html", "locations/kerala/index.html",
   "sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml"
