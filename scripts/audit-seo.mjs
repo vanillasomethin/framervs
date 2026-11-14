@@ -11,7 +11,7 @@ const errors = [];
 const warnings = [];
 const read = (p) => fs.readFileSync(path.join(root, p), "utf8");
 const required = [
-  "index.html", "seo/index.html", "commercial-design/index.html", "nri-home-design/index.html",
+  "index.html", "seo/index.html", "commercial-design/index.html", "landscape-design/index.html", "project-management/index.html", "nri-home-design/index.html",
   "locations/mangalore/index.html", "locations/kasaragod/index.html",
   "locations/coastal-karnataka/index.html", "locations/kerala/index.html",
   "sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml"
@@ -42,6 +42,7 @@ const htmlFiles = required.filter((p) => p.endsWith(".html"));
 const canonicalMap = new Map();
 for (const file of htmlFiles) {
   const html = read(file);
+  if (html.includes("—")) errors.push(`${file}: em dash found in published page copy`);
   const title = html.match(/<title>(.*?)<\/title>/is)?.[1]?.trim();
   const description = html.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i)?.[1]?.trim();
   const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
@@ -76,6 +77,9 @@ const locations = fs.existsSync(path.join(root, "sitemap-locations.xml")) ? read
 if (!rootSitemap.includes("sitemap-locations.xml")) errors.push("Sitemap index does not reference location sitemap");
 const pages = fs.existsSync(path.join(root, "sitemap-pages.xml")) ? read("sitemap-pages.xml") : "";
 if (!pages.includes("/commercial-design/")) errors.push("Pages sitemap missing commercial design landing page");
+for (const slug of ["landscape-design", "project-management"]) {
+  if (!pages.includes(`/${slug}/`)) errors.push(`Pages sitemap missing ${slug}`);
+}
 for (const slug of ["mangalore", "kasaragod", "coastal-karnataka", "kerala"]) {
   if (!locations.includes(`/locations/${slug}/`)) errors.push(`Location sitemap missing ${slug}`);
 }
