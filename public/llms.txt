@@ -12,6 +12,8 @@ This file is supplementary machine-readable site navigation. It is not a substit
 - [Contact](https://www.vanillasometh.in/contact/): Project enquiry form and contact details.
 - [Estimator](https://www.vanillasometh.in/estimator/): Preliminary project estimator.
 
+- [NRI home design](https://www.vanillasometh.in/nri-home-design/): Remote-first initial design briefing and project-scope information for NRI families planning homes in India.
+
 ## Location and regional pages
 
 - [Mangalore](https://www.vanillasometh.in/locations/mangalore/): Studio base and architecture/interior design enquiries in Mangaluru and Dakshina Kannada.
