@@ -26,6 +26,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Check CMS JavaScript syntax
+        run: |
+          node --check public/cms/render.mjs
+          node --check scripts/build-cms.mjs
+          node --check netlify/functions/cms.js
+          node --input-type=module --check < public/admin/admin.js
       - name: Generate CMS pages and sitemap
         run: node scripts/build-cms.mjs
       - name: Audit static SEO metadata and sitemaps
