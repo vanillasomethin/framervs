@@ -2777,8 +2777,8 @@
         "summary": "Landscape and outdoor recreation project, including MUGA and football court design coordination.",
         "seoDescription": "Landscape and outdoor recreation design coordination at King Abdullah Park, Riyadh, including sports court documentation.",
         "cover": {
-          "src": "",
-          "alt": ""
+          "src": "/uploads/2026/11/king-abdulaziz-park-4-scaled-1024x578-15c3b9.jpg",
+          "alt": "King Abdulaziz Park 4 scaled 1024x578"
         },
         "body": "## Project overview\nKing Abdullah Park, Riyadh.\n\nThe available project record confirms Vanilla & Somethin' as design consultant to ARSA Contracting Company for MUGA court and football court shop drawings and design coordination.\n\nLandscape package scope, project photography, plans and final deliverables should be added to this case study before publication.",
         "tags": [
@@ -2789,7 +2789,8 @@
           "Football court",
           "Riyadh"
         ],
-        "gallery": []
+        "gallery": [],
+        "updatedAt": "2026-11-15T13:10:23.430Z"
       },
       {
         "id": "aestra-clinic-riyadh",
@@ -2848,7 +2849,17 @@
       "projects": {
         "title": "Selected Projects",
         "description": "Architecture, interiors, landscape and project delivery across residential, commercial and public-realm environments."
+      },
+      "blog": {
+        "title": "",
+        "description": ""
+      },
+      "updates": {
+        "title": "",
+        "description": ""
       }
-    }
+    },
+    "blog": [],
+    "updates": []
   }
 }
