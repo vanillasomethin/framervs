@@ -1,0 +1,42 @@
+name: SEO integrity
+
+on:
+  pull_request:
+    paths:
+      - "public/**"
+      - "scripts/audit-seo.mjs"
+      - "scripts/build-cms.mjs"
+      - "public/cms/**"
+      - "public/admin/**"
+      - "netlify/functions/cms.js"
+      - "vs-calculator/**"
+      - ".github/workflows/seo-audit.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/**"
+      - "scripts/audit-seo.mjs"
+      - "scripts/build-cms.mjs"
+      - "netlify/functions/cms.js"
+      - "vs-calculator/**"
+
+jobs:
+  static-seo-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check CMS JavaScript syntax
+        run: |
+          node --check public/cms/render.mjs
+          node --check scripts/build-cms.mjs
+          node --check netlify/functions/cms.js
+          node --input-type=module --check < public/admin/admin.js
+      - name: Build estimator app
+        run: cd vs-calculator && npm ci && npm run build
+      - name: Generate CMS pages and sitemap
+        run: node scripts/build-cms.mjs
+      - name: Audit static SEO metadata and sitemaps
+        run: node scripts/audit-seo.mjs

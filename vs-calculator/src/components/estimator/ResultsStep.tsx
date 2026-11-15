@@ -632,7 +632,7 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
 
       {/* Modal Dialog for Meeting Scheduler */}
       <Dialog open={showConsultationPrompt} onOpenChange={setShowConsultationPrompt}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-4xl">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-vs-dark">
               Ready to Get Started?
