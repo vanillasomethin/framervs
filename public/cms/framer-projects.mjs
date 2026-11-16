@@ -51,19 +51,19 @@ export function transformFramerProjectHTML(source, item) {
   const summary = item.summary || item.seoDescription || "";
   const cover = item.cover?.src || imageList(item)[0] || "";
   const gallery = imageList(item);
-  const oldHeadingHTML = (html.match(/<h1\\b[^>]*>([\\s\\S]*?)<\\/h1>/i) || [,""])[1] || "";
+  const oldHeadingHTML = (html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i) || [,""])[1] || "";
   const oldProjectTitle = plain(oldHeadingHTML);
   const readClassText = (className, tag) => {
-    const re = new RegExp('class="[^"]*\\\\b' + className + '\\\\b[^"]*"[^>]*>[\\\\s\\\\S]*?<' + tag + '\\\\b[^>]*>([\\\\s\\\\S]*?)<\\/' + tag + '>', "i");
+    const re = new RegExp('class="[^"]*\\b' + className + '\\b[^"]*"[^>]*>[\\s\\S]*?<' + tag + '\\b[^>]*>([\\s\\S]*?)</' + tag + '>', "i");
     const match = html.match(re);
     return match ? plain(match[1]) : "";
   };
   const oldDescription = (html.match(/<meta name="description" content="([^"]*)"/i) || [,""])[1];
-  const oldCover = (html.match(/class="framer-19f5tnp"[\\s\\S]*?<img\\b[^>]*src="([^"]+)"/i) || [,""])[1];
+  const oldCover = (html.match(/class="framer-19f5tnp"[\s\S]*?<img\b[^>]*src="([^"]+)"/i) || [,""])[1];
   const oldGalleryStart = html.indexOf('id="section-images-gallery"');
   const oldGalleryEnd = oldGalleryStart >= 0 ? html.indexOf('id="section-other-project"', oldGalleryStart) : -1;
   const oldGalleryBlock = oldGalleryStart >= 0 ? html.slice(oldGalleryStart, oldGalleryEnd > oldGalleryStart ? oldGalleryEnd : oldGalleryStart + 90000) : "";
-  const oldGallerySources = [...new Set([...oldGalleryBlock.matchAll(/<img\\b[^>]*\\bsrc="([^"]+)"/gi)].map((match) => match[1]))];
+  const oldGallerySources = [...new Set([...oldGalleryBlock.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/gi)].map((match) => match[1]))];
   const oldFields = [
     [oldProjectTitle, title],
     [plain(oldDescription), summary],
