@@ -59,10 +59,10 @@ export function transformFramerProjectHTML(source, item) {
     return match ? plain(match[1]) : "";
   };
   const shouldReplaceBody = item.framerBodyManaged || !item.legacyFramer;
-  const oldBodyHTML = (html.match(/class="[^"]*\\bframer-m2lc1s\\b[^"]*"[^>]*>([\\s\\S]*?)<\\/div>/i) || [,""])[1] || "";
-  const oldBodyText = [...oldBodyHTML.matchAll(/<(?:h5|p)\\b[^>]*>([\\s\\S]*?)<\\/(?:h5|p)>/gi)].map((match) => plain(match[1]));
+  const oldBodyHTML = (html.match(/class="[^"]*\bframer-m2lc1s\b[^"]*"[^>]*>([\s\S]*?)<\/div>/i) || [,""])[1] || "";
+  const oldBodyText = [...oldBodyHTML.matchAll(/<(?:h5|p)\b[^>]*>([\s\S]*?)<\/(?:h5|p)>/gi)].map((match) => plain(match[1]));
   const newBodyHTML = shouldReplaceBody ? markdownToFramer(item.body || "") : "";
-  const newBodyText = [...newBodyHTML.matchAll(/<(?:h5|p)\\b[^>]*>([\\s\\S]*?)<\\/(?:h5|p)>/gi)].map((match) => plain(match[1]));
+  const newBodyText = [...newBodyHTML.matchAll(/<(?:h5|p)\b[^>]*>([\s\S]*?)<\/(?:h5|p)>/gi)].map((match) => plain(match[1]));
   const bodyPairs = shouldReplaceBody ? oldBodyText.map((before, index) => [before, newBodyText[index] || ""]) : [];
   const oldDescription = (html.match(/<meta name="description" content="([^"]*)"/i) || [,""])[1];
   const oldCover = (html.match(/class="framer-19f5tnp"[\s\S]*?<img\b[^>]*src="([^"]+)"/i) || [,""])[1];
