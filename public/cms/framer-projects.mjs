@@ -98,6 +98,12 @@ export function transformFramerProjectHTML(source, item) {
   if (item.framerBodyManaged || !item.legacyFramer) {
     const bodyHTML = markdownToFramer(item.body || "");
     html = html.replace(/(<div[^>]*class="[^"]*\bframer-m2lc1s\b[^"]*"[^>]*>)[\s\S]*?(<\/div>)/i, "$1" + bodyHTML + "$2");
+    if (!String(item.body || "").trim()) {
+      html = html.replace(/<div([^>]*id="section-behid-shoot"[^>]*)>/i, '<div$1 style="display:none">');
+    } else if (!item.legacyFramer) {
+      const storyImage = gallery[0] || cover;
+      if (storyImage) html = html.replace(/(<div[^>]*class="[^"]*\bframer-c7zlap\b[^"]*"[^>]*>[\s\S]*?<img\b)([^>]*>)/i, (_, a, b) => setImage(a + b, storyImage, title + " — design story"));
+    }
   }
   if (!gallery.length) {
     html = html.replace(/<div([^>]*id="section-images-gallery"[^>]*)>/i, '<div$1 style="display:none">');
