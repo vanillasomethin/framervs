@@ -41,6 +41,14 @@
   [headers.values]
     Content-Type = "text/javascript; charset=utf-8"
 
+# Client brief form: private link only, never indexed, never leaks the token in a Referer header
+[[headers]]
+  for = "/onboard/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Referrer-Policy = "no-referrer"
+    Cache-Control = "no-store"
+
 [[headers]]
   for = "/admin/*"
   [headers.values]
