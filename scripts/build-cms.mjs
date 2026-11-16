@@ -70,6 +70,7 @@ const makeCard = (templateCard, item) => {
     image = image.replace(/\ssrc="[^"]*"/i, ' src="' + String(cover).replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '"');
     return image;
   });
+  else card = card.replace(/<img\b/i, '<img style="display:none"');
   const replaceText = (tag, value) => card = card.replace(new RegExp("(<" + tag + "\\b[^>]*>)[\\s\\S]*?(</" + tag + ">)", "i"), "$1" + String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "$2");
   replaceText("h5", item.title);
   replaceText("p", item.category);
