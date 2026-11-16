@@ -93,6 +93,9 @@ const appendFramerCards = async (file, newItems, allItems) => {
       const updated = makeCard(card, item);
       html = html.slice(0, cardStart) + updated + html.slice(cardEnd);
       cursor = cardStart + updated.length;
+    } else if (href) {
+      html = html.slice(0, cardStart) + html.slice(cardEnd);
+      cursor = cardStart;
     } else cursor = cardEnd;
   }
   if (newItems.length) {
