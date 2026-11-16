@@ -109,6 +109,14 @@ const appendFramerCards = async (file, newItems, allItems) => {
   }
   await writeFile(file, html);
 };
+// Remove any legacy page that was unpublished or deleted in the admin.
+const legacyTemplateSlugs = ["flutecase", "fair-fly", "nord-terra", "mak", "bnb", "coco-meltdown", "artwist-salon", "seiko-hyper", "koan", "pipe-nova"];
+const publishedSlugs = new Set(projects.map((item) => safeSlug(item.slug)));
+for (const legacySlug of legacyTemplateSlugs) {
+  if (!publishedSlugs.has(legacySlug)) {
+    await rm(join(publicDir, "project-showcase", legacySlug), { recursive: true, force: true });
+  }
+}
 const newFramerProjects = projects.filter((item) => !item.legacyFramer);
 await appendFramerCards(join(publicDir, "project-showcase", "index.html"), newFramerProjects, projects);
 await appendFramerCards(join(publicDir, "index.html"), newFramerProjects, projects);
