@@ -51,11 +51,31 @@ export function transformFramerProjectHTML(source, item) {
   const summary = item.summary || item.seoDescription || "";
   const cover = item.cover?.src || imageList(item)[0] || "";
   const gallery = imageList(item);
-  const oldTitle = (html.match(/<title>([\s\S]*?)<\/title>/i) || [,""])[1];
+  const oldHeadingHTML = (html.match(/<h1\\b[^>]*>([\\s\\S]*?)<\\/h1>/i) || [,""])[1] || "";
+  const oldProjectTitle = plain(oldHeadingHTML);
+  const readClassText = (className, tag) => {
+    const re = new RegExp('class="[^"]*\\\\b' + className + '\\\\b[^"]*"[^>]*>[\\\\s\\\\S]*?<' + tag + '\\\\b[^>]*>([\\\\s\\\\S]*?)<\\/' + tag + '>', "i");
+    const match = html.match(re);
+    return match ? plain(match[1]) : "";
+  };
   const oldDescription = (html.match(/<meta name="description" content="([^"]*)"/i) || [,""])[1];
-  const oldCover = (html.match(/class="framer-19f5tnp"[\s\S]*?<img\b[^>]*src="([^"]+)"/i) || [,""])[1];
-  for (const [before, after] of [[plain(oldDescription), summary], [oldCover, cover]]) {
-    if (before && after && before !== after) html = html.split(before).join(after);
+  const oldCover = (html.match(/class="framer-19f5tnp"[\\s\\S]*?<img\\b[^>]*src="([^"]+)"/i) || [,""])[1];
+  const oldGalleryStart = html.indexOf('id="section-images-gallery"');
+  const oldGalleryEnd = oldGalleryStart >= 0 ? html.indexOf('id="section-other-project"', oldGalleryStart) : -1;
+  const oldGalleryBlock = oldGalleryStart >= 0 ? html.slice(oldGalleryStart, oldGalleryEnd > oldGalleryStart ? oldGalleryEnd : oldGalleryStart + 90000) : "";
+  const oldGallerySources = [...new Set([...oldGalleryBlock.matchAll(/<img\\b[^>]*\\bsrc="([^"]+)"/gi)].map((match) => match[1]))];
+  const oldFields = [
+    [oldProjectTitle, title],
+    [plain(oldDescription), summary],
+    [readClassText("framer-1fqri61", "h5"), item.category],
+    [readClassText("framer-ky5owd", "h5"), item.year],
+    [readClassText("framer-1b8nbnx", "h5"), item.client],
+    [readClassText("framer-1f881x7", "h5"), item.location],
+    [oldCover, cover],
+    ...oldGallerySources.map((src, index) => [src, gallery[Math.min(index, gallery.length - 1)]])
+  ];
+  for (const [before, after] of oldFields) {
+    if (before && after && before !== after) html = html.split(before).join(esc(after));
   }
   html = html.replace(/<title>[\s\S]*?<\/title>/i, "<title>" + esc(title) + " | Vanilla &amp; Somethin</title>");
   html = setMeta(html, "description", item.seoDescription || summary);
