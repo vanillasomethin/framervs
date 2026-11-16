@@ -25,18 +25,22 @@ for (const [path, html] of pages) {
 // projects use their own original page; new projects inherit a selected template.
 const projects = (cms.projects || []).filter((item) => item.status === "published" && item.slug);
 const safeSlug = (value) => String(value || "").toLowerCase().replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, "");
+const templateCache = new Map();
+const loadTemplate = async (slug) => {
+  const key = safeSlug(slug) || "flutecase";
+  if (!templateCache.has(key)) {
+    let html;
+    try { html = await readFile(join(publicDir, "project-showcase", key, "index.html"), "utf8"); }
+    catch { html = await readFile(join(publicDir, "project-showcase", "flutecase", "index.html"), "utf8"); }
+    templateCache.set(key, html);
+  }
+  return templateCache.get(key);
+};
 for (const item of projects) {
   const slug = safeSlug(item.slug);
   if (!slug) continue;
   const requestedTemplate = safeSlug(item.framerTemplateSlug || (item.legacyFramer ? slug : "flutecase"));
-  const templateSlug = requestedTemplate || "flutecase";
-  const templatePath = join(publicDir, "project-showcase", templateSlug, "index.html");
-  let template;
-  try {
-    template = await readFile(templatePath, "utf8");
-  } catch {
-    template = await readFile(join(publicDir, "project-showcase", "flutecase", "index.html"), "utf8");
-  }
+  const template = await loadTemplate(requestedTemplate || "flutecase");
   const html = transformFramerProjectHTML(template, { ...item, slug });
   const output = join(publicDir, "project-showcase", slug, "index.html");
   await mkdir(dirname(output), { recursive: true });
