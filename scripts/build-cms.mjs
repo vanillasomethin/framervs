@@ -1,27 +1,19 @@
 #!/usr/bin/env node
-// Generates the CMS-managed pages (blog, projects, updates) from
-// public/content.json into public/ at Netlify build time, and adds them to
-// the deployed sitemap. The admin panel (/admin) edits content.json; each save
-// commits to GitHub, which triggers a deploy that runs this script.
-//
-// Usage: node scripts/build-cms.mjs
-
+// Generate CMS pages and Framer-native project showcase pages from content.json.
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderAllPages, sitemapPaths, SITE_URL } from "../public/cms/render.mjs";
+import { transformFramerProjectHTML } from "../public/cms/framer-projects.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const publicDir = join(root, "public");
-
 const content = JSON.parse(await readFile(join(publicDir, "content.json"), "utf8"));
 const cms = content.cms || {};
 
-// Start clean so deleted or unpublished items disappear from the site
 for (const dir of ["blog", "projects", "updates"]) {
   await rm(join(publicDir, dir), { recursive: true, force: true });
 }
-
 const pages = renderAllPages(cms);
 for (const [path, html] of pages) {
   const file = join(publicDir, path);
@@ -29,20 +21,86 @@ for (const [path, html] of pages) {
   await writeFile(file, html);
 }
 
-// Generate a dedicated sitemap for CMS-managed content. The public sitemap.xml
-// is a sitemap index, so project/blog/update URLs belong in a child urlset.
-const today = new Date().toISOString().slice(0, 10);
-const cmsUrls = sitemapPaths(cms);
-const cmsEntries = cmsUrls
-  .map((path) => `<url>\n<loc>${SITE_URL}${path}</loc>\n<lastmod>${today}</lastmod>\n<changefreq>weekly</changefreq>\n<priority>0.7</priority>\n</url>`)
-  .join("\n");
-const cmsSitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${cmsEntries}\n</urlset>\n`;
-await writeFile(join(publicDir, "sitemap-cms.xml"), cmsSitemap);
+// Framer project pages remain the source of truth for visual design. Existing
+// projects use their own original page; new projects inherit a selected template.
+const projects = (cms.projects || []).filter((item) => item.status === "published" && item.slug);
+const safeSlug = (value) => String(value || "").toLowerCase().replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, "");
+for (const item of projects) {
+  const slug = safeSlug(item.slug);
+  if (!slug) continue;
+  const requestedTemplate = safeSlug(item.framerTemplateSlug || (item.legacyFramer ? slug : "flutecase"));
+  const templateSlug = requestedTemplate || "flutecase";
+  const templatePath = join(publicDir, "project-showcase", templateSlug, "index.html");
+  let template;
+  try {
+    template = await readFile(templatePath, "utf8");
+  } catch {
+    template = await readFile(join(publicDir, "project-showcase", "flutecase", "index.html"), "utf8");
+  }
+  const html = transformFramerProjectHTML(template, { ...item, slug });
+  const output = join(publicDir, "project-showcase", slug, "index.html");
+  await mkdir(dirname(output), { recursive: true });
+  await writeFile(output, html);
+}
 
+// Add newly-created CMS projects to the existing Framer grid using a native
+// Framer card cloned from its own markup. Legacy cards are already present.
+const findDivEnd = (html, start) => {
+  const token = /<\/?div\b[^>]*>/gi;
+  token.lastIndex = start;
+  let depth = 0;
+  let match;
+  while ((match = token.exec(html))) {
+    if (/^<div\b/i.test(match[0])) depth += 1;
+    else depth -= 1;
+    if (depth === 0) return token.lastIndex;
+  }
+  return -1;
+};
+const makeCard = (templateCard, item) => {
+  let card = templateCard;
+  card = card.replace(/href="[^"]*"/i, 'href="/project-showcase/' + safeSlug(item.slug) + '/"');
+  const cover = item.cover?.src || item.gallery?.find((entry) => entry.src)?.src || "";
+  if (cover) card = card.replace(/<img\b[^>]*>/i, (tag) => {
+    let image = tag.replace(/\s+srcset="[^"]*"/i, "");
+    image = image.replace(/\ssrc="[^"]*"/i, ' src="' + String(cover).replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '"');
+    return image;
+  });
+  const replaceText = (tag, value) => card = card.replace(new RegExp("(<" + tag + "\\b[^>]*>)[\\s\\S]*?(</" + tag + ">)", "i"), "$1" + String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "$2");
+  replaceText("h5", item.title);
+  replaceText("p", item.category);
+  return card;
+};
+const appendFramerCards = async (file, newItems) => {
+  if (!newItems.length) return;
+  let html;
+  try { html = await readFile(file, "utf8"); } catch { return; }
+  const cardStart = html.indexOf('<div class="framer-50ol73-container">');
+  if (cardStart < 0) return;
+  const cardEnd = findDivEnd(html, cardStart);
+  const gridStart = html.indexOf('<div class="framer-1bgqte0"', cardStart);
+  if (cardEnd < 0 || gridStart < 0) return;
+  const gridEnd = findDivEnd(html, gridStart);
+  if (gridEnd < 0) return;
+  const templateCard = html.slice(cardStart, cardEnd);
+  const cards = newItems.map((item) => makeCard(templateCard, item)).join("");
+  const insertAt = gridEnd - "</div>".length;
+  html = html.slice(0, insertAt) + cards + html.slice(insertAt);
+  await writeFile(file, html);
+};
+const newFramerProjects = projects.filter((item) => !item.legacyFramer);
+await appendFramerCards(join(publicDir, "project-showcase", "index.html"), newFramerProjects);
+await appendFramerCards(join(publicDir, "index.html"), newFramerProjects);
+
+// Sitemap includes both the CMS SEO route and the Framer-designed project route.
+const today = new Date().toISOString().slice(0, 10);
+const cmsPaths = [...new Set([...sitemapPaths(cms), ...projects.map((item) => "/project-showcase/" + safeSlug(item.slug) + "/")])];
+const cmsEntries = cmsPaths.map((path) => '<url>\n<loc>' + SITE_URL + path + '</loc>\n<lastmod>' + today + '</lastmod>\n<changefreq>weekly</changefreq>\n<priority>0.7</priority>\n</url>').join("\n");
+const cmsSitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + cmsEntries + '\n</urlset>\n';
+await writeFile(join(publicDir, "sitemap-cms.xml"), cmsSitemap);
 const sitemapFile = join(publicDir, "sitemap.xml");
 const sitemap = await readFile(sitemapFile, "utf8");
 if (!sitemap.includes("sitemap-cms.xml")) {
-  await writeFile(sitemapFile, sitemap.replace("</sitemapindex>", `  <sitemap><loc>${SITE_URL}/sitemap-cms.xml</loc></sitemap>\n</sitemapindex>`));
+  await writeFile(sitemapFile, sitemap.replace("</sitemapindex>", '  <sitemap><loc>' + SITE_URL + '/sitemap-cms.xml</loc></sitemap>\n</sitemapindex>'));
 }
-
-console.log(`CMS: wrote ${pages.length} pages`);
+console.log('CMS: wrote ' + pages.length + ' CMS pages and ' + projects.length + ' Framer project pages');
