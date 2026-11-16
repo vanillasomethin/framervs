@@ -6,6 +6,7 @@
 // one commit / one deploy. Previews use the same renderer as the live pages.
 
 import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, renderUpdates } from "/cms/render.mjs";
+import { renderFramerProjectPreview } from "/cms/framer-projects.mjs";
 
 const API = "/.netlify/functions/cms";
 const SESSION_KEY = "vsAdminSession";
@@ -63,14 +64,15 @@ const TYPES = {
     label: "Projects",
     singular: "project",
     blurb: "Built and ongoing work, each with its own page, photos and project facts.",
-    livePath: (item) => `/projects/${item.slug}/`,
-    indexPath: "/projects/",
+    livePath: (item) => `/project-showcase/${item.slug}/`,
+    indexPath: "/project-showcase/",
     manualOrder: true,
-    create: () => ({ id: uid(), title: "", slug: "", status: "draft", category: "", location: "", year: "", client: "", area: "", projectStatus: "Scope to confirm", summary: "", seoDescription: "", cover: { src: "", alt: "" }, body: "", tags: [], gallery: [] }),
+    create: () => ({ id: uid(), title: "", slug: "", status: "draft", category: "", location: "", year: "", client: "", area: "", projectStatus: "Scope to confirm", summary: "", seoDescription: "", cover: { src: "", alt: "" }, body: "", tags: [], gallery: [], framerTemplateSlug: "flutecase" }),
     preview: (c, item) => renderProject(c, item),
     fields: [
       { key: "title", type: "title", placeholder: "Project name" },
-      { key: "slug", type: "slug", base: "/projects/" },
+      { key: "slug", type: "slug", base: "/project-showcase/" },
+      { key: "framerTemplateSlug", type: "select", label: "Framer page design", options: ["flutecase", "fair-fly", "nord-terra", "mak", "bnb", "coco-meltdown", "artwist-salon", "seiko-hyper", "koan", "pipe-nova"] },
       { row: [
         { key: "category", type: "text", label: "Type", placeholder: "e.g. Residential", list: PROJECT_TYPES },
         { key: "location", type: "text", label: "Location", placeholder: "e.g. Mangalore" },
@@ -820,7 +822,9 @@ const renderEditor = (view, type, id) => {
 
   // Preview -----------------------------------------------------------------
   let previewTimer;
-  const drawPreview = () => {
+  let previewRevision = 0;
+  const drawPreview = async () => {
+    const revision = ++previewRevision;
     const previewCMS = clone(cms());
     const previewItem = { ...clone(item), status: "published", slug: item.slug || "preview" };
     const list = previewCMS[type];
@@ -829,7 +833,13 @@ const renderEditor = (view, type, id) => {
     const frame = $("#preview", view);
     if (!frame) return;
     const scrollY = frame.contentWindow?.scrollY || 0;
-    frame.srcdoc = swapPreviewUrls(config.preview(previewCMS, previewItem)).replace("<head>", '<head><base target="_blank">');
+    let previewHTML;
+    if (type === "projects") {
+      try { previewHTML = await renderFramerProjectPreview(previewItem); }
+      catch (error) { previewHTML = config.preview(previewCMS, previewItem); }
+    } else previewHTML = config.preview(previewCMS, previewItem);
+    if (revision !== previewRevision || !$("#preview", view)) return;
+    frame.srcdoc = swapPreviewUrls(previewHTML).replace("<head>", '<head><base target="_blank">');
     frame.onload = () => frame.contentWindow?.scrollTo(0, scrollY);
   };
   const schedulePreview = () => {
@@ -879,6 +889,7 @@ const renderEditor = (view, type, id) => {
         item.slug = slugify(input.value);
       } else {
         setPath(item, key, input.value);
+        if (type === "projects" && key === "body") item.framerBodyManaged = true;
       }
       if (key === "title") {
         if (type === "updates") item.slug = uniqueSlug(type, input.value, item.id);
