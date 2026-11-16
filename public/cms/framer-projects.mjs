@@ -3,12 +3,12 @@ const esc = (value = "") => String(value).replace(/&/g, "&amp;").replace(/</g, "
 const plain = (value = "") => String(value).replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 const imageList = (item) => (item.gallery || []).filter((entry) => entry && entry.src && entry.type !== "pdf").map((entry) => entry.src).filter(Boolean);
 const textBlock = (html, className, tag, value) => {
-  if (!value) return html;
+  if (value == null) return html;
   const re = new RegExp('(<div[^>]*class="[^"]*\\b' + className + '\\b[^"]*"[^>]*>[\\s\\S]*?<' + tag + '\\b[^>]*>)[\\s\\S]*?(</' + tag + '>)', "i");
   return html.replace(re, (_, before, after) => before + esc(value) + after);
 };
 const setMeta = (html, name, value) => {
-  if (!value) return html;
+  if (value == null) return html;
   const safe = esc(value);
   const escapedName = name.replace(/[.*+?^$()|[\]\\]/g, "\\$&");
   const re = new RegExp('(<meta\\s+[^>]*(?:name|property)="' + escapedName + '"[^>]*content=")[^"]*(")', "i");
@@ -95,11 +95,13 @@ export function transformFramerProjectHTML(source, item) {
   html = textBlock(html, "framer-1b8nbnx", "h5", item.client);
   html = textBlock(html, "framer-1f881x7", "h5", item.location);
   if (cover) html = html.replace(/(<div[^>]*class="[^"]*\bframer-19f5tnp\b[^"]*"[^>]*>[\s\S]*?<img\b)([^>]*>)/i, (_, a, b) => setImage(a + b, cover, item.cover?.alt || title));
-  if (item.body && String(item.body).trim()) {
-    const bodyHTML = markdownToFramer(item.body);
+  if (item.framerBodyManaged || !item.legacyFramer) {
+    const bodyHTML = markdownToFramer(item.body || "");
     html = html.replace(/(<div[^>]*class="[^"]*\bframer-m2lc1s\b[^"]*"[^>]*>)[\s\S]*?(<\/div>)/i, "$1" + bodyHTML + "$2");
   }
-  if (gallery.length) {
+  if (!gallery.length) {
+    html = html.replace(/<div([^>]*id="section-images-gallery"[^>]*)>/i, '<div$1 style="display:none">');
+  } else {
     const start = html.indexOf('id="section-images-gallery"');
     const next = html.indexOf('id="section-other-project"', start);
     const end = next > start ? next : html.indexOf('id="section-contact"', start);
@@ -116,6 +118,7 @@ export function transformFramerProjectHTML(source, item) {
       html = html.slice(0, start) + section + html.slice(stop);
     }
   }
+  if (!cover) html = html.replace(/<div([^>]*class="[^"]*\bframer-ng0vvg\b[^"]*"[^>]*)>/i, '<div$1 style="display:none">');
   html = html.replace(/href="(?:\.\/)?project-showcase\/([^"]+)"/g, 'href="/project-showcase/$1/"');
   return html;
 }
