@@ -12,7 +12,7 @@ const setMeta = (html, name, value) => {
   const safe = esc(value);
   const escapedName = name.replace(/[.*+?^$()|[\]\\]/g, "\\$&");
   const re = new RegExp('(<meta\\s+[^>]*(?:name|property)="' + escapedName + '"[^>]*content=")[^"]*(")', "i");
-  return re.test(html) ? html.replace(re, "$1" + safe + "$2") : html;
+  return re.test(html) ? html.replace(re, (_, before, after) => before + safe + after) : html;
 };
 const setImage = (tag, url, alt) => {
   if (!url) return tag;
