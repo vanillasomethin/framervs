@@ -71,26 +71,43 @@ const makeCard = (templateCard, item) => {
   replaceText("p", item.category);
   return card;
 };
-const appendFramerCards = async (file, newItems) => {
-  if (!newItems.length) return;
+const appendFramerCards = async (file, newItems, allItems) => {
   let html;
   try { html = await readFile(file, "utf8"); } catch { return; }
-  const cardStart = html.indexOf('<div class="framer-50ol73-container">');
-  if (cardStart < 0) return;
-  const cardEnd = findDivEnd(html, cardStart);
-  const gridStart = html.indexOf('<div class="framer-1bgqte0"', cardStart);
-  if (cardEnd < 0 || gridStart < 0) return;
-  const gridEnd = findDivEnd(html, gridStart);
-  if (gridEnd < 0) return;
-  const templateCard = html.slice(cardStart, cardEnd);
-  const cards = newItems.map((item) => makeCard(templateCard, item)).join("");
-  const insertAt = gridEnd - "</div>".length;
-  html = html.slice(0, insertAt) + cards + html.slice(insertAt);
+  const bySlug = new Map(allItems.map((item) => [safeSlug(item.slug), item]));
+  // Refresh cards for existing projects when title, category or cover changes.
+  let cursor = 0;
+  while (true) {
+    const cardStart = html.indexOf('<div class="framer-50ol73-container">', cursor);
+    if (cardStart < 0) break;
+    const cardEnd = findDivEnd(html, cardStart);
+    if (cardEnd < 0) break;
+    const card = html.slice(cardStart, cardEnd);
+    const href = card.match(/href="[^"]*project-showcase\/([^/"?]+)[^"]*"/i);
+    const item = href && bySlug.get(safeSlug(href[1]));
+    if (item) {
+      const updated = makeCard(card, item);
+      html = html.slice(0, cardStart) + updated + html.slice(cardEnd);
+      cursor = cardStart + updated.length;
+    } else cursor = cardEnd;
+  }
+  if (newItems.length) {
+    const cardStart = html.indexOf('<div class="framer-50ol73-container">');
+    const gridStart = html.indexOf('<div class="framer-1bgqte0"', cardStart);
+    const gridEnd = gridStart >= 0 ? findDivEnd(html, gridStart) : -1;
+    const cardEnd = cardStart >= 0 ? findDivEnd(html, cardStart) : -1;
+    if (cardStart >= 0 && cardEnd >= 0 && gridEnd >= 0) {
+      const templateCard = html.slice(cardStart, cardEnd);
+      const cards = newItems.map((item) => makeCard(templateCard, item)).join("");
+      const insertAt = gridEnd - "</div>".length;
+      html = html.slice(0, insertAt) + cards + html.slice(insertAt);
+    }
+  }
   await writeFile(file, html);
 };
 const newFramerProjects = projects.filter((item) => !item.legacyFramer);
-await appendFramerCards(join(publicDir, "project-showcase", "index.html"), newFramerProjects);
-await appendFramerCards(join(publicDir, "index.html"), newFramerProjects);
+await appendFramerCards(join(publicDir, "project-showcase", "index.html"), newFramerProjects, projects);
+await appendFramerCards(join(publicDir, "index.html"), newFramerProjects, projects);
 
 // Sitemap includes both the CMS SEO route and the Framer-designed project route.
 const today = new Date().toISOString().slice(0, 10);
