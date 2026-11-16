@@ -2764,6 +2764,589 @@
     },
     "projects": [
       {
+        "id": "framer-flutecase",
+        "title": "Flute-Case",
+        "slug": "flutecase",
+        "status": "published",
+        "category": "Commercial - Office",
+        "location": "Mangalore, Karnataka",
+        "year": "2025",
+        "client": "John Salins",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "Office Space for Rapid Solution Pvt.Ltd - The design intent was to use minimal colors, patterns, and textures to create a sense of lightness for the inhabitants to experience calm while working, which in turn increases their productivity at work.",
+        "seoDescription": "Office Space for Rapid Solution Pvt.Ltd - The design intent was to use minimal colors, patterns, and textures to create a sense of lightness for the inhabitants to experience calm while working, which in turn increases their productivity at work.",
+        "cover": {
+          "src": "https://framerusercontent.com/images/B4xFhzEhd6G5mQnlYF6h0KEzxAo.png?lossless=1&width=1024&height=1024",
+          "alt": "Flute-Case"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [
+          {
+            "id": "flutecase-image-1",
+            "src": "https://framerusercontent.com/images/sjMxowwS5lIcQ4LZpFAsLUkl7w.jpg?width=1024&height=683",
+            "alt": "Flute-Case — image 1",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "flutecase-image-2",
+            "src": "https://framerusercontent.com/images/yrPlGDvkcQFiVnGHonFqpDkefkE.jpg?width=683&height=1024",
+            "alt": "Flute-Case — image 2",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "flutecase-image-3",
+            "src": "https://framerusercontent.com/images/O8IZDrHinI2G807cJslac9N5bU.jpg?width=683&height=1024",
+            "alt": "Flute-Case — image 3",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "flutecase-image-4",
+            "src": "https://framerusercontent.com/images/kFo9eSEyWADn89SkmrIzlymkkfA.jpg?width=1024&height=683",
+            "alt": "Flute-Case — image 4",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "flutecase-image-5",
+            "src": "https://framerusercontent.com/images/uJXHjbekO4AZUQiynek4tw6qGE.jpg?width=1024&height=683",
+            "alt": "Flute-Case — image 5",
+            "type": "image",
+            "caption": ""
+          }
+        ],
+        "framerTemplateSlug": "flutecase",
+        "legacyFramer": true
+      },
+      {
+        "id": "framer-fair-fly",
+        "title": "Fair-Fly",
+        "slug": "fair-fly",
+        "status": "published",
+        "category": "Commercial - Retail",
+        "location": "Mangalore, Karnatka",
+        "year": "2025",
+        "client": "Sorbete",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "a vibrant outdoor popsicle pop-up store designed by Vanilla & Somethin Architects, featuring playful colors, lightweight materials, and a breezy open form that blends seamlessly with the lively food street atmosphere.",
+        "seoDescription": "a vibrant outdoor popsicle pop-up store designed by Vanilla & Somethin Architects, featuring playful colors, lightweight materials, and a breezy open form that blends seamlessly with the lively food street atmosphere.",
+        "cover": {
+          "src": "https://framerusercontent.com/images/ju0gSS3ymm8N5DMB9UWKr52GHzs.png?width=864&height=507",
+          "alt": "Fair-Fly"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [
+          {
+            "id": "fair-fly-image-1",
+            "src": "https://framerusercontent.com/images/YRZaH09aWQ6auWKKxcizYRHM4I.jpg?width=1920&height=1080",
+            "alt": "Fair-Fly — image 1",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "fair-fly-image-2",
+            "src": "https://framerusercontent.com/images/Kn6kn3qnIbGtIBF2JxVujTfJk.jpg?width=1414&height=2000",
+            "alt": "Fair-Fly — image 2",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "fair-fly-image-3",
+            "src": "https://framerusercontent.com/images/hKA4Z18JQ2RJ7LsNYEKi9ejfeo.png?width=864&height=1216",
+            "alt": "Fair-Fly — image 3",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "fair-fly-image-4",
+            "src": "https://framerusercontent.com/images/zIQ2THLmgHoFI4qcMEsSMwvcSP0.jpg?width=1920&height=789",
+            "alt": "Fair-Fly — image 4",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "fair-fly-image-5",
+            "src": "https://framerusercontent.com/images/FWwq0pVadml4ey0WstpAj5rvlM.png?width=1920&height=1080",
+            "alt": "Fair-Fly — image 5",
+            "type": "image",
+            "caption": ""
+          }
+        ],
+        "framerTemplateSlug": "fair-fly",
+        "legacyFramer": true
+      },
+      {
+        "id": "framer-nord-terra",
+        "title": "Nord Terra House",
+        "slug": "nord-terra",
+        "status": "published",
+        "category": "Residential",
+        "location": "Kozhikode, Kerala",
+        "year": "2024",
+        "client": "Mr. Sadath",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "Architectural compositions of Nordterra House bathed in natural light and shadow, capturing raw textures and refined geometry in a cinematic, moody tone that evokes calm strength and understated luxury",
+        "seoDescription": "Architectural compositions of Nordterra House bathed in natural light and shadow, capturing raw textures and refined geometry in a cinematic, moody tone that evokes calm strength and understated luxury",
+        "cover": {
+          "src": "https://framerusercontent.com/images/atHnzlC0bxos7mKbhByERKoYC0o.jpg?width=2000&height=1025",
+          "alt": "Nord Terra House"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [
+          {
+            "id": "nord-terra-image-1",
+            "src": "https://framerusercontent.com/images/HhPJaClTuEDV2MX2eWZlH0ezmWc.png?width=1866&height=1257",
+            "alt": "Nord Terra House — image 1",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "nord-terra-image-2",
+            "src": "https://framerusercontent.com/images/3ASwFHYbp90HKnOmqxBtmgEvMU.png?width=1257&height=1866",
+            "alt": "Nord Terra House — image 2",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "nord-terra-image-3",
+            "src": "https://framerusercontent.com/images/44pjUBj5FV3Z9Qtz8iB5ywdaA6I.png?width=1866&height=1009",
+            "alt": "Nord Terra House — image 3",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "nord-terra-image-4",
+            "src": "https://framerusercontent.com/images/300SV7xsgYBiZyZEvoJ5voSih4.png?width=1866&height=1257",
+            "alt": "Nord Terra House — image 4",
+            "type": "image",
+            "caption": ""
+          }
+        ],
+        "framerTemplateSlug": "nord-terra",
+        "legacyFramer": true
+      },
+      {
+        "id": "framer-mak",
+        "title": "MAK Park Square",
+        "slug": "mak",
+        "status": "published",
+        "category": "Residential - Apartment",
+        "location": "Mangalore, Karnataka",
+        "year": "2025",
+        "client": "MAK Builders",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "A minimalist fine art project focusing on simplicity, negative space, and quiet, contemplative moments.",
+        "seoDescription": "A minimalist fine art project focusing on simplicity, negative space, and quiet, contemplative moments.",
+        "cover": {
+          "src": "https://framerusercontent.com/images/oOgqrwl6b9KzDzwvQVDCzrzBd2Q.png?width=3840&height=1675",
+          "alt": "MAK Park Square"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [
+          {
+            "id": "mak-image-1",
+            "src": "https://framerusercontent.com/images/v3U2W5ffX2vI76SKNxWoVV642c.jpg?width=1502&height=1080",
+            "alt": "MAK Park Square — image 1",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "mak-image-2",
+            "src": "https://framerusercontent.com/images/nKl7JdgRPbWKMTQh6mVxOacp4.jpg?width=1028&height=1080",
+            "alt": "MAK Park Square — image 2",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "mak-image-3",
+            "src": "https://framerusercontent.com/images/xNhSV0DE3Ul79EZi4vIy0Z5WU.jpg?width=891&height=1080",
+            "alt": "MAK Park Square — image 3",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "mak-image-4",
+            "src": "https://framerusercontent.com/images/XYBKliRXXKxijovY4lEfnZhkm0.jpg?width=803&height=1080",
+            "alt": "MAK Park Square — image 4",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "mak-image-5",
+            "src": "https://framerusercontent.com/images/5mQttCrNn04vA7KMA5TxXHJUPkI.jpg?width=1080&height=1080",
+            "alt": "MAK Park Square — image 5",
+            "type": "image",
+            "caption": ""
+          }
+        ],
+        "framerTemplateSlug": "mak",
+        "legacyFramer": true
+      },
+      {
+        "id": "framer-bnb",
+        "title": "BNB House",
+        "slug": "bnb",
+        "status": "published",
+        "category": "Residential - Interiors",
+        "location": "Kadri, Karnataka",
+        "year": "2025",
+        "client": "Mr. Ashraf",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "A portrait series exploring the connection between people and landscapes, blending organic elements with human emotion.",
+        "seoDescription": "A portrait series exploring the connection between people and landscapes, blending organic elements with human emotion.",
+        "cover": {
+          "src": "https://framerusercontent.com/images/bqseiXtoV5vO99RUi0xXuxLl2zM.png?width=1536&height=1024",
+          "alt": "BNB House"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [
+          {
+            "id": "bnb-image-1",
+            "src": "https://framerusercontent.com/images/rlS8jtmOT3o76Xg58FjMSRJX8.png?width=1536&height=1024",
+            "alt": "BNB House — image 1",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "bnb-image-2",
+            "src": "https://framerusercontent.com/images/PJ4Uq3QfIJ2p8diYpjp320uw75s.png?width=3852&height=4096",
+            "alt": "BNB House — image 2",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "bnb-image-3",
+            "src": "https://framerusercontent.com/images/NlzGawrikUVgo9DkBUkb1kaM.png?width=1536&height=1024",
+            "alt": "BNB House — image 3",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "bnb-image-4",
+            "src": "https://framerusercontent.com/images/PKSLkb9sH6u4iacGn4dkrd3dM.png?width=1536&height=1024",
+            "alt": "BNB House — image 4",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "bnb-image-5",
+            "src": "https://framerusercontent.com/images/YvBroEXjbxEceU1Q1LifjH14.png?width=4096&height=4096",
+            "alt": "BNB House — image 5",
+            "type": "image",
+            "caption": ""
+          }
+        ],
+        "framerTemplateSlug": "bnb",
+        "legacyFramer": true
+      },
+      {
+        "id": "framer-coco-meltdown",
+        "title": "Coco Meltdown",
+        "slug": "coco-meltdown",
+        "status": "published",
+        "category": "Commercial - Cafe",
+        "location": "Al Khobar, Saudi Arabia",
+        "year": "2024",
+        "client": "Dip'N'Melt",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "A documentary-style series capturing diverse individuals, telling their stories through raw, intimate portraits.",
+        "seoDescription": "A documentary-style series capturing diverse individuals, telling their stories through raw, intimate portraits.",
+        "cover": {
+          "src": "https://framerusercontent.com/images/iGACg6EJ6JWKeROxDsUB60pUqt8.jpg?width=2000&height=1414",
+          "alt": "Coco Meltdown"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [
+          {
+            "id": "coco-meltdown-image-1",
+            "src": "https://framerusercontent.com/images/L4Xsh1FL7vzvaQX0CGp2B2Grfo.jpg?width=3607&height=2338",
+            "alt": "Coco Meltdown — image 1",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "coco-meltdown-image-2",
+            "src": "https://framerusercontent.com/images/tcgIPLIIkHeRNakg6rspHL5iw0.jpg?width=1080&height=1920",
+            "alt": "Coco Meltdown — image 2",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "coco-meltdown-image-3",
+            "src": "https://framerusercontent.com/images/AHCqeyuDqUKUjfy6EZOT0zPvnBM.jpg?width=1080&height=1920",
+            "alt": "Coco Meltdown — image 3",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "coco-meltdown-image-4",
+            "src": "https://framerusercontent.com/images/cIivHF6ezxEfBwl6wNCLjeInVc.jpg?width=1920&height=954",
+            "alt": "Coco Meltdown — image 4",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "coco-meltdown-image-5",
+            "src": "https://framerusercontent.com/images/c4934FFgGXFqSwtIcQbEoDMW5hU.jpg?width=1920&height=898",
+            "alt": "Coco Meltdown — image 5",
+            "type": "image",
+            "caption": ""
+          }
+        ],
+        "framerTemplateSlug": "coco-meltdown",
+        "legacyFramer": true
+      },
+      {
+        "id": "framer-artwist-salon",
+        "title": "Artwist Salon",
+        "slug": "artwist-salon",
+        "status": "published",
+        "category": "Commercial - Salon",
+        "location": "Kochi, Kerala",
+        "year": "2025",
+        "client": "Mrs. Fida",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "Artwist Salon is envisioned as a creative beauty space where elegance meets expression. The design blends soft curves, warm lighting, and refined textures to craft an inviting environment that feels both luxurious and personal. Each zone , from styling stations to the wash area , is arranged to enhance comfort while maintaining an efficient workflow for the stylists. A muted, modern palette acts as a calm backdrop, allowing the artistry of hair, beauty, and makeup to take center stage.",
+        "seoDescription": "Artwist Salon is envisioned as a creative beauty space where elegance meets expression. The design blends soft curves, warm lighting, and refined textures to craft an inviting environment that feels both luxurious and personal. Each zone , from styling stations to the wash area , is arranged to enhance comfort while maintaining an efficient workflow for the stylists. A muted, modern palette acts as a calm backdrop, allowing the artistry of hair, beauty, and makeup to take center stage.",
+        "cover": {
+          "src": "https://framerusercontent.com/images/p2HafXrbkrzZWGuRNvQwiKefJ7s.png?width=1920&height=1080",
+          "alt": "Artwist Salon"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [
+          {
+            "id": "artwist-salon-image-1",
+            "src": "https://framerusercontent.com/images/n9HkcPhpEOJmjw4g2wMA3qZbvK0.jpg?width=1920&height=1080",
+            "alt": "Artwist Salon — image 1",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "artwist-salon-image-2",
+            "src": "https://framerusercontent.com/images/EsedbmP5wyBiEUlNOl020JaRLI.jpg?width=1920&height=1080",
+            "alt": "Artwist Salon — image 2",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "artwist-salon-image-3",
+            "src": "https://framerusercontent.com/images/jbYteP2ZwXkelGgPTHqRXLK1nY.jpg?width=1920&height=1080",
+            "alt": "Artwist Salon — image 3",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "artwist-salon-image-4",
+            "src": "https://framerusercontent.com/images/rt1HPkJWK9j3gt5GBhACT2YMJ4.jpg?width=1920&height=1080",
+            "alt": "Artwist Salon — image 4",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "artwist-salon-image-5",
+            "src": "https://framerusercontent.com/images/KS1M3lRmKRjAyvkgulYCSTQ4k4.jpg?width=1920&height=1080",
+            "alt": "Artwist Salon — image 5",
+            "type": "image",
+            "caption": ""
+          }
+        ],
+        "framerTemplateSlug": "artwist-salon",
+        "legacyFramer": true
+      },
+      {
+        "id": "framer-seiko-hyper",
+        "title": "Seiko Hypermarket",
+        "slug": "seiko-hyper",
+        "status": "published",
+        "category": "Commercial - Retail",
+        "location": "Dammam, Saudi Arabia",
+        "year": "2025",
+        "client": "Hyper Al Wafa",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "Seiko Hypermarket is designed as a seamless, customer-centered retail environment that prioritizes clarity, flow, and visual comfort. The layout organizes diverse product zones into an intuitive circulation system, ensuring effortless navigation even during peak hours. A bright, neutral palette combined with clean signage and strategic lighting enhances product visibility while maintaining a pleasant shopping atmosphere. Durable materials, well-defined departmental identities, and thoughtful detailing allow the space to feel both contemporary and highly functional , delivering an elevated retail experience that aligns with Seiko’s commitment to quality and convenience.",
+        "seoDescription": "Seiko Hypermarket is designed as a seamless, customer-centered retail environment that prioritizes clarity, flow, and visual comfort. The layout organizes diverse product zones into an intuitive circulation system, ensuring effortless navigation even during peak hours. A bright, neutral palette combined with clean signage and strategic lighting enhances product visibility while maintaining a pleasant shopping atmosphere. Durable materials, well-defined departmental identities, and thoughtful detailing allow the space to feel both contemporary and highly functional , delivering an elevated retail experience that aligns with Seiko’s commitment to quality and convenience.",
+        "cover": {
+          "src": "https://framerusercontent.com/images/AI0u2FuN2JqVr5PS28MixwnR82k.jpg?width=1355&height=1020",
+          "alt": "Seiko Hypermarket"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [
+          {
+            "id": "seiko-hyper-image-1",
+            "src": "https://framerusercontent.com/images/2c26sIr82lYVf9ZA5gPu0Fyuy4I.jpg?width=3000&height=2126",
+            "alt": "Seiko Hypermarket — image 1",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "seiko-hyper-image-2",
+            "src": "https://framerusercontent.com/images/SeFdwOcgHQSe3IhVljhziAU.jpg?width=1808&height=1911",
+            "alt": "Seiko Hypermarket — image 2",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "seiko-hyper-image-3",
+            "src": "https://framerusercontent.com/images/eM2yaKWa34vYC9CYOenuc5Tvmvw.jpg?width=2066&height=1950",
+            "alt": "Seiko Hypermarket — image 3",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "seiko-hyper-image-4",
+            "src": "https://framerusercontent.com/images/IbbRf5jMwy2fzNFbkvdp74ff0gk.jpg?width=3000&height=1642",
+            "alt": "Seiko Hypermarket — image 4",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "seiko-hyper-image-5",
+            "src": "https://framerusercontent.com/images/iUkqsW2WCTrXq8ejUUyChYo4A.jpg?width=3000&height=1481",
+            "alt": "Seiko Hypermarket — image 5",
+            "type": "image",
+            "caption": ""
+          }
+        ],
+        "framerTemplateSlug": "seiko-hyper",
+        "legacyFramer": true
+      },
+      {
+        "id": "framer-koan",
+        "title": "Koan House",
+        "slug": "koan",
+        "status": "published",
+        "category": "Residential - Interior",
+        "location": "Kadri, Mangalore",
+        "year": "2025",
+        "client": "Adoor Family",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "A lifestyle photography project focusing on authenticity, unposed moments, and the beauty of imperfection.",
+        "seoDescription": "A lifestyle photography project focusing on authenticity, unposed moments, and the beauty of imperfection.",
+        "cover": {
+          "src": "https://framerusercontent.com/images/ztJAhSpApJJMG6U1vb2GRwo3bo.png?width=5504&height=3072",
+          "alt": "Koan House"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [
+          {
+            "id": "koan-image-1",
+            "src": "https://framerusercontent.com/images/DWRxUUAvm93qMApEzOZyjGRp0.png?width=1376&height=668",
+            "alt": "Koan House — image 1",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "koan-image-2",
+            "src": "https://framerusercontent.com/images/NaUPVQWYAk4s98QG4ifouPQqWw.png?width=697&height=1024",
+            "alt": "Koan House — image 2",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "koan-image-3",
+            "src": "https://framerusercontent.com/images/xUb82VLPTkuVCXexfdkZwFZKm08.png?width=1423&height=1024",
+            "alt": "Koan House — image 3",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "koan-image-4",
+            "src": "https://framerusercontent.com/images/DUfuZIcfqmplu42OBfbhKcxg.png?width=1376&height=709",
+            "alt": "Koan House — image 4",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "koan-image-5",
+            "src": "https://framerusercontent.com/images/Vv0hXKoszcGHLixcB8Av1H3mJD8.png?width=1376&height=768",
+            "alt": "Koan House — image 5",
+            "type": "image",
+            "caption": ""
+          }
+        ],
+        "framerTemplateSlug": "koan",
+        "legacyFramer": true
+      },
+      {
+        "id": "framer-pipe-nova",
+        "title": "Pipe Nova",
+        "slug": "pipe-nova",
+        "status": "published",
+        "category": "Commercial - Retail",
+        "location": "Falnir, Mangalore",
+        "year": "2025",
+        "client": "Sorbete",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "A creative exploration of light and shadow, using reflections, neon, and unconventional lighting techniques for unique visual effects.",
+        "seoDescription": "A creative exploration of light and shadow, using reflections, neon, and unconventional lighting techniques for unique visual effects.",
+        "cover": {
+          "src": "https://framerusercontent.com/images/ajLmeHHIgaReHnNGnMQBksLB54.jpg?width=1734&height=1080",
+          "alt": "Pipe Nova"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [
+          {
+            "id": "pipe-nova-image-1",
+            "src": "https://framerusercontent.com/images/gBCpiCPhIckhZm794KK4tjeOH4.jpg?width=1920&height=1080",
+            "alt": "Pipe Nova — image 1",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "pipe-nova-image-2",
+            "src": "https://framerusercontent.com/images/A841McgveLFGK0dJhzabN7AZH0.jpg?width=689&height=811",
+            "alt": "Pipe Nova — image 2",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "pipe-nova-image-3",
+            "src": "https://framerusercontent.com/images/DHRKcLc1QGDibDJfHdchiT00.png?width=1901&height=811",
+            "alt": "Pipe Nova — image 3",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "pipe-nova-image-4",
+            "src": "https://framerusercontent.com/images/3LGwFH6xGHWXAhV4EI89gCzDI.jpg?width=1920&height=1080",
+            "alt": "Pipe Nova — image 4",
+            "type": "image",
+            "caption": ""
+          },
+          {
+            "id": "pipe-nova-image-5",
+            "src": "https://framerusercontent.com/images/BoS1uYhzd8FVrZcl51Lgk55Pta0.jpg?width=1920&height=978",
+            "alt": "Pipe Nova — image 5",
+            "type": "image",
+            "caption": ""
+          }
+        ],
+        "framerTemplateSlug": "pipe-nova",
+        "legacyFramer": true
+      },
+      {
         "id": "king-abdullah-park-riyadh",
         "title": "King Abdullah Park",
         "slug": "king-abdullah-park-riyadh",
