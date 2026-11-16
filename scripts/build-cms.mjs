@@ -121,7 +121,7 @@ for (const legacySlug of legacyTemplateSlugs) {
     await rm(join(publicDir, "project-showcase", legacySlug), { recursive: true, force: true });
   }
 }
-const newFramerProjects = projects.filter((item) => !item.legacyFramer);
+const newFramerProjects = projects.filter((item) => !item.legacyFramer || safeSlug(item.slug) !== safeSlug(item.framerTemplateSlug));
 await appendFramerCards(join(publicDir, "project-showcase", "index.html"), newFramerProjects, projects);
 await appendFramerCards(join(publicDir, "index.html"), newFramerProjects, projects);
 
