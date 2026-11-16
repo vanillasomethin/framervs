@@ -889,6 +889,7 @@ const renderEditor = (view, type, id) => {
         item.slug = slugify(input.value);
       } else {
         setPath(item, key, input.value);
+        if (type === "projects" && key === "body") item.framerBodyManaged = true;
       }
       if (key === "title") {
         if (type === "updates") item.slug = uniqueSlug(type, input.value, item.id);
