@@ -54,7 +54,7 @@ export function transformFramerProjectHTML(source, item) {
   const oldTitle = (html.match(/<title>([\s\S]*?)<\/title>/i) || [,""])[1];
   const oldDescription = (html.match(/<meta name="description" content="([^"]*)"/i) || [,""])[1];
   const oldCover = (html.match(/class="framer-19f5tnp"[\s\S]*?<img\b[^>]*src="([^"]+)"/i) || [,""])[1];
-  for (const [before, after] of [[plain(oldTitle), title], [plain(oldDescription), summary], [oldCover, cover]]) {
+  for (const [before, after] of [[plain(oldDescription), summary], [oldCover, cover]]) {
     if (before && after && before !== after) html = html.split(before).join(after);
   }
   html = html.replace(/<title>[\s\S]*?<\/title>/i, "<title>" + esc(title) + " | Vanilla &amp; Somethin</title>");
