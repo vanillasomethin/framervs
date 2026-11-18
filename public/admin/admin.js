@@ -508,6 +508,7 @@ const render = () => {
   if (TYPES[section] && id) return renderEditor(view, section, id);
   if (TYPES[section]) return renderList(view, section);
   if (section === "settings") return renderSettings(view);
+  if (section === "seo") return renderSEO(view);
   return renderDashboard(view);
 };
 
@@ -1056,6 +1057,99 @@ const enableDrop = (box, onFiles) => {
     box.classList.remove("drag");
     const files = Array.from(e.dataTransfer.files || []).filter((f) => f.type.startsWith("image/"));
     if (files.length) onFiles(files);
+  });
+};
+
+
+const seoApi = async (body) => {
+  const response = await fetch("/.netlify/functions/search-console", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${state.token}` },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`);
+  return data;
+};
+
+const renderSEO = (view) => {
+  const end = new Date(Date.now() - 3 * 86400000);
+  const start = new Date(end);
+  start.setDate(start.getDate() - 27);
+  const iso = (d) => d.toISOString().slice(0, 10);
+  view.innerHTML = `
+    <div class="page-head"><div><h1>Search performance</h1><p>Google Search Console · Organic search visibility for the studio website.</p></div></div>
+    <div class="panel seo-connect">
+      <div><h2>Google Search Console</h2><p class="muted" id="seo-status">Checking connection…</p></div>
+      <button type="button" class="btn primary" id="seo-connect">Connect Google</button>
+    </div>
+    <div class="panel" style="margin-top:18px">
+      <div class="grid-2">
+        <label class="field"><span>Search Console property</span><select id="seo-property"><option value="">Loading properties…</option></select></label>
+        <label class="field"><span>Report</span><select id="seo-dimension"><option value="date">Daily trend</option><option value="query">Search queries</option><option value="page">Top pages</option><option value="country">Countries</option><option value="device">Devices</option></select></label>
+        <label class="field"><span>Start date</span><input id="seo-start" type="date" value="${iso(start)}"></label>
+        <label class="field"><span>End date</span><input id="seo-end" type="date" value="${iso(end)}"></label>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:16px"><button type="button" class="btn primary" id="seo-load">Load report</button><span class="muted" id="seo-message" role="status"></span></div>
+    </div>
+    <div class="stats seo-stats" id="seo-stats" style="margin-top:18px">
+      <div class="panel stat"><span class="label">Clicks</span><span class="num">—</span><span class="sub">Select a property and load data</span></div>
+      <div class="panel stat"><span class="label">Impressions</span><span class="num">—</span><span class="sub">Google organic results</span></div>
+      <div class="panel stat"><span class="label">CTR</span><span class="num">—</span><span class="sub">Click-through rate</span></div>
+      <div class="panel stat"><span class="label">Average position</span><span class="num">—</span><span class="sub">Lower is better</span></div>
+    </div>
+    <div class="panel" style="margin-top:18px"><h2 id="seo-table-title">Search data</h2><p class="muted" id="seo-table-note">Search Console data will appear here. Recent dates may be delayed by Google.</p><div class="table-wrap" id="seo-table"></div></div>
+    <div class="notice warn" style="margin-top:18px">This is Google Search Console data only. Business Profile metrics are not connected. Your Google OAuth app is currently in Testing; its refresh token may expire after 7 days.</div>`;
+  const status = $("#seo-status", view);
+  const property = $("#seo-property", view);
+  const message = $("#seo-message", view);
+  const connect = $("#seo-connect", view);
+  const load = $("#seo-load", view);
+  const fmt = (n) => Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+  const showError = (error) => { message.textContent = error.message; message.style.color = "var(--danger)"; };
+  const loadSites = async () => {
+    status.textContent = "Checking Google authorisation…";
+    const data = await seoApi({ action: "sites" });
+    property.innerHTML = data.sites.length ? data.sites.map((s) => `<option value="${escapeHTML(s.siteUrl)}">${escapeHTML(s.siteUrl)} · ${escapeHTML(s.permissionLevel)}</option>`).join("") : '<option value="">No accessible properties found</option>';
+    status.textContent = data.sites.length ? `Connected · ${data.sites.length} Search Console propert${data.sites.length === 1 ? "y" : "ies"} available` : "Google connected, but no Search Console properties are accessible to this account.";
+  };
+  connect.addEventListener("click", async () => {
+    connect.disabled = true;
+    try {
+      const response = await fetch("/.netlify/functions/google-oauth-start", { method: "POST", headers: { Authorization: `Bearer ${state.token}` } });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not start Google connection.");
+      location.href = data.url;
+    } catch (error) { showError(error); connect.disabled = false; }
+  });
+  load.addEventListener("click", async () => {
+    if (!property.value) { message.textContent = "Choose a property first."; return; }
+    load.disabled = true; message.textContent = "Loading report…"; message.style.color = "var(--muted)";
+    try {
+      const dimension = $("#seo-dimension", view).value;
+      const data = await seoApi({ action: "query", siteUrl: property.value, startDate: $("#seo-start", view).value, endDate: $("#seo-end", view).value, dimensions: [dimension] });
+      const rows = data.rows || [];
+      const totals = rows.reduce((a, r) => ({ clicks:a.clicks+r.clicks, impressions:a.impressions+r.impressions, positionWeighted:a.positionWeighted+r.position*r.impressions }), { clicks:0, impressions:0, positionWeighted:0 });
+      const ctr = totals.impressions ? totals.clicks / totals.impressions : 0;
+      const position = totals.impressions ? totals.positionWeighted / totals.impressions : 0;
+      $("#seo-stats", view).innerHTML = [
+        ["Clicks",fmt(totals.clicks),"Organic visits from Google"],
+        ["Impressions",fmt(totals.impressions),"Appearances in Google results"],
+        ["CTR",`${(ctr*100).toFixed(2)}%`,"Clicks ÷ impressions"],
+        ["Average position",position ? position.toFixed(1) : "—","Impression-weighted average"]
+      ].map(([label,num,sub]) => `<div class="panel stat"><span class="label">${label}</span><span class="num">${num}</span><span class="sub">${sub}</span></div>`).join("");
+      $("#seo-table-title", view).textContent = dimension === "date" ? "Daily search performance" : `Performance by ${dimension}`;
+      $("#seo-table-note", view).textContent = `${rows.length} rows · ${$("#seo-start",view).value} to ${$("#seo-end",view).value}`;
+      const heading = dimension === "date" ? "Date" : dimension[0].toUpperCase()+dimension.slice(1);
+      $("#seo-table", view).innerHTML = rows.length ? `<table class="data-table"><thead><tr><th>${heading}</th><th>Clicks</th><th>Impressions</th><th>CTR</th><th>Position</th></tr></thead><tbody>${rows.map(r => `<tr><td>${escapeHTML(r.keys?.[0] || "")}</td><td>${fmt(r.clicks)}</td><td>${fmt(r.impressions)}</td><td>${(r.ctr*100).toFixed(2)}%</td><td>${Number(r.position || 0).toFixed(1)}</td></tr>`).join("")}</tbody></table>` : '<p class="muted">No rows returned for this property and date range.</p>';
+      message.textContent = "Report loaded."; message.style.color = "var(--ok)";
+    } catch (error) { showError(error); }
+    finally { load.disabled = false; }
+  });
+  loadSites().catch((error) => {
+    status.textContent = "Not connected or connection expired.";
+    connect.textContent = "Connect / reconnect Google";
+    showError(error);
   });
 };
 
