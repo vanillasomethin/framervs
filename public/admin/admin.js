@@ -5,7 +5,8 @@
 // GitHub. Changes are held locally until "Publish", so several edits go out as
 // one commit / one deploy. Previews use the same renderer as the live pages.
 
-import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, renderUpdates } from "/cms/render.mjs";\nimport { animateAdminView, initAdminMotion } from "./motion.js";
+import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, renderUpdates } from "/cms/render.mjs";
+import { animateAdminView, initAdminMotion } from "./motion.js";
 import { session, SESSION_KEY, app, $, $$, clone, uid, api, toast } from "./core.js";
 import { data as studio, loadAll, refresh, sync, onData, hasPendingChanges, meId, team, setMe, isoDate } from "./studio/data.js";
 import { icon, drawerIsOpen } from "./studio/ui.js";
