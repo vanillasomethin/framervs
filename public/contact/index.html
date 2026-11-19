@@ -385,14 +385,14 @@
 .vs-enquiry h3{font:500 clamp(25px,4vw,38px)/1.15 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#fff;margin:0 0 10px}
 .vs-enquiry-hint{font-size:14px;color:#adadad;margin:0 0 26px}
 .vs-enquiry-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.vs-enquiry-options button,.vs-enquiry-contact-options a{appearance:none;text-align:left;border:1px solid rgba(255,255,255,.22);border-radius:8px;background:transparent;color:#f5f5f5;padding:17px 18px;font:14px/1.35 inherit;cursor:pointer;transition:background .18s,border-color .18s,color .18s;text-decoration:none}
+.vs-enquiry-options button,.vs-enquiry-contact-options a{appearance:none;text-align:left;border:1px solid rgba(255,255,255,.22);border-radius:8px;background:transparent;color:#f5f5f5;padding:17px 18px;font:inherit;font-size:14px;line-height:1.35;cursor:pointer;transition:background .18s,border-color .18s,color .18s;text-decoration:none}
 .vs-enquiry-options button:hover,.vs-enquiry-options button:focus-visible,.vs-enquiry-options button[aria-pressed="true"]{border-color:#fff;background:rgba(255,255,255,.09);outline:none}
 .vs-enquiry-options-compact{grid-template-columns:1fr}
 .vs-enquiry-location input{box-sizing:border-box;width:100%;padding:17px 2px;border:0;border-bottom:1px solid rgba(255,255,255,.4);border-radius:0;background:transparent;color:#fff;font:16px 'Space Grotesk',sans-serif;outline:none}
 .vs-enquiry-location input:focus{border-color:#fff}
 .vs-enquiry-location input::placeholder{color:#777}
 .vs-enquiry-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:28px}
-.vs-enquiry-back,.vs-enquiry-reset{border:0;background:none;color:#adadad;padding:12px 0;cursor:pointer;font:13px inherit}
+.vs-enquiry-back,.vs-enquiry-reset{border:0;background:none;color:#adadad;padding:12px 0;cursor:pointer;font:inherit;font-size:13px}
 .vs-enquiry-next{border:1px solid #fff;border-radius:8px;background:#fff;color:#111;padding:13px 20px;cursor:pointer;font:13px inherit}
 .vs-enquiry-next:disabled{opacity:.35;cursor:not-allowed}
 .vs-enquiry-contact-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
@@ -406,7 +406,7 @@
 const state={project:'',location:'',stage:''};let step=0;
 const steps=[...root.querySelectorAll('[data-step]')],label=root.querySelector('#vs-enquiry-step-label'),bar=root.querySelector('#vs-enquiry-progress-bar i'),location=root.querySelector('#vs-project-location'),next=root.querySelector('[data-next]');
 function render(){steps.forEach((el,i)=>el.hidden=i!==step);label.textContent=(step+1).toString().padStart(2,'0')+' / 04';bar.style.width=((step+1)*25)+'%';}
-function showFinal(){const details='Project enquiry: '+state.project+' | Location: '+state.location+' | Stage: '+state.stage;root.querySelector('#vs-whatsapp-enquiry').href='https://wa.me/917411349844?text='+encodeURIComponent('Hello Vanilla & Somethin’! I would like to discuss a project.\n'+details);const cal='https://cal.com/hisham-khalid-qyohid/30min? notes='+encodeURIComponent(details);root.querySelector('#vs-book-consultation').href='https://cal.com/hisham-khalid-qyohid/30min';}
+function showFinal(){const details='Project enquiry: '+state.project+' | Location: '+state.location+' | Stage: '+state.stage;root.querySelector('#vs-whatsapp-enquiry').href='https://wa.me/917411349844?text='+encodeURIComponent('Hello Vanilla & Somethin’! I would like to discuss a project.\n'+details);root.querySelector('#vs-book-consultation').href='https://cal.com/hisham-khalid-qyohid/30min?notes='+encodeURIComponent(details);}
 root.querySelectorAll('[data-project]').forEach(btn=>btn.addEventListener('click',()=>{state.project=btn.dataset.project;step=1;render();location.focus();}));
 location.addEventListener('input',()=>{state.location=location.value.trim();next.disabled=!state.location;});
 next.addEventListener('click',()=>{state.location=location.value.trim();if(state.location){step=2;render();}});
