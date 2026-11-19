@@ -52,7 +52,11 @@ const getStudioStore = (event) => {
   if (process.env.STUDIO_LOCAL_DIR) return fileStore(process.env.STUDIO_LOCAL_DIR);
   const { getStore, connectLambda } = require("@netlify/blobs");
   if (event) connectLambda(event);
-  return getStore({ name: "studio", consistency: "strong" });
+  // Strong consistency currently requires Netlify to inject an uncached edge URL,
+  // which is not available in this Lambda-compatible function runtime. Use the
+  // default eventual-consistency path so the Studio API remains operational.
+  // Conditional ETag writes still protect updates from overwriting a newer value.
+  return getStore({ name: "studio" });
 };
 
 const readDoc = async (store, key) => {
