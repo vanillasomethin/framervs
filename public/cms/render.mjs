@@ -339,7 +339,7 @@ ${body}
 <div>${socials}</div>
 </div>
 </div></footer>
-</body>
+<script src="/cms/motion.js" defer></script>\n</body>
 </html>
 `;
 };
