@@ -52,12 +52,6 @@ for (const file of htmlFiles) {
   if (!canonical) errors.push(`${file}: missing canonical`);
   const ogUrl = html.match(/property="og:url" content="([^"]+)"/i)?.[1];
   if (ogUrl && canonical && ogUrl !== canonical) errors.push(`${file}: og:url does not match canonical`);
-  if (file === "index.html") {
-    const orgMatch = html.match(/<script type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/i);
-    let orgSchema = null;
-    try { orgSchema = orgMatch ? JSON.parse(orgMatch[1]) : null; } catch { /* JSON-LD parse error is reported below */ }
-    if (orgSchema?.["@type"] === "Organization" && orgSchema.url !== "https://www.vanillasometh.in/") errors.push("index.html: Organization schema URL must use the primary www domain");
-  }
   if (canonical) {
     if (!canonical.startsWith("https://www.vanillasometh.in/")) errors.push(`${file}: incorrect canonical ${canonical}`);
     if (canonicalMap.has(canonical)) errors.push(`${file}: canonical duplicates ${canonicalMap.get(canonical)}`);
@@ -68,6 +62,13 @@ for (const file of htmlFiles) {
     try { JSON.parse(match[1]); } catch (error) {
       errors.push(`${file}: JSON-LD #${index + 1} invalid: ${error.message}`);
     }
+  }
+  if (file === "index.html") {
+    const organizationSchema = schemas.map((match) => {
+      try { return JSON.parse(match[1]); } catch { return null; }
+    }).find((schema) => schema?.["@type"] === "Organization");
+    if (!organizationSchema) errors.push("index.html: Organization JSON-LD missing");
+    else if (organizationSchema.url !== "https://www.vanillasometh.in/") errors.push("index.html: Organization schema URL must use the primary www domain");
   }
   if (!/<h1\b/i.test(html)) warnings.push(`${file}: no H1 in server-rendered HTML`);
 }
