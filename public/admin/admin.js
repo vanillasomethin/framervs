@@ -566,10 +566,12 @@ const render = ({ keepScroll = false } = {}) => {
     const board = $(".board-scroll");
     if (board) board.scrollLeft = boardX;
   }
+  animateAdminView(view);
   updateSaveState();
 };
 
-initAdminMotion();\napp.render = () => render({ keepScroll: true });
+initAdminMotion();
+app.render = () => render({ keepScroll: true });
 app.onExpired = () => logout(false);
 window.addEventListener("hashchange", () => render());
 
