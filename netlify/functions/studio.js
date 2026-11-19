@@ -23,6 +23,9 @@ const TOKEN_DAYS = 45;
 const ID = /^[A-Za-z0-9_-]{4,40}$/;
 
 const key = (name) => `c/${name}`;
+const isPlain = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+// An error the client should not retry (the same request can never succeed)
+const badRequest = (message) => Object.assign(new Error(message), { status: 400 });
 
 const validItem = (item) =>
   item &&
@@ -69,25 +72,55 @@ const save = async (store, ops) => {
   let settingsOp = null;
   for (const op of ops) {
     if (op && op.c === "settings" && op.op === "set") settingsOp = op;
-    else if (op && WRITABLE.includes(op.c) && (op.op === "set" || op.op === "del")) (byCollection[op.c] ||= []).push(op);
+    else if (op && WRITABLE.includes(op.c) && ["set", "del", "patch"].includes(op.op)) (byCollection[op.c] ||= []).push(op);
     else return json(400, { error: "Unknown change." });
   }
   const now = new Date().toISOString();
   const revs = {};
+  const merged = {}; // records after field-level merging, so the client can adopt other devices' changes
 
   for (const [name, list] of Object.entries(byCollection)) {
-    for (const op of list) if (op.op === "set" && !validItem(op.item)) return json(400, { error: `An item in ${name} is invalid or too large.` });
+    for (const op of list) {
+      if (op.op === "set" && !validItem(op.item)) return json(400, { error: `An item in ${name} is invalid or too large.` });
+      if (op.op === "patch" && !(typeof op.id === "string" && ID.test(op.id) && isPlain(op.fields) && validItem(op.item) && op.item.id === op.id)) {
+        return json(400, { error: `An edit to ${name} is invalid or too large.` });
+      }
+    }
+    let mergedItems = [];
     const result = await mutate(store, key(name), (doc) => {
+      mergedItems = []; // reset: this callback reruns if another save lands first
       let items = doc ? doc.items : [];
       for (const op of list) {
         if (op.op === "del") {
           items = items.filter((i) => i.id !== op.id);
           continue;
         }
+        if (op.op === "patch") {
+          const index = items.findIndex((i) => i.id === op.id);
+          if (index === -1) {
+            // The record is gone (deleted elsewhere): keep this edit by recreating it from the full copy
+            if (items.length >= MAX_ITEMS) throw badRequest(`Too many ${name}.`);
+            items.push({ ...clean(op.item), createdAt: op.item.createdAt || now, updatedAt: now });
+          } else {
+            // Field-level merge: only the fields this device changed are applied, so edits other
+            // devices made to other fields of the same record are kept.
+            const next = { ...items[index] };
+            for (const [field, value] of Object.entries(clean(op.fields))) {
+              if (field === "id" || field === "createdAt" || field === "updatedAt") continue;
+              if (value === null) delete next[field];
+              else next[field] = value;
+            }
+            next.updatedAt = now;
+            if (Buffer.byteLength(JSON.stringify(next)) > MAX_ITEM_BYTES) throw badRequest(`An item in ${name} is too large.`);
+            items[index] = next;
+          }
+          mergedItems.push(items.find((i) => i.id === op.id));
+          continue;
+        }
         const incoming = clean(op.item);
         const index = items.findIndex((i) => i.id === incoming.id);
         if (index === -1) {
-          if (items.length >= MAX_ITEMS) throw new Error(`Too many ${name}.`);
+          if (items.length >= MAX_ITEMS) throw badRequest(`Too many ${name}.`);
           items.push({ ...incoming, createdAt: incoming.createdAt || now, updatedAt: now });
         } else {
           items[index] = { ...incoming, createdAt: items[index].createdAt || now, updatedAt: now };
@@ -97,6 +130,7 @@ const save = async (store, ops) => {
       return { rev: (doc ? doc.rev : 0) + 1, items };
     });
     revs[name] = result.rev;
+    if (mergedItems.length) merged[name] = mergedItems;
   }
 
   if (settingsOp) {
@@ -106,7 +140,7 @@ const save = async (store, ops) => {
     const doc = await mutate(store, "settings", (current) => ({ rev: (current ? current.rev : 0) + 1, value: clean(settingsOp.value) }));
     revs.settings = doc.rev;
   }
-  return json(200, { ok: true, revs, at: now });
+  return json(200, { ok: true, revs, at: now, merged });
 };
 
 // ---------------------------------------------------------------------------
@@ -288,7 +322,7 @@ exports.handler = async (event) => {
         return json(400, { error: "Unknown action." });
     }
   } catch (error) {
-    console.error("studio function error", error);
-    return json(500, { error: error.message || "Something went wrong." });
+    if (error.status !== 400) console.error("studio function error", error);
+    return json(error.status === 400 ? 400 : 500, { error: error.message || "Something went wrong." });
   }
 };

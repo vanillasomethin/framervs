@@ -2,7 +2,7 @@
 // backup & restore, sample data. Rendered below the website settings.
 
 import { $, $$, uid, app, studioApi, toast } from "../core.js";
-import { data, team, saveSettings, DEFAULT_CHECKLIST, ONBOARDING, loadAll, meId, setMe, isoDate } from "./data.js";
+import { data, team, saveSettings, DEFAULT_CHECKLIST, ONBOARDING, loadAll, meId, setMe, isoDate, waitForSave, discardQueue } from "./data.js";
 import { icon, esc, optionsHTML, confirmBox } from "./ui.js";
 import { seedDemo, clearDemo, hasDemoData } from "./demo.js";
 
@@ -97,6 +97,10 @@ export const renderStudioSettings = (container) => {
         try {
           const backup = JSON.parse(await file.text());
           if (!(await confirmBox({ title: "Restore this backup?", message: "All current studio data (clients, projects, tasks, site logs) is replaced with the backup's contents.", confirmLabel: "Restore", danger: true }))) return;
+          // Let anything already queued land first, then drop whatever couldn't: these edits are older
+          // than the backup, and a later retry must not overwrite the restored data.
+          await waitForSave();
+          discardQueue();
           await studioApi({ action: "import", data: backup });
           await loadAll();
           toast("Backup restored.");

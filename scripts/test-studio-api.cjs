@@ -49,6 +49,26 @@ const call = async (fn, body, token, method = "POST", qs) => { const r = await f
   r = await call(studio, { action: "save", ops: [{ c: "settings", op: "set", value: { team: [{ id: "tm_a1b2", name: "Hisham" }] } }] }, T);
   r = await call(studio, { action: "load" }, T); ok("settings round trip", r.body.settings.team[0].name === "Hisham" && r.body.revs.settings === 1, r.body);
 
+  // field-level merge: two devices edit DIFFERENT fields of the same task from the same starting point
+  await call(studio, { action: "save", ops: [{ c: "tasks", op: "set", item: { id: "tk_merge1", title: "Shared task", status: "todo", due: "" } }] }, T);
+  const patch = (id, fields, item) => call(studio, { action: "save", ops: [{ c: "tasks", op: "patch", id, fields, item }] }, T);
+  await patch("tk_merge1", { due: "2026-12-01" }, { id: "tk_merge1", title: "Shared task", status: "todo", due: "2026-12-01" });
+  r = await patch("tk_merge1", { status: "done" }, { id: "tk_merge1", title: "Shared task", status: "done", due: "" }); // stale copy: due is still ""
+  const m = r.body.merged && r.body.merged.tasks && r.body.merged.tasks[0];
+  ok("a stale device's edit keeps the other device's change (field-level merge)", r.status === 200 && m.status === "done" && m.due === "2026-12-01", r.body);
+  r = await call(studio, { action: "load" }, T); const merged = r.body.collections.tasks.find((t) => t.id === "tk_merge1");
+  ok("both edits are persisted", merged.status === "done" && merged.due === "2026-12-01" && merged.title === "Shared task", merged);
+  await patch("tk_merge1", { due: null }, { id: "tk_merge1", title: "Shared task", status: "done" }); r = await call(studio, { action: "load" }, T);
+  ok("clearing a field removes it", !("due" in r.body.collections.tasks.find((t) => t.id === "tk_merge1")));
+  r = await patch("tk_gone01", { status: "done" }, { id: "tk_gone01", title: "Deleted elsewhere", status: "done" }); r = await call(studio, { action: "load" }, T);
+  ok("an edit to a record deleted elsewhere recreates it instead of losing the edit", r.body.collections.tasks.some((t) => t.id === "tk_gone01"));
+  r = await call(studio, { action: "save", ops: [{ c: "tasks", op: "patch", id: "tk_merge1", fields: ["x"], item: { id: "tk_merge1", title: "t" } }] }, T); ok("patch with non-object fields rejected", r.status === 400, r);
+  r = await call(studio, { action: "save", ops: [{ c: "tasks", op: "patch", id: "tk_merge1", fields: { a: 1 }, item: { id: "tk_other1", title: "t" } }] }, T); ok("patch whose id doesn't match its item rejected", r.status === 400, r);
+  r = await patch("tk_merge1", { notes: "x".repeat(30000) }, { id: "tk_merge1", title: "Shared task" }); ok("merge that would exceed the item size limit is a 400 (not retried forever)", r.status === 400, r);
+  r = await call(studio, { action: "save", ops: [{ c: "tasks", op: "patch", id: "tk_merge1", fields: { id: "tk_hijack", createdAt: "1999", status: "todo" }, item: { id: "tk_merge1", title: "Shared task" } }] }, T); r = await call(studio, { action: "load" }, T);
+  const kept = r.body.collections.tasks.find((t) => t.id === "tk_merge1");
+  ok("patches can't change a record's id or creation date", Boolean(kept) && kept.createdAt !== "1999" && !r.body.collections.tasks.some((t) => t.id === "tk_hijack"), kept);
+
   // photos
   const jpg = Buffer.from("fakejpegdata").toString("base64");
   r = await call(studio, { action: "photo.put", id: "ph_abc123", type: "image/jpeg", data: jpg }, T); ok("photo upload", r.status === 200, r);

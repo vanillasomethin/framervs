@@ -137,7 +137,31 @@ export const loadAll = async () => {
   data.tokens = result.tokens || {};
   data.revs = result.revs;
   data.loaded = true;
+  // Edits made but not yet saved (for example when the login expired mid-save)
+  // go back on top of the fresh copy and are sent again, instead of being lost.
+  authExpired = false;
+  reapplyQueue();
+  if (queue.length) {
+    setSync("saving");
+    flushTimer = setTimeout(flush, 200);
+  }
   emit("load");
+};
+
+// Put queued edits back into the local copy after it was replaced from the server
+const reapplyQueue = () => {
+  for (const op of queue) {
+    if (op.c === "settings") {
+      applySettings(op.value);
+    } else if (op.op === "del") {
+      data[op.c] = data[op.c].filter((i) => i.id !== op.id);
+    } else {
+      const list = data[op.c];
+      const index = list.findIndex((i) => i.id === op.item.id);
+      if (index === -1) list.push(op.item);
+      else list[index] = op.item;
+    }
+  }
 };
 
 let queue = [];
@@ -153,40 +177,83 @@ const setSync = (state, error = "") => {
   emit("sync");
 };
 
+let authExpired = false; // login expired: hold edits until the user signs in again
+
 const flush = async () => {
-  if (flushing || !queue.length) return;
+  clearTimeout(flushTimer);
+  flushTimer = null;
+  if (flushing || authExpired || !queue.length) return;
   flushing = true;
   const batch = queue.splice(0, queue.length);
   setSync("saving");
   try {
     const result = await studioApi({ action: "save", ops: batch });
     Object.assign(data.revs, result.revs);
+    applyMerged(result.merged);
     retryDelay = 1500;
     warned = false;
     setSync(queue.length ? "saving" : "saved");
   } catch (error) {
-    if (error.status === 401) return; // shell shows the login screen
-    queue.unshift(...batch);
-    setSync("error", error.message);
-    if (!warned) {
-      toast(`Couldn't save to the server: ${error.message} Your changes are kept and will retry.`, { error: true, duration: 7000 });
-      warned = true;
+    if (error.status === 400 || error.status === 413) {
+      // The server will never accept this batch; dropping it keeps later saves from getting stuck behind it
+      toast(`Some changes couldn't be saved: ${error.message}`, { error: true, duration: 9000 });
+      setSync(queue.length ? "saving" : "saved");
+    } else {
+      queue.unshift(...batch); // keep the edits, whatever went wrong
+      if (error.status === 401) {
+        authExpired = true;
+        setSync("error", "Your login expired. Sign in again and these changes will be saved.");
+      } else {
+        setSync("error", error.message);
+        if (!warned) {
+          toast(`Couldn't save to the server: ${error.message} Your changes are kept and will retry.`, { error: true, duration: 7000 });
+          warned = true;
+        }
+        flushTimer = setTimeout(flush, retryDelay);
+        retryDelay = Math.min(retryDelay * 2, 30000);
+      }
     }
-    flushTimer = setTimeout(flush, retryDelay);
-    retryDelay = Math.min(retryDelay * 2, 30000);
   } finally {
     flushing = false;
-    if (queue.length && !flushTimer) flushTimer = setTimeout(flush, 300);
   }
-  flushTimer = null;
+  if (queue.length && !flushTimer && !authExpired && sync.state !== "error") flushTimer = setTimeout(flush, 300);
 };
 
+// The server merges field-level edits with whatever other devices changed.
+// Adopt the merged record unless we have newer unsaved edits to it.
+const applyMerged = (merged) => {
+  for (const [collection, items] of Object.entries(merged || {})) {
+    for (const item of items) {
+      if (queue.some((q) => q.c === collection && ((q.item && q.item.id === item.id) || q.id === item.id))) continue;
+      const list = data[collection];
+      const index = list.findIndex((i) => i.id === item.id);
+      if (index !== -1) list[index] = item;
+    }
+  }
+};
+
+const idOf = (op) => (op.item ? op.item.id : op.id);
+
 const enqueue = (op) => {
-  // Keep only the latest write per item so quick successive edits stay small
-  if (op.c === "settings") queue = queue.filter((q) => q.c !== "settings");
-  else if (op.op === "set") queue = queue.filter((q) => !(q.c === op.c && q.op === "set" && q.item.id === op.item.id));
-  else if (op.op === "del") queue = queue.filter((q) => !(q.c === op.c && q.op === "set" && q.item.id === op.id));
+  // Fold quick successive edits to the same item together so batches stay small
+  if (op.c === "settings") {
+    queue = queue.filter((q) => q.c !== "settings");
+  } else if (op.op === "set") {
+    queue = queue.filter((q) => !(q.c === op.c && q.op !== "del" && idOf(q) === op.item.id));
+  } else if (op.op === "del") {
+    queue = queue.filter((q) => !(q.c === op.c && idOf(q) === op.id));
+  } else if (op.op === "patch") {
+    const prior = queue.find((q) => q.c === op.c && q.op !== "del" && idOf(q) === op.id);
+    if (prior && prior.op === "set") prior.item = op.item; // still being created: just update the new record
+    else if (prior) Object.assign(prior, { fields: { ...prior.fields, ...op.fields }, item: op.item });
+    else queue.push(op);
+    return scheduleFlush();
+  }
   queue.push(op);
+  scheduleFlush();
+};
+
+const scheduleFlush = () => {
   setSync("saving");
   clearTimeout(flushTimer);
   flushTimer = setTimeout(flush, 350);
@@ -194,15 +261,52 @@ const enqueue = (op) => {
 
 export const hasPendingChanges = () => queue.length > 0 || flushing;
 
-// Create or update an item; shows up everywhere immediately.
+// Resolves once everything queued has reached the server (or saving has failed)
+export const waitForSave = async (timeoutMs = 8000) => {
+  const started = Date.now();
+  while ((flushing || queue.length) && sync.state !== "error" && Date.now() - started < timeoutMs) {
+    await new Promise((resolve) => setTimeout(resolve, 80));
+  }
+};
+
+// Throw away unsaved edits, for example because a backup is about to replace everything
+export const discardQueue = () => {
+  queue = [];
+  clearTimeout(flushTimer);
+  flushTimer = null;
+  setSync("saved");
+};
+
+// "", null, undefined and [] all mean "nothing here", so an untouched empty field isn't an edit
+const emptyish = (v) => v == null || v === "" || (Array.isArray(v) && v.length === 0);
+const changedFields = (before, after) => {
+  const fields = {};
+  for (const key of new Set([...Object.keys(before), ...Object.keys(after)])) {
+    if (key === "updatedAt" || key === "createdAt") continue;
+    const a = emptyish(before[key]) ? null : before[key];
+    const b = emptyish(after[key]) ? null : after[key];
+    if (JSON.stringify(a) !== JSON.stringify(b)) fields[key] = b === null ? null : after[key];
+  }
+  return fields;
+};
+
+// Create or update an item; shows up everywhere immediately. Edits to an
+// existing item are sent as just the fields that changed, so two people
+// editing different fields of the same record don't overwrite each other.
 export const put = (collection, item) => {
   const next = { ...item, updatedAt: new Date().toISOString() };
   if (!next.createdAt) next.createdAt = next.updatedAt;
   const list = data[collection];
   const index = list.findIndex((i) => i.id === next.id);
+  const previous = index === -1 ? null : list[index];
   if (index === -1) list.push(next);
   else list[index] = next;
-  enqueue({ c: collection, op: "set", item: next });
+  if (!previous || collection === "activity") {
+    enqueue({ c: collection, op: "set", item: next });
+  } else {
+    const fields = changedFields(previous, next);
+    if (Object.keys(fields).length) enqueue({ c: collection, op: "patch", id: next.id, fields, item: next });
+  }
   return next;
 };
 

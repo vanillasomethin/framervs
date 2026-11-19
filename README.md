@@ -23,7 +23,7 @@ One private admin for the whole studio: **project management, client onboarding,
 
 `Ctrl/Cmd + K` opens a quick search and command palette.
 
-Studio data (clients, fees, site photos…) is stored in **Netlify Blobs**, never in this repository. `public/content.json` is public, so nothing private goes there. Saves are conflict-safe (ETag compare-and-set), and other devices pick up changes when the tab regains focus. Download a backup from Settings now and then; site photos are not included in backups.
+Studio data (clients, fees, site photos…) is stored in **Netlify Blobs**, never in this repository. `public/content.json` is public, so nothing private goes there. Saves are conflict-safe: each collection is updated with an ETag compare-and-set, and an edit sends only the fields that changed, so two people editing different fields of the same task or project don't overwrite each other (if both change the same field, the last save wins). Edits that couldn't be saved (offline, or an expired login) are kept and sent once you're back. Other devices pick up changes when the tab regains focus. Download a backup from Settings now and then; site photos are not included in backups.
 
 ### Website (public)
 **Journal** (`/blog`), **Portfolio** (`/projects`) and **Updates** (`/updates`) are generated at build time from `public/content.json`. Edits stay in the browser until **Publish**, which commits the content and any new photos to GitHub in one commit; Netlify then deploys (about 1–2 minutes). **Website controls** shows live page health checks and a Rebuild button.
