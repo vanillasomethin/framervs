@@ -4,19 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Site Admin · Vanilla &amp; Somethin</title>
+  <title>Studio Admin · Vanilla &amp; Somethin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/admin/admin.css?v=6">
+  <link rel="stylesheet" href="/admin/admin.css?v=7">
+  <link rel="stylesheet" href="/admin/studio.css?v=7">
 </head>
 <body>
   <!-- Login -->
   <div id="login-view" class="login-screen" hidden>
     <form id="login-form" class="login-card">
       <div class="brand">VANILLA <span>&amp;</span> SOMETHIN</div>
-      <h1>Site admin</h1>
-      <p class="muted">Add journal stories, projects and studio updates.</p>
+      <h1>Studio admin</h1>
+      <p class="muted">Projects, clients, site management and the website, in one place.</p>
       <div id="setup-notice" class="notice warn" hidden></div>
       <label class="field">
         <span>Password</span>
@@ -31,15 +32,24 @@
   <div id="app-view" class="app" hidden>
     <aside class="sidebar">
       <div class="brand">VANILLA <span>&amp;</span> SOMETHIN</div>
-      <nav id="main-nav">
-        <a href="#/" data-route="dashboard"><span class="icon">◧</span>Dashboard</a>
-        <a href="#/blog" data-route="blog"><span class="icon">✎</span>Journal</a>
-        <a href="#/projects" data-route="projects"><span class="icon">▦</span>Projects</a>
-        <a href="#/updates" data-route="updates"><span class="icon">◉</span>Updates</a>
-        <a href="#/seo" data-route="seo"><span class="icon">⌁</span>SEO</a>
-        <a href="#/settings" data-route="settings"><span class="icon">⚙</span>Settings</a>
+      <nav id="main-nav" aria-label="Main">
+        <a href="#/" data-route="dashboard"><span class="icon" data-icon="dashboard"></span>Dashboard</a>
+        <div class="nav-label">Studio</div>
+        <a href="#/projects" data-route="projects"><span class="icon" data-icon="folder"></span>Projects</a>
+        <a href="#/tasks" data-route="tasks"><span class="icon" data-icon="tasks"></span>Tasks</a>
+        <a href="#/clients" data-route="clients"><span class="icon" data-icon="users"></span>Clients</a>
+        <a href="#/sites" data-route="sites"><span class="icon" data-icon="site"></span>Site management</a>
+        <div class="nav-label">Website</div>
+        <a href="#/website" data-route="website"><span class="icon" data-icon="globe"></span>Website controls</a>
+        <a href="#/blog" data-route="blog"><span class="icon" data-icon="book"></span>Journal</a>
+        <a href="#/portfolio" data-route="portfolio"><span class="icon" data-icon="image"></span>Portfolio</a>
+        <a href="#/updates" data-route="updates"><span class="icon" data-icon="megaphone"></span>Updates</a>
+        <a href="#/seo" data-route="seo"><span class="icon" data-icon="search"></span>SEO</a>
+        <div class="nav-label"></div>
+        <a href="#/settings" data-route="settings"><span class="icon" data-icon="settings"></span>Settings</a>
       </nav>
       <div class="sidebar-foot">
+        <div id="me-box"></div>
         <a href="/" target="_blank" rel="noopener">View website ↗</a>
         <button type="button" class="link" id="logout-button">Log out</button>
       </div>
@@ -47,10 +57,12 @@
 
     <div class="main">
       <header class="topbar">
+        <button type="button" class="icon-btn menu-btn" id="menu-button" aria-label="Menu"></button>
+        <button type="button" class="search-btn" id="search-button" aria-label="Search or jump to"><span>Search or jump to…</span><kbd>Ctrl K</kbd></button>
         <div id="save-state" class="save-state"></div>
         <div class="topbar-actions">
           <button type="button" class="btn ghost" id="discard-button" hidden>Discard changes</button>
-          <button type="button" class="btn primary" id="publish-button" disabled>Publish</button>
+          <button type="button" class="btn primary" id="publish-button" hidden>Publish</button>
         </div>
       </header>
       <div id="view" class="view"></div>
@@ -60,6 +72,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="loading" class="loading-screen"><div class="spinner"></div></div>
 
-  <script type="module" src="/admin/admin.js?v=6"></script>
+  <script type="module" src="/admin/admin.js?v=7"></script>
 </body>
 </html>

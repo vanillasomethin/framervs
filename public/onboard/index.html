@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Your project brief · Vanilla &amp; Somethin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--card:#151515;--line:#2a2a2a;--fg:#fff;--muted:#a9a9a9;--accent:#f21d2f;--ok:#4cc38a}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Inter",system-ui,sans-serif;font-size:16px;line-height:1.6}
+.wrap{max-width:740px;margin:0 auto;padding:0 20px}
+header{padding:28px 0 8px}
+.brand{font-family:"Space Grotesk",sans-serif;font-weight:700;letter-spacing:.02em}
+.brand span{color:var(--accent)}
+h1{font-family:"Space Grotesk",sans-serif;font-size:clamp(32px,6vw,52px);line-height:1.05;margin:28px 0 12px;text-transform:uppercase;letter-spacing:-.01em}
+.lede{color:var(--muted);font-size:18px;margin:0 0 8px;max-width:560px}
+.eyebrow{font-family:"Fragment Mono",monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.note{display:flex;gap:10px;margin:18px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:14px;background:var(--card)}
+form{margin:28px 0 120px}
+fieldset{border:0;margin:0 0 36px;padding:0}
+legend{display:flex;align-items:center;gap:12px;width:100%;padding:0;margin-bottom:16px;font-family:"Space Grotesk",sans-serif;font-size:22px;font-weight:700}
+legend i{font-style:normal;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent);font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.full{grid-column:1/-1}
+label.field{display:grid;gap:6px;font-size:14px;font-weight:500}
+label.field>span em{font-style:normal;font-weight:400;color:var(--muted)}
+input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);font:inherit;outline:none}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a9a9a9' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:#777;box-shadow:0 0 0 3px rgba(255,255,255,.08)}
+input.bad,select.bad{border-color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{cursor:pointer}
+.chips input{position:absolute;opacity:0;pointer-events:none}
+.chips span{display:inline-block;padding:9px 15px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:14.5px;transition:all .15s}
+.chips input:checked+span{background:var(--fg);color:#111;border-color:var(--fg)}
+.chips input:focus-visible+span{box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(13,13,13,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 0;z-index:5}
+.bar .wrap{display:flex;align-items:center;gap:16px}
+.bar p{margin:0;flex:1;font-size:13.5px;color:var(--muted)}
+button.send{border:0;border-radius:999px;background:var(--accent);color:#fff;font:inherit;font-weight:600;padding:13px 26px;cursor:pointer;white-space:nowrap}
+button.send:disabled{opacity:.55;cursor:wait}
+button.send:hover:not(:disabled){background:#d81627}
+.err{color:#ff8b8b;margin:0 0 14px;min-height:0}
+.state{padding:70px 0;text-align:center}
+.state h2{font-family:"Space Grotesk",sans-serif;font-size:34px;margin:0 0 12px}
+.state p{color:var(--muted);max-width:520px;margin:0 auto 12px}
+.tick{display:inline-grid;place-items:center;width:64px;height:64px;border-radius:50%;background:rgba(76,195,138,.15);color:var(--ok);font-size:30px;margin-bottom:18px}
+.link-btn{background:none;border:0;color:var(--fg);text-decoration:underline;font:inherit;cursor:pointer;padding:0}
+footer{padding:0 0 130px;color:#777;font-size:13px;text-align:center}
+[hidden]{display:none!important}
+@media(max-width:640px){.grid{grid-template-columns:1fr}.bar .wrap{flex-wrap:wrap}.bar p{flex-basis:100%}button.send{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="brand">VANILLA <span>&amp;</span> SOMETHIN</div></header>
+
+  <div id="loading" class="state"><p>Opening your brief…</p></div>
+  <div id="invalid" class="state" hidden><h2>This link isn't valid</h2><p id="invalid-msg">Please ask the studio to send you a new one.</p></div>
+
+  <main id="form-view" hidden>
+    <div class="eyebrow">[Project brief]</div>
+    <h1 id="title">Tell us about your project</h1>
+    <p class="lede">A few questions so we can understand your plans before we talk. It takes about 5–10 minutes, there are no wrong answers, and you can leave anything blank.</p>
+    <div class="note"><span>🔒</span><span>This page is private to you and Vanilla &amp; Somethin. Your answers are saved only with the studio, and you can come back to edit them with this same link <span id="expiry"></span>.</span></div>
+
+    <form id="brief" novalidate autocomplete="on">
+      <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+      <fieldset>
+        <legend><i>1</i> About you</legend>
+        <div class="grid">
+          <label class="field"><span>Your name *</span><input type="text" name="name" autocomplete="name" required></label>
+          <label class="field"><span>Email *</span><input type="email" name="email" autocomplete="email" required></label>
+          <label class="field"><span>Phone / WhatsApp</span><input type="tel" name="phone" autocomplete="tel"></label>
+          <label class="field"><span>Company <em>(if any)</em></span><input type="text" name="company" autocomplete="organization"></label>
+          <label class="field"><span>Where are you based?</span><input type="text" name="location" placeholder="City / town"></label>
+          <label class="field"><span>Best way to reach you</span><select name="preferredContact"><option value="">–</option><option>Phone call</option><option>WhatsApp</option><option>Email</option></select></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><i>2</i> Your project</legend>
+        <div class="grid">
+          <label class="field full"><span>What are you planning?</span>
+            <select name="projectType"><option value="">Choose one…</option>
+              <option value="Residential">A new house / villa</option>
+              <option value="Residential - Apartment">An apartment building</option>
+              <option value="Residential - Interiors">Interiors for my home</option>
+              <option value="Commercial - Office">An office</option>
+              <option value="Commercial - Retail">A shop / showroom</option>
+              <option value="Commercial - Cafe">A café / restaurant</option>
+              <option value="Hospitality">A hotel / resort / homestay</option>
+              <option value="Landscape">Landscape / gardens</option>
+              <option value="Interiors">Other interiors</option>
+            </select></label>
+          <div class="full"><div style="font-size:14px;font-weight:500;margin-bottom:8px" id="scope-label">Which services do you need?</div><div class="chips" id="scope" role="group" aria-labelledby="scope-label"></div></div>
+          <label class="field"><span>Do you have a plot / site?</span><select name="hasPlot"><option value="">–</option><option>Yes, I own it</option><option>Yes, under purchase</option><option>Still looking</option><option>Not applicable (interiors)</option></select></label>
+          <label class="field"><span>Plot size</span><input type="text" name="plotSize" placeholder="e.g. 40 × 60 ft, or 10 cents"></label>
+          <label class="field full"><span>Site address / location</span><input type="text" name="siteAddress" placeholder="Where will it be built?"></label>
+          <label class="field"><span>Floors you have in mind</span><input type="text" name="floors" placeholder="e.g. Ground + 1"></label>
+          <label class="field"><span>Who will use it?</span><input type="text" name="household" placeholder="e.g. Family of 5, parents at home"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><i>3</i> Budget &amp; timing</legend>
+        <div class="grid">
+          <label class="field"><span>Approximate budget <em>(construction + interiors)</em></span><select name="budget"><option value="">–</option><option>Under ₹50 lakh</option><option>₹50 lakh – ₹1 crore</option><option>₹1 – 2 crore</option><option>₹2 – 5 crore</option><option>Above ₹5 crore</option><option>Not sure yet</option></select></label>
+          <label class="field"><span>When would you like to start?</span><select name="timeline"><option value="">–</option><option>As soon as possible</option><option>Within 3 months</option><option>3 – 6 months</option><option>6 – 12 months</option><option>Just exploring</option></select></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><i>4</i> Your vision</legend>
+        <div class="grid">
+          <label class="field full"><span>What must the space have? <em>Rooms, features, lifestyle needs</em></span><textarea name="mustHaves" placeholder="e.g. 4 bedrooms, a courtyard, a home office, space for prayer, parking for 3 cars"></textarea></label>
+          <label class="field full"><span>How should it feel? <em>Style, materials, mood</em></span><textarea name="styleNotes" placeholder="e.g. Warm and earthy, lots of natural light, exposed laterite, minimal"></textarea></label>
+          <label class="field full"><span>Anything you definitely don't want?</span><textarea name="dislikes" style="min-height:80px"></textarea></label>
+          <label class="field full"><span>References <em>Links to Pinterest, Instagram or projects you like</em></span><textarea name="references" style="min-height:80px" placeholder="Paste links, one per line"></textarea></label>
+          <label class="field full"><span>Anything else we should know?</span><textarea name="anythingElse" style="min-height:80px"></textarea></label>
+        </div>
+      </fieldset>
+      <p class="err" id="error" role="alert"></p>
+    </form>
+  </main>
+
+  <div id="done" class="state" hidden>
+    <div class="tick">✓</div>
+    <h2 id="done-title">Thank you!</h2>
+    <p>We've received your brief and the team will be in touch shortly.</p>
+    <p>Need to change something? <button class="link-btn" id="edit-again" type="button">Edit your answers</button> any time using this same link<span id="expiry2"></span>.</p>
+  </div>
+  <footer id="foot" hidden>Vanilla &amp; Somethin · Architects, designers &amp; builders</footer>
+</div>
+
+<div class="bar" id="bar" hidden><div class="wrap"><p id="bar-note">Your answers are saved on this device as you type.</p><button class="send" id="send" type="submit" form="brief">Send brief to the studio</button></div></div>
+
+<script>
+(() => {
+  const API = "/.netlify/functions/onboard";
+  const token = new URLSearchParams(location.search).get("t") || "";
+  const $ = (s) => document.querySelector(s);
+  const form = $("#brief");
+  const DRAFT = `vsBrief:${token.slice(0, 8)}`;
+  let expires = "";
+
+  const show = (id) => ["#loading", "#invalid", "#form-view", "#done"].forEach((s) => ($(s).hidden = s !== id));
+  const fmt = (iso) => new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+  const read = () => {
+    const data = {};
+    for (const el of form.elements) {
+      if (!el.name || el.name === "website" || el.type === "checkbox") continue;
+      if (el.value.trim()) data[el.name] = el.value.trim();
+    }
+    data.scope = [...form.querySelectorAll("#scope input:checked")].map((i) => i.value);
+    return data;
+  };
+  const fill = (data, override = false) => {
+    for (const [k, v] of Object.entries(data || {})) {
+      const el = form.elements[k];
+      if (el && !(el instanceof RadioNodeList) && k !== "scope" && (override || !el.value)) el.value = v;
+    }
+    (data.scope || []).forEach((s) => { const i = [...form.querySelectorAll("#scope input")].find((x) => x.value === s); if (i) i.checked = true; });
+  };
+
+  const load = async () => {
+    if (!/^[a-f0-9]{32}$/.test(token)) return show("#invalid");
+    try {
+      const response = await fetch(`${API}?t=${encodeURIComponent(token)}`);
+      const info = await response.json();
+      if (!response.ok) { $("#invalid-msg").textContent = info.error || "Please ask the studio to send you a new one."; return show("#invalid"); }
+      expires = info.expires;
+      $("#scope").innerHTML = info.scopeOptions.map((o) => `<label><input type="checkbox" value="${o}"><span>${o}</span></label>`).join("");
+      if (info.firstName) $("#title").textContent = `Hello ${info.firstName}, tell us about your project`;
+      $("#expiry").textContent = `until ${fmt(expires)}`;
+      $("#expiry2").textContent = ` until ${fmt(expires)}`;
+      fill(info.prefill);
+      let draft = null;
+      try { draft = JSON.parse(localStorage.getItem(DRAFT) || "null"); } catch {}
+      if (info.data) { fill(info.data, true); $("#bar-note").textContent = `Submitted ${fmt(info.submittedAt)}. You can update your answers and send again.`; }
+      else if (draft) fill(draft);
+      show("#form-view");
+      $("#bar").hidden = false;
+      $("#foot").hidden = false;
+    } catch {
+      $("#invalid-msg").textContent = "We couldn't reach the studio's server. Please check your connection and try again.";
+      show("#invalid");
+    }
+  };
+
+  form.addEventListener("input", () => {
+    $("#error").textContent = "";
+    form.querySelectorAll(".bad").forEach((el) => el.classList.remove("bad"));
+    try { localStorage.setItem(DRAFT, JSON.stringify(read())); } catch {}
+  });
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const data = read();
+    const problems = [];
+    if (!data.name) problems.push(form.elements.name);
+    if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) problems.push(form.elements.email);
+    if (problems.length) {
+      problems.forEach((el) => el.classList.add("bad"));
+      $("#error").textContent = "Please add your name and a valid email so we can reach you.";
+      problems[0].focus();
+      return;
+    }
+    const button = $("#send");
+    button.disabled = true;
+    button.textContent = "Sending…";
+    try {
+      const response = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ t: token, data, website: form.elements.website.value }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Something went wrong.");
+      try { localStorage.removeItem(DRAFT); } catch {}
+      $("#done-title").textContent = `Thank you, ${(data.name || "").split(/\s+/)[0]}!`;
+      $("#bar").hidden = true;
+      show("#done");
+      window.scrollTo(0, 0);
+    } catch (error) {
+      $("#error").textContent = error.message;
+    } finally {
+      button.disabled = false;
+      button.textContent = "Send brief to the studio";
+    }
+  });
+
+  $("#edit-again").addEventListener("click", () => { show("#form-view"); $("#bar").hidden = false; window.scrollTo(0, 0); });
+  load();
+})();
+</script>
+</body>
+</html>

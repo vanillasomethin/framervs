@@ -12,54 +12,21 @@
 // Optional:
 //   GITHUB_REPO     - owner/name, defaults to vanillasomethin/framervs
 //   GITHUB_BRANCH   - defaults to main
-//   SESSION_SECRET  - signs login sessions; defaults to a value derived from the two secrets above
+//   SESSION_SECRET  - signs login sessions; defaults to a value derived from ADMIN_PASSWORD
 
 const crypto = require("crypto");
+const { json, safeEqual, createSession, isAuthorized, parseBody, SESSION_DAYS } = require("./lib/auth");
 
 const REPO = process.env.GITHUB_REPO || "vanillasomethin/framervs";
 const BRANCH = process.env.GITHUB_BRANCH || "main";
 const CONTENT_PATH = "public/content.json";
 const UPLOAD_DIR = "public/uploads";
-const SESSION_DAYS = 7;
 const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 const ALLOWED_TYPES = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/avif": "avif", "application/pdf": "pdf" };
 
-const json = (statusCode, body) => ({
-  statusCode,
-  headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-  body: JSON.stringify(body),
-});
-
+// Login only needs the password. GITHUB_TOKEN is needed to publish website
+// content (journal, portfolio, updates); the private studio works without it.
 const missingConfig = () => ["ADMIN_PASSWORD", "GITHUB_TOKEN"].filter((key) => !process.env[key]);
-
-const sessionSecret = () =>
-  process.env.SESSION_SECRET ||
-  crypto.createHash("sha256").update(`${process.env.ADMIN_PASSWORD}::${process.env.GITHUB_TOKEN}`).digest("hex");
-
-const sign = (payload) => crypto.createHmac("sha256", sessionSecret()).update(payload).digest("base64url");
-
-const createSession = () => {
-  const payload = Buffer.from(JSON.stringify({ exp: Date.now() + SESSION_DAYS * 86400000 })).toString("base64url");
-  return `${payload}.${sign(payload)}`;
-};
-
-const safeEqual = (a, b) => {
-  const left = Buffer.from(String(a));
-  const right = Buffer.from(String(b));
-  return left.length === right.length && crypto.timingSafeEqual(left, right);
-};
-
-const isAuthorized = (event) => {
-  const header = event.headers.authorization || event.headers.Authorization || "";
-  const token = header.replace(/^Bearer\s+/i, "");
-  const [payload, signature] = token.split(".");
-  if (!payload || !signature || !safeEqual(signature, sign(payload))) return false;
-  try {
-    return JSON.parse(Buffer.from(payload, "base64url").toString()).exp > Date.now();
-  } catch {
-    return false;
-  }
-};
 
 const github = async (path, options = {}) => {
   const response = await fetch(`https://api.github.com/repos/${REPO}${path}`, {
@@ -171,17 +138,12 @@ exports.handler = async (event) => {
   }
   if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed" });
 
-  const missing = missingConfig();
-  if (missing.length) {
-    return json(503, { error: `The admin isn't set up yet. Add ${missing.join(" and ")} in Netlify environment variables.`, missing });
+  if (!process.env.ADMIN_PASSWORD) {
+    return json(503, { error: "The admin isn't set up yet. Add ADMIN_PASSWORD in Netlify environment variables.", missing: missingConfig() });
   }
 
-  let body;
-  try {
-    body = JSON.parse(event.body || "{}");
-  } catch {
-    return json(400, { error: "Invalid request." });
-  }
+  const body = parseBody(event);
+  if (!body) return json(400, { error: "Invalid request." });
 
   try {
     if (body.action === "login") {
@@ -193,6 +155,10 @@ exports.handler = async (event) => {
     }
 
     if (!isAuthorized(event)) return json(401, { error: "Your session has expired. Please log in again." });
+
+    if (!process.env.GITHUB_TOKEN) {
+      return json(503, { error: "Publishing website content needs GITHUB_TOKEN in Netlify environment variables.", missing: missingConfig(), needsGithub: true });
+    }
 
     switch (body.action) {
       case "load":

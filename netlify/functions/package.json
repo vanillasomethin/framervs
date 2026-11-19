@@ -1,0 +1,8 @@
+{
+  "name": "vs-functions",
+  "private": true,
+  "description": "Dependencies for the Netlify functions (installed by Netlify at build time).",
+  "dependencies": {
+    "@netlify/blobs": "10.7.4"
+  }
+}

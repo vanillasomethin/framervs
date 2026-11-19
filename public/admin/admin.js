@@ -6,14 +6,23 @@
 // one commit / one deploy. Previews use the same renderer as the live pages.
 
 import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, renderUpdates } from "/cms/render.mjs";
+import { session, SESSION_KEY, app, $, $$, clone, uid, api, toast } from "./core.js";
+import { data as studio, loadAll, refresh, sync, onData, hasPendingChanges, meId, team, setMe, isoDate } from "./studio/data.js";
+import { icon, drawerIsOpen } from "./studio/ui.js";
+import { renderDashboard as renderStudioDashboard } from "./studio/dashboard.js";
+import { renderProjects, renderProjectDetail } from "./studio/projects.js";
+import { renderTasksPage } from "./studio/tasks.js";
+import { renderClients, renderClientDetail } from "./studio/clients.js";
+import { renderSitesPage } from "./studio/sites.js";
+import { renderWebsite } from "./studio/website.js";
+import { renderStudioSettings } from "./studio/settings.js";
+import { openPalette } from "./studio/palette.js";
 
-const API = "/.netlify/functions/cms";
-const SESSION_KEY = "vsAdminSession";
 const BACKUP_KEY = "vsAdminBackup";
 
 const state = {
-  token: localStorage.getItem(SESSION_KEY) || "",
-  content: null, // full content.json being edited
+  content: null, // full content.json being edited (null until GitHub is connected)
+  contentError: "", // why the website content couldn't be loaded
   savedJSON: "", // content.json as last loaded/published, for change tracking
   sha: "", // blob sha of content.json we are editing on top of
   pending: new Map(), // image url -> { path, sha } uploaded but not yet committed
@@ -22,12 +31,8 @@ const state = {
   justPublished: false,
 };
 
-const $ = (selector, root = document) => root.querySelector(selector);
-const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-const uid = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
-const today = () => new Date().toISOString().slice(0, 10);
+const today = () => isoDate();
 const cms = () => state.content.cms;
-const clone = (value) => JSON.parse(JSON.stringify(value));
 
 // ---------------------------------------------------------------------------
 // Content types
@@ -111,6 +116,11 @@ const TYPES = {
   },
 };
 
+// The public portfolio lives under "Portfolio" in the admin so it isn't confused with studio Projects
+const routeOf = (type) => (type === "projects" ? "portfolio" : type);
+const typeOf = (route) => (route === "portfolio" ? "projects" : route);
+const WEBSITE_ROUTES = ["blog", "portfolio", "updates"];
+
 const ensureShape = (content) => {
   content.cms = content.cms || {};
   const c = content.cms;
@@ -127,43 +137,9 @@ const ensureShape = (content) => {
 // API
 // ---------------------------------------------------------------------------
 
-const api = async (body) => {
-  const response = await fetch(API, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...(state.token ? { Authorization: `Bearer ${state.token}` } : {}) },
-    body: JSON.stringify(body),
-  });
-  let data = {};
-  try {
-    data = await response.json();
-  } catch {
-    data = { error: response.status === 404 ? "The admin backend isn't deployed yet." : `Request failed (${response.status}).` };
-  }
-  if (response.status === 401 && body.action !== "login") {
-    logout(false);
-    throw new Error(data.error || "Please log in again.");
-  }
-  if (!response.ok) {
-    const error = new Error(data.error || `Request failed (${response.status}).`);
-    error.status = response.status;
-    throw error;
-  }
-  return data;
-};
-
 // ---------------------------------------------------------------------------
 // UI helpers
 // ---------------------------------------------------------------------------
-
-let toastTimer;
-const toast = (html, { error = false, duration = 4500 } = {}) => {
-  const el = $("#toast");
-  el.innerHTML = html;
-  el.classList.toggle("error", error);
-  el.classList.add("show");
-  clearTimeout(toastTimer);
-  if (duration) toastTimer = setTimeout(() => el.classList.remove("show"), duration);
-};
 
 const resolveSrc = (url) => state.previews.get(url) || url;
 
@@ -210,19 +186,37 @@ const countChanges = () => {
   return count;
 };
 
+let publishing = false;
+
+const isWebsiteRoute = () => {
+  const { section } = route();
+  return WEBSITE_ROUTES.includes(section) || section === "settings";
+};
+
+// Left of the top bar: studio save status (always autosaved) or, on website
+// pages, what's waiting to be published. Right: Publish, only when needed.
 const updateSaveState = () => {
-  const changes = countChanges();
+  const changes = state.content ? countChanges() : 0;
   const el = $("#save-state");
-  el.classList.toggle("dirty", changes > 0);
-  if (changes > 0) {
+  const websiteView = isWebsiteRoute() && state.content;
+  el.classList.toggle("dirty", websiteView ? changes > 0 : sync.state !== "saved" || changes > 0);
+  el.classList.toggle("bad", sync.state === "error");
+  if (websiteView && changes > 0) {
     el.innerHTML = `<span class="dot"></span><span>${changes} unpublished change${changes === 1 ? "" : "s"}</span><span class="long muted">· publish to put them on the website</span>`;
-  } else if (state.justPublished) {
+  } else if (websiteView && state.justPublished) {
     el.innerHTML = '<span class="dot"></span><span>Published — the website updates in about 1–2 minutes</span>';
+  } else if (sync.state === "error") {
+    el.innerHTML = `<span class="dot"></span><span>Couldn't save · retrying</span><span class="long muted">· ${escapeHTML(sync.error)}</span>`;
+  } else if (sync.state === "saving") {
+    el.innerHTML = '<span class="dot"></span><span>Saving…</span>';
+  } else if (changes > 0) {
+    el.innerHTML = `<span class="dot"></span><span>${changes} unpublished website change${changes === 1 ? "" : "s"}</span><span class="long muted">· press Publish</span>`;
   } else {
-    el.innerHTML = '<span class="dot"></span><span>Everything is published</span>';
+    el.innerHTML = '<span class="dot"></span><span>All changes saved</span>';
   }
-  $("#publish-button").disabled = changes === 0;
-  $("#publish-button").textContent = changes ? `Publish ${changes} change${changes === 1 ? "" : "s"}` : "Publish";
+  $("#publish-button").hidden = changes === 0;
+  $("#publish-button").disabled = publishing;
+  $("#publish-button").textContent = publishing ? "Publishing…" : changes ? `Publish ${changes} change${changes === 1 ? "" : "s"}` : "Publish";
   $("#discard-button").hidden = changes === 0;
 };
 
@@ -327,11 +321,12 @@ const showLogin = async () => {
   $("#app-view").hidden = true;
   $("#login-view").hidden = false;
   try {
-    const status = await (await fetch(API)).json();
-    if (!status.configured) {
+    const status = await (await fetch("/.netlify/functions/cms")).json();
+    if (status.missing.includes("ADMIN_PASSWORD")) {
       $("#setup-notice").hidden = false;
       $("#setup-notice").innerHTML = `<strong>One-time setup needed.</strong> In Netlify → Site configuration → Environment variables, add:
-        <ol>${status.missing.map((m) => `<li><code>${escapeHTML(m)}</code>${m === "GITHUB_TOKEN" ? ` — a GitHub fine-grained token with <em>Contents: read &amp; write</em> on <code>${escapeHTML(status.repo)}</code>` : " — the password you want for this admin"}</li>`).join("")}</ol>
+        <ol><li><code>ADMIN_PASSWORD</code> — the password you want for this admin</li>
+        <li><code>GITHUB_TOKEN</code> <em>(to publish website content)</em> — a GitHub fine-grained token with <em>Contents: read &amp; write</em> on <code>${escapeHTML(status.repo)}</code></li></ol>
         Then redeploy the site.`;
     }
   } catch {
@@ -341,7 +336,7 @@ const showLogin = async () => {
 };
 
 const logout = (reload = true) => {
-  state.token = "";
+  session.token = "";
   localStorage.removeItem(SESSION_KEY);
   if (reload) location.reload();
   else showLogin();
@@ -355,7 +350,7 @@ $("#login-form").addEventListener("submit", async (event) => {
   $("#login-error").textContent = "";
   try {
     const { token } = await api({ action: "login", password: $("#login-password").value });
-    state.token = token;
+    session.token = token;
     localStorage.setItem(SESSION_KEY, token);
     $("#login-view").hidden = true;
     await start();
@@ -368,7 +363,8 @@ $("#login-form").addEventListener("submit", async (event) => {
 });
 
 $("#logout-button").addEventListener("click", () => {
-  if (countChanges() && !confirm("You have unpublished changes. They'll be kept on this device for next time. Log out?")) return;
+  if (hasPendingChanges()) return toast("Still saving your latest changes. Try again in a moment.");
+  if (state.content && countChanges() && !confirm("You have unpublished website changes. They'll be kept on this device for next time. Log out?")) return;
   logout();
 });
 
@@ -376,17 +372,17 @@ $("#logout-button").addEventListener("click", () => {
 // Load / publish
 // ---------------------------------------------------------------------------
 
-const start = async () => {
-  $("#loading").hidden = false;
+const loadWebsiteContent = async () => {
   try {
     const { content, sha } = await api({ action: "load" });
     state.content = ensureShape(content);
     state.sha = sha;
     state.savedJSON = JSON.stringify(state.content);
+    state.contentError = "";
 
     const backup = JSON.parse(localStorage.getItem(BACKUP_KEY) || "null");
     if (backup && backup.sha === sha && JSON.stringify(ensureShape(backup.content)) !== state.savedJSON) {
-      if (confirm("You have unpublished changes from your last visit on this device. Restore them?")) {
+      if (confirm("You have unpublished website changes from your last visit on this device. Restore them?")) {
         state.content = ensureShape(backup.content);
         state.pending = new Map(backup.pending || []);
       } else {
@@ -395,17 +391,30 @@ const start = async () => {
     } else if (backup) {
       localStorage.removeItem(BACKUP_KEY);
     }
+  } catch (error) {
+    if (error.status === 401) throw error;
+    // The studio works without GitHub; only publishing website content needs it
+    state.content = null;
+    state.contentError = error.message;
+  }
+};
 
-    $("#app-view").hidden = false;
-    $("#loading").hidden = true;
-    updateSaveState();
-    render();
+const start = async () => {
+  $("#loading").hidden = false;
+  try {
+    await loadAll();
+    await loadWebsiteContent();
   } catch (error) {
     $("#loading").hidden = true;
-    if (!state.token) return;
+    if (!session.token) return;
     $("#app-view").hidden = false;
-    $("#view").innerHTML = `<div class="panel"><h2>Couldn't load the website content</h2><p class="muted">${escapeHTML(error.message)}</p><button class="btn" onclick="location.reload()">Try again</button></div>`;
+    $("#view").innerHTML = `<div class="page"><div class="panel"><h2>Couldn't load the studio data</h2><p class="muted">${escapeHTML(error.message)}</p><button class="btn" onclick="location.reload()">Try again</button></div></div>`;
+    return;
   }
+  $("#app-view").hidden = false;
+  $("#loading").hidden = true;
+  render();
+  startPolling();
 };
 
 const validate = () => {
@@ -413,7 +422,7 @@ const validate = () => {
     const seen = new Set();
     for (const item of cms()[type]) {
       if (item.status !== "published") continue;
-      const where = `#/${type}/${item.id}`;
+      const where = `#/${routeOf(type)}/${item.id}`;
       if (!item.title.trim()) return { message: `A published ${config.singular} has no title.`, where };
       if (type !== "updates") {
         if (!item.slug) return { message: `"${item.title}" needs a web address.`, where };
@@ -442,11 +451,13 @@ const describeChanges = () => {
 };
 
 $("#publish-button").addEventListener("click", async () => {
+  if (publishing) return;
   const problem = validate();
   if (problem) {
     toast(`${escapeHTML(problem.message)} <a href="${problem.where}">Fix it</a>`, { error: true, duration: 8000 });
     return;
   }
+  publishing = true;
   const button = $("#publish-button");
   button.disabled = true;
   button.textContent = "Publishing…";
@@ -470,6 +481,8 @@ $("#publish-button").addEventListener("click", async () => {
     } else {
       toast(`Couldn't publish: ${escapeHTML(error.message)}`, { error: true, duration: 10000 });
     }
+  } finally {
+    publishing = false;
     updateSaveState();
   }
 });
@@ -484,7 +497,7 @@ $("#discard-button").addEventListener("click", () => {
 });
 
 window.addEventListener("beforeunload", (event) => {
-  if (state.content && countChanges()) {
+  if (hasPendingChanges() || (state.content && countChanges())) {
     event.preventDefault();
     event.returnValue = "";
   }
@@ -495,24 +508,70 @@ window.addEventListener("beforeunload", (event) => {
 // ---------------------------------------------------------------------------
 
 const route = () => {
-  const [, section = "", id = ""] = location.hash.replace(/^#/, "").split("/");
-  return { section: section || "dashboard", id };
+  const [, section = "", id = "", tab = ""] = location.hash.replace(/^#/, "").split("/");
+  return { section: section || "dashboard", id, tab };
 };
 
-const render = () => {
-  if (!state.content) return;
-  const { section, id } = route();
+// Counts shown on the dashboard and the Website page
+const websiteSummary = () => {
+  const count = (type) => {
+    if (!state.content) return undefined;
+    const items = cms()[type];
+    const published = items.filter((i) => i.status === "published").length;
+    return { published, drafts: items.length - published };
+  };
+  return { blog: count("blog"), projects: count("projects"), updates: count("updates"), pending: state.content ? countChanges() : 0, available: Boolean(state.content) };
+};
+
+const needsGithub = (view) => {
+  view.innerHTML = `<div class="page"><div class="page-head"><div><h1>Website content</h1><p>Journal, Portfolio and Updates are published through GitHub.</p></div></div>
+    <div class="panel"><h2>Connect GitHub to manage website content</h2>
+    <p class="muted">${escapeHTML(state.contentError || "The website content couldn't be loaded.")}</p>
+    <p class="muted">In Netlify → Site configuration → Environment variables, add <code>GITHUB_TOKEN</code> (a fine-grained token with <em>Contents: read &amp; write</em> on the repository), then redeploy. The studio tools (projects, tasks, clients, sites) work without it.</p>
+    <button class="btn" onclick="location.reload()">Check again</button></div></div>`;
+};
+
+const render = ({ keepScroll = false } = {}) => {
+  if (!studio.loaded) return;
+  const { section, id, tab } = route();
+  const scrollY = window.scrollY;
+  const boardX = $(".board-scroll")?.scrollLeft || 0;
   $$("#main-nav a").forEach((a) => a.classList.toggle("active", a.dataset.route === section));
+  document.body.classList.remove("nav-open");
   const view = $("#view");
-  window.scrollTo(0, 0);
-  if (TYPES[section] && id) return renderEditor(view, section, id);
-  if (TYPES[section]) return renderList(view, section);
-  if (section === "settings") return renderSettings(view);
-  if (section === "seo") return renderSEO(view);
-  return renderDashboard(view);
+  // Only Journal / Portfolio / Updates are website content. The studio's own
+  // "projects" route must not be mistaken for the website's "projects" type.
+  const type = WEBSITE_ROUTES.includes(section) ? typeOf(section) : "";
+
+  if (!keepScroll) window.scrollTo(0, 0);
+  if (TYPES[type] && !state.content) needsGithub(view);
+  else if (TYPES[type] && id) renderEditor(view, type, id);
+  else if (TYPES[type]) renderList(view, type);
+  else if (section === "settings") renderSettings(view);
+  else if (section === "seo") renderSEO(view);
+  else if (section === "projects") (id ? renderProjectDetail(view, id, tab) : renderProjects(view));
+  else if (section === "tasks") {
+    view.innerHTML = "";
+    const root = document.createElement("div");
+    root.className = "page";
+    view.appendChild(root);
+    renderTasksPage(root);
+  } else if (section === "clients") (id ? renderClientDetail(view, id) : renderClients(view));
+  else if (section === "sites") renderSitesPage(view);
+  else if (section === "website") renderWebsite(view, { summary: websiteSummary });
+  else renderStudioDashboard(view, websiteSummary());
+
+  if (keepScroll) {
+    window.scrollTo(0, scrollY);
+    const board = $(".board-scroll");
+    if (board) board.scrollLeft = boardX;
+  }
+  updateSaveState();
 };
 
-window.addEventListener("hashchange", render);
+app.render = () => render({ keepScroll: true });
+app.onExpired = () => logout(false);
+window.addEventListener("hashchange", () => render());
 
 // Web address from a title, with -2, -3… added if another item already uses it
 const uniqueSlug = (type, title, id) => {
@@ -529,52 +588,22 @@ const createItem = (type) => {
   cms()[type].unshift(item);
   state.autoSlug.add(item.id);
   changed();
-  location.hash = `#/${type}/${item.id}`;
+  location.hash = `#/${routeOf(type)}/${item.id}`;
 };
 
-// ---------------------------------------------------------------------------
-// Dashboard
-// ---------------------------------------------------------------------------
-
-const renderDashboard = (view) => {
-  const stats = Object.entries(TYPES)
-    .map(([type, config]) => {
-      const items = cms()[type];
-      const published = items.filter((i) => i.status === "published").length;
-      return `<a class="panel stat" href="#/${type}">
-        <span class="label">${config.label}</span>
-        <span class="num">${published}</span>
-        <span class="sub">published${items.length - published ? ` · ${items.length - published} draft${items.length - published === 1 ? "" : "s"}` : ""}</span>
-      </a>`;
-    })
-    .join("");
-
-  const recent = Object.keys(TYPES)
-    .flatMap((type) => cms()[type].map((item) => ({ type, item })))
-    .sort((a, b) => String(b.item.updatedAt || b.item.date || "").localeCompare(String(a.item.updatedAt || a.item.date || "")))
-    .slice(0, 6);
-
-  view.innerHTML = `
-    <div class="page-head"><div><h1>Welcome back</h1><p>What would you like to add to the website?</p></div></div>
-    <div class="quick panel" style="margin-bottom:24px">
-      <button type="button" data-new="blog"><strong>✎ Write a journal story</strong><span>Articles, design tips, behind the scenes</span></button>
-      <button type="button" data-new="projects"><strong>▦ Add a project</strong><span>Photos, facts and the project story</span></button>
-      <button type="button" data-new="updates"><strong>◉ Post an update</strong><span>Short news: awards, events, milestones</span></button>
-    </div>
-    <div class="stats">${stats}</div>
-    <div class="panel">
-      <h2>Recent</h2>
-      <p class="muted">Pick up where you left off.</p>
-      ${recent.length ? `<div class="list">${recent.map(({ type, item }) => listRow(type, item, { compact: true })).join("")}</div>` : '<p class="muted">Nothing yet — start with one of the buttons above.</p>'}
-    </div>
-    <div class="panel">
-      <h2>How publishing works</h2>
-      <p class="muted" style="margin:0">Edits are kept on this device until you press <strong>Publish</strong> (top right). Publishing updates the website in about 1–2 minutes. Items marked <strong>Draft</strong> are never shown on the website.
-      Pages: <a href="/blog/" target="_blank" rel="noopener">/blog</a> · <a href="/projects/" target="_blank" rel="noopener">/projects</a> · <a href="/updates/" target="_blank" rel="noopener">/updates</a></p>
-    </div>`;
-
-  $$("[data-new]", view).forEach((b) => b.addEventListener("click", () => createItem(b.dataset.new)));
-  bindRows(view);
+// Studio project -> draft portfolio entry on the website. Only the public-safe
+// facts are copied (not client name, fees or budget).
+app.addToPortfolio = (project) => {
+  if (!state.content) {
+    toast("Connect GitHub first: website content isn't available yet.", { error: true });
+    return;
+  }
+  const item = { ...TYPES.projects.create(), title: project.name, category: project.type || "", location: project.location || "", area: project.area || "", summary: project.summary || "", year: String((project.start || "").slice(0, 4) || new Date().getFullYear()) };
+  item.slug = uniqueSlug("projects", item.title, item.id);
+  cms().projects.unshift(item);
+  changed();
+  toast("Draft created in Portfolio. Add photos and a story, then publish.");
+  location.hash = `#/portfolio/${item.id}`;
 };
 
 // ---------------------------------------------------------------------------
@@ -592,7 +621,7 @@ const listRow = (type, item, { compact = false, index = 0, total = 0 } = {}) => 
     item.location ? `<span>${escapeHTML(item.location)}</span>` : "",
   ].join("");
   const live = JSON.parse(state.savedJSON).cms?.[type]?.find((i) => i.id === item.id && i.status === "published");
-  return `<div class="row" data-open="#/${type}/${item.id}">
+  return `<div class="row" data-open="#/${routeOf(type)}/${item.id}">
     <div class="thumb" style="${image ? `background-image:url('${escapeHTML(resolveSrc(image))}')` : ""}">${image ? "" : "▢"}</div>
     <div style="min-width:0"><div class="row-title">${escapeHTML(item.title || "Untitled")}</div><div class="row-meta">${meta}</div></div>
     ${compact ? "" : `<div class="row-actions">
@@ -784,14 +813,14 @@ const renderEditor = (view, type, id) => {
   const config = TYPES[type];
   const item = cms()[type].find((i) => i.id === id);
   if (!item) {
-    view.innerHTML = `<div class="panel"><h2>Not found</h2><p class="muted">This ${config.singular} may have been deleted.</p><a class="btn" href="#/${type}">Back to ${config.label}</a></div>`;
+    view.innerHTML = `<div class="panel"><h2>Not found</h2><p class="muted">This ${config.singular} may have been deleted.</p><a class="btn" href="#/${routeOf(type)}">Back to ${config.label}</a></div>`;
     return;
   }
   const live = JSON.parse(state.savedJSON).cms?.[type]?.find((i) => i.id === item.id && i.status === "published");
 
   view.innerHTML = `
     <div class="editor-head">
-      <div class="left"><a class="btn small ghost" href="#/${type}">← ${config.label}</a></div>
+      <div class="left"><a class="btn small ghost" href="#/${routeOf(type)}">← ${config.label}</a></div>
       <div class="left">
         <div class="editor-tabs status-toggle" id="editor-tabs"><button type="button" data-tab="edit" class="on">Edit</button><button type="button" data-tab="preview">Preview</button></div>
         <div class="status-toggle" id="status-toggle">
@@ -864,7 +893,7 @@ const renderEditor = (view, type, id) => {
     if (!confirm(`Delete "${item.title || "Untitled"}"? It will be removed from the website when you publish.`)) return;
     cms()[type].splice(cms()[type].indexOf(item), 1);
     changed();
-    location.hash = `#/${type}`;
+    location.hash = `#/${routeOf(type)}`;
   });
 
   // Text fields ---------------------------------------------------------------
@@ -1020,9 +1049,9 @@ const renderEditor = (view, type, id) => {
     const draw = () => {
       box.innerHTML = galleryInner(list());
       $("[data-gallery-add]", box).addEventListener("click", async () => add(await pickFiles(true)));
-      $("[data-gallery-kind]", box).forEach((select) => select.addEventListener("change", () => { list()[Number(select.dataset.galleryKind)].kind = select.value; touch(); }));
-      $("[data-gallery-alt]", box).forEach((input) => input.addEventListener("input", () => { list()[Number(input.dataset.galleryAlt)].alt = input.value; touch(); }));
-      $("[data-gallery-remove]", box).forEach((b) =>
+      $$("[data-gallery-kind]", box).forEach((select) => select.addEventListener("change", () => { list()[Number(select.dataset.galleryKind)].kind = select.value; touch(); }));
+      $$("[data-gallery-alt]", box).forEach((input) => input.addEventListener("input", () => { list()[Number(input.dataset.galleryAlt)].alt = input.value; touch(); }));
+      $$("[data-gallery-remove]", box).forEach((b) =>
         b.addEventListener("click", () => {
           list().splice(Number(b.dataset.galleryRemove), 1);
           touch();
@@ -1064,7 +1093,7 @@ const enableDrop = (box, onFiles) => {
 const seoApi = async (body) => {
   const response = await fetch("/.netlify/functions/search-console", {
     method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${state.token}` },
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.token}` },
     body: JSON.stringify(body),
   });
   const data = await response.json().catch(() => ({}));
@@ -1116,7 +1145,7 @@ const renderSEO = (view) => {
   connect.addEventListener("click", async () => {
     connect.disabled = true;
     try {
-      const response = await fetch("/.netlify/functions/google-oauth-start", { method: "POST", headers: { Authorization: `Bearer ${state.token}` } });
+      const response = await fetch("/.netlify/functions/google-oauth-start", { method: "POST", headers: { Authorization: `Bearer ${session.token}` } });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not start Google connection.");
       location.href = data.url;
@@ -1158,6 +1187,14 @@ const renderSEO = (view) => {
 // ---------------------------------------------------------------------------
 
 const renderSettings = (view) => {
+  view.innerHTML = `<div class="page"><div class="page-head"><div><h1>Settings</h1><p>Your team, onboarding checklist and backups save automatically. Website details are published with the Publish button.</p></div></div><div class="settings-body"></div></div>`;
+  const body = $(".settings-body", view);
+  if (state.content) renderWebsiteSettings(body);
+  else body.innerHTML = `<div class="panel"><h2>Website details</h2><p class="muted">Connect GitHub to edit the website's contact details and page headings. ${escapeHTML(state.contentError)}</p></div>`;
+  renderStudioSettings(body);
+};
+
+const renderWebsiteSettings = (view) => {
   const c = cms();
   const intro = (key, label) => `
     <div class="grid-2">
@@ -1166,9 +1203,8 @@ const renderSettings = (view) => {
     </div>`;
 
   view.innerHTML = `
-    <div class="page-head"><div><h1>Settings</h1><p>Details shown on the journal, project and update pages.</p></div></div>
     <div class="panel">
-      <h2>Contact details</h2>
+      <h2>Website contact details</h2>
       <p class="muted">Shown in the footer of the journal, projects and updates pages.</p>
       <div class="editor-form">
         <div class="grid-2">
@@ -1212,8 +1248,54 @@ const renderSettings = (view) => {
 };
 
 // ---------------------------------------------------------------------------
+// Shell: sidebar, search, live refresh
+// ---------------------------------------------------------------------------
+
+$$("[data-icon]").forEach((el) => (el.innerHTML = icon(el.dataset.icon, 18)));
+$("#search-button").insertAdjacentHTML("afterbegin", icon("search", 16));
+$("#menu-button").innerHTML = icon("menu", 20);
+
+const renderMe = () => {
+  const box = $("#me-box");
+  if (!team().length) {
+    box.innerHTML = '<a href="#/settings">Add your team →</a>';
+    return;
+  }
+  box.innerHTML = `<label><span>Signed in as</span><select aria-label="Who are you?"><option value="">Choose…</option>${team().map((m) => `<option value="${escapeHTML(m.id)}"${m.id === meId() ? " selected" : ""}>${escapeHTML(m.name)}</option>`).join("")}</select></label>`;
+  $("select", box).addEventListener("change", (e) => setMe(e.target.value));
+};
+
+onData((kind) => {
+  if (kind === "sync") updateSaveState();
+  if (kind === "me" || kind === "load" || kind === "remote") renderMe();
+});
+
+$("#search-button").addEventListener("click", openPalette);
+$("#menu-button").addEventListener("click", () => document.body.classList.toggle("nav-open"));
+document.addEventListener("keydown", (event) => {
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k" && studio.loaded) {
+    event.preventDefault();
+    openPalette();
+  }
+});
+
+// Pick up changes made on another device (checked every 45s and when the tab regains focus)
+let pollTimer;
+const startPolling = () => {
+  if (pollTimer) return;
+  const tick = async () => {
+    if (document.hidden || !studio.loaded) return;
+    const changedRemotely = await refresh();
+    if (changedRemotely && !drawerIsOpen() && !isWebsiteRoute()) app.render();
+  };
+  pollTimer = setInterval(tick, 45000);
+  document.addEventListener("visibilitychange", () => !document.hidden && tick());
+};
+
+// ---------------------------------------------------------------------------
 // Boot
 // ---------------------------------------------------------------------------
 
-if (state.token) start();
+renderMe();
+if (session.token) start();
 else showLogin();
