@@ -11,7 +11,7 @@ const errors = [];
 const warnings = [];
 const read = (p) => fs.readFileSync(path.join(root, p), "utf8");
 const required = [
-  "index.html", "seo/index.html", "commercial-design/index.html", "landscape-design/index.html", "project-management/index.html", "renovation-and-short-stay-design/index.html", "permits-and-licensing-support/index.html", "nri-home-design/index.html",
+  "index.html", "team.html", "seo/index.html", "commercial-design/index.html", "landscape-design/index.html", "project-management/index.html", "renovation-and-short-stay-design/index.html", "permits-and-licensing-support/index.html", "nri-home-design/index.html",
   "locations/mangalore/index.html", "locations/kasaragod/index.html",
   "locations/coastal-karnataka/index.html", "locations/kerala/index.html",
   "sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml", "sitemap-cms.xml"
@@ -35,6 +35,7 @@ for (const file of sitemapFiles) {
   if (new Set(urls).size !== urls.length) errors.push(`${file}: duplicate loc entries`);
   for (const url of urls) {
     try { new URL(url); } catch { errors.push(`${file}: invalid URL ${url}`); }
+    try { if (new URL(url).hostname !== "www.vanillasometh.in") errors.push(`${file}: non-primary hostname in sitemap URL ${url}`); } catch { /* invalid URL already reported above */ }
   }
 }
 
@@ -49,6 +50,14 @@ for (const file of htmlFiles) {
   if (!title) errors.push(`${file}: missing title`);
   if (!description) errors.push(`${file}: missing meta description`);
   if (!canonical) errors.push(`${file}: missing canonical`);
+  const ogUrl = html.match(/property="og:url" content="([^"]+)"/i)?.[1];
+  if (ogUrl && canonical && ogUrl !== canonical) errors.push(`${file}: og:url does not match canonical`);
+  if (file === "index.html") {
+    const orgMatch = html.match(/<script type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/i);
+    let orgSchema = null;
+    try { orgSchema = orgMatch ? JSON.parse(orgMatch[1]) : null; } catch { /* JSON-LD parse error is reported below */ }
+    if (orgSchema?.["@type"] === "Organization" && orgSchema.url !== "https://www.vanillasometh.in/") errors.push("index.html: Organization schema URL must use the primary www domain");
+  }
   if (canonical) {
     if (!canonical.startsWith("https://www.vanillasometh.in/")) errors.push(`${file}: incorrect canonical ${canonical}`);
     if (canonicalMap.has(canonical)) errors.push(`${file}: canonical duplicates ${canonicalMap.get(canonical)}`);
