@@ -675,6 +675,20 @@ const bindRows = (root, type) => {
 
 const listFilters = {};
 
+const showcasePanel = () => {
+  const cards = (cms().caseStudies || []).filter((c) => c && c.title);
+  if (!cards.length) return "";
+  const href = (u) => String(u || "").replace(/^\.\//, "/");
+  return `<section class="showcase">
+    <div class="showcase-head"><span class="eyebrow">Framer showcase</span><p class="muted">These ${cards.length} projects are the designed pages on the homepage. They are edited in Framer (the site's design tool), so they show here for reference only. Projects you add above get their own page under <code>/projects</code>.</p></div>
+    <div class="showcase-grid">${cards
+      .map((c) => `<a class="showcase-card" href="${escapeHTML(href(c.url))}" target="_blank" rel="noopener">
+        <div class="showcase-img" style="background-image:url('${escapeHTML((c.image && c.image.src) || "")}')"></div>
+        <div class="showcase-meta"><strong>${escapeHTML(c.title)}</strong><span>${escapeHTML(c.client || "")}</span><em>${escapeHTML(c.category || "")}</em></div></a>`)
+      .join("")}</div>
+  </section>`;
+};
+
 const renderList = (view, type) => {
   const config = TYPES[type];
   const filters = (listFilters[type] = listFilters[type] || { q: "", status: "all" });
@@ -692,7 +706,8 @@ const renderList = (view, type) => {
         <option value="draft">Drafts</option>
       </select>
     </div>
-    <div id="list-body"></div>`;
+    <div id="list-body"></div>
+    ${type === "projects" ? showcasePanel() : ""}`;
 
   $("#list-status", view).value = filters.status;
 
