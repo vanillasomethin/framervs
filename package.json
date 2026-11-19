@@ -1,0 +1,8 @@
+{
+  "name": "vanilla-somethin-site",
+  "private": true,
+  "description": "Root dependencies required by Netlify Functions.",
+  "dependencies": {
+    "@netlify/blobs": "10.7.4"
+  }
+}
