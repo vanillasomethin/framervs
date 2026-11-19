@@ -29,15 +29,20 @@ for (const [path, html] of pages) {
   await writeFile(file, html);
 }
 
-// Append CMS URLs to the deployed sitemap (the committed file stays as-is)
-const sitemapFile = join(publicDir, "sitemap.xml");
-const sitemap = await readFile(sitemapFile, "utf8");
+// Generate a dedicated sitemap for CMS-managed content. The public sitemap.xml
+// is a sitemap index, so project/blog/update URLs belong in a child urlset.
 const today = new Date().toISOString().slice(0, 10);
-const entries = sitemapPaths(cms)
+const cmsUrls = sitemapPaths(cms);
+const cmsEntries = cmsUrls
   .map((path) => `<url>\n<loc>${SITE_URL}${path}</loc>\n<lastmod>${today}</lastmod>\n<changefreq>weekly</changefreq>\n<priority>0.7</priority>\n</url>`)
   .join("\n");
-if (!sitemap.includes(`${SITE_URL}/blog/`)) {
-  await writeFile(sitemapFile, sitemap.replace("</urlset>", `${entries}\n</urlset>`));
+const cmsSitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${cmsEntries}\n</urlset>\n`;
+await writeFile(join(publicDir, "sitemap-cms.xml"), cmsSitemap);
+
+const sitemapFile = join(publicDir, "sitemap.xml");
+const sitemap = await readFile(sitemapFile, "utf8");
+if (!sitemap.includes("sitemap-cms.xml")) {
+  await writeFile(sitemapFile, sitemap.replace("</sitemapindex>", `  <sitemap><loc>${SITE_URL}/sitemap-cms.xml</loc></sitemap>\n</sitemapindex>`));
 }
 
 console.log(`CMS: wrote ${pages.length} pages`);

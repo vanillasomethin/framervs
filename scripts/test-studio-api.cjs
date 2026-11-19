@@ -8,11 +8,16 @@ delete process.env.GITHUB_TOKEN; process.env.ADMIN_PASSWORD = "pw-test"; process
 const cms = require("../netlify/functions/cms.js").handler;
 const studio = require("../netlify/functions/studio.js").handler;
 const onboard = require("../netlify/functions/onboard.js").handler;
+const searchConsole = require("../netlify/functions/search-console.js").handler;
 let pass = 0, fail = 0;
 const ok = (name, cond, extra) => { cond ? pass++ : fail++; console.log(`${cond ? "PASS" : "FAIL"}  ${name}${cond ? "" : "  -> " + JSON.stringify(extra)}`); };
 const call = async (fn, body, token, method = "POST", qs) => { const r = await fn({ httpMethod: method, headers: token ? { authorization: "Bearer " + token } : {}, body: body ? JSON.stringify(body) : undefined, queryStringParameters: qs }); return { status: r.statusCode, body: JSON.parse(r.body) }; };
 (async () => {
   let r = await call(studio, { action: "load" }); ok("load without login is rejected", r.status === 401, r);
+  // One login must work everywhere: the Search Console functions verify sessions with their own copy of the check
+  const interop = await call(cms, { action: "login", password: "pw-test" });
+  r = await call(searchConsole, { action: "sites" }, interop.body.token); ok("a studio login is accepted by the Search Console function", r.status !== 401, r);
+  r = await call(searchConsole, { action: "sites" }, interop.body.token + "x"); ok("...and a tampered token is still rejected there", r.status === 401, r);
   r = await call(cms, { action: "login", password: "bad" }); ok("wrong password rejected", r.status === 401, r);
   r = await call(cms, { action: "login", password: "pw-test" }); const T = r.body.token; ok("login works with only ADMIN_PASSWORD", r.status === 200 && T, r);
   r = await call(studio, { action: "load" }, T + "x"); ok("tampered token rejected", r.status === 401, r);

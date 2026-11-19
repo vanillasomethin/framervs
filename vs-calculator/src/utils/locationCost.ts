@@ -112,7 +112,7 @@ const DISTRICT_STATION: Record<string, string> = {
   "Hosakote": "Bangalore", "Nelamangala": "Bangalore", "Anekal": "Bangalore", "Devanahalli": "Bangalore",
   "Doddaballapur": "Bangalore",
 
-  // Kerala: Kasaragod district
+  // Kasaragod has its own CPWD station (index 134 in the 01.04.2026 Kerala schedule), so the city receives a direct local cost-index comparison.\n  // Kerala: Kasaragod district
   "Kanhangad": "Kasaragod", "Nileshwar": "Kasaragod", "Manjeshwar": "Kasaragod", "Uppala": "Kasaragod",
   "Kumbla": "Kasaragod", "Cheruvathur": "Kasaragod", "Trikaripur": "Kasaragod", "Bekal": "Kasaragod",
   "Badiadka": "Kasaragod",

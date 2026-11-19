@@ -236,8 +236,18 @@ h1{font-size:clamp(36px,6vw,72px);margin:0 0 20px;text-transform:uppercase}
 .facts div{background:var(--bg);padding:16px 18px}
 .facts dt{font-family:"Fragment Mono",monospace;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 .facts dd{margin:4px 0 0;font-family:"Space Grotesk",sans-serif;font-size:18px}
-.gallery{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));margin-top:48px}
+.gallery{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));margin-top:22px}
 .gallery img{width:100%;border-radius:10px;aspect-ratio:4/3;object-fit:cover}
+.project-media-group{margin-top:44px}
+.project-media-group h2{font-size:22px;margin-bottom:14px}
+.media-item{display:block;text-decoration:none;color:var(--fg)}
+.media-item img{transition:transform .25s ease}
+.media-item:hover img{transform:scale(1.01)}
+.media-caption{display:block;color:var(--muted);font-size:13px;margin-top:7px}
+.document-card{display:flex;flex-direction:column;justify-content:space-between;gap:14px;min-height:180px;padding:24px;border:1px solid var(--line);border-radius:10px;background:var(--panel);text-decoration:none;color:var(--fg)}
+.document-card span{font-family:"Fragment Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--accent)}
+.document-card strong{font-size:18px;font-weight:500;overflow-wrap:anywhere}
+.document-card small{color:var(--muted)}
 .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:40px}
 .tags span{border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;color:var(--muted)}
 .timeline{margin-top:48px;border-left:1px solid var(--line);padding-left:28px;display:grid;gap:44px}
@@ -417,7 +427,7 @@ ${projects.length ? `<div class="grid">${projects.map(projectCard).join("\n")}</
 };
 
 export const renderProject = (cms, project) => {
-  const description = project.summary || plainText(project.body);
+  const description = project.seoDescription || project.summary || plainText(project.body);
   const facts = [
     ["Client", project.client],
     ["Location", project.location],
@@ -427,6 +437,24 @@ export const renderProject = (cms, project) => {
     ["Status", project.projectStatus],
   ].filter(([, v]) => v);
   const others = publishedProjects(cms).filter((p) => p.slug !== project.slug).slice(0, 3);
+  const mediaGroups = [
+    ["photo", "Project photography"],
+    ["render", "3D visualisations"],
+    ["plan", "Plans"],
+    ["drawing", "Technical drawings"],
+    ["document", "Project documents"],
+  ].map(([kind, label]) => {
+    const items = (project.gallery || []).filter((g) => g?.src && (g.kind || "photo") === kind && safeUrl(g.src));
+    if (!items.length) return "";
+    const content = items.map((g) => {
+      const href = safeUrl(g.src);
+      const isPDF = g.mediaType === "application/pdf" || href.toLowerCase().split("?")[0].endsWith(".pdf");
+      return isPDF
+        ? `<a class="document-card" href="${escapeHTML(href)}" target="_blank" rel="noopener"><span>PDF DOCUMENT</span><strong>${escapeHTML(g.alt || label)}</strong><small>Open drawing or document ↗</small></a>`
+        : `<a class="media-item" href="${escapeHTML(href)}" target="_blank" rel="noopener">${img(g)}<span class="media-caption">${escapeHTML(g.alt || label)}</span></a>`;
+    }).join("\n");
+    return `<section class="project-media-group"><h2>${label}</h2><div class="gallery">${content}</div></section>`;
+  }).join("\n");
   return layout({
     cms,
     section: "projects",
@@ -441,6 +469,7 @@ export const renderProject = (cms, project) => {
       description,
       creator: { "@type": "Organization", name: SITE_NAME },
       ...(project.cover?.src ? { image: project.cover.src } : {}),
+      ...(project.tags?.length ? { keywords: project.tags.join(", ") } : {}),
     },
     body: `<a class="back" href="/projects/">← All projects</a>
 <p class="eyebrow">[${escapeHTML(project.category || "Project")}]</p>
@@ -449,7 +478,7 @@ ${project.summary ? `<p class="lede">${escapeHTML(project.summary)}</p>` : ""}
 ${facts.length ? `<dl class="facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${escapeHTML(v)}</dd></div>`).join("")}</dl>` : ""}
 ${project.cover?.src ? `<div class="cover">${img(project.cover)}</div>` : ""}
 ${project.body ? `<div class="narrow prose">${markdownToHTML(project.body)}</div>` : ""}
-${(project.gallery || []).filter((g) => g?.src).length ? `<div class="gallery">${project.gallery.filter((g) => g?.src).map((g) => img(g)).join("")}</div>` : ""}
+${mediaGroups}
 <p class="more"><a class="btn" href="/contact">Start a project with us →</a></p>
 ${others.length ? `<div class="more"><p class="eyebrow">[More projects]</p><div class="grid" style="margin-top:20px">${others.map(projectCard).join("\n")}</div></div>` : ""}`,
   });

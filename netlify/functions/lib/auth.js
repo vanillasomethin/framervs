@@ -12,9 +12,12 @@ const json = (statusCode, body) => ({
   body: JSON.stringify(body),
 });
 
+// Must stay identical to how search-console.js and google-oauth-*.js derive the
+// secret, so a single admin login is accepted by all of them. (With no
+// GITHUB_TOKEN set, every function derives the same value, so login still works.)
 const sessionSecret = () =>
   process.env.SESSION_SECRET ||
-  crypto.createHash("sha256").update(`vs-admin::${process.env.ADMIN_PASSWORD || ""}`).digest("hex");
+  crypto.createHash("sha256").update(`${process.env.ADMIN_PASSWORD}::${process.env.GITHUB_TOKEN}`).digest("hex");
 
 const sign = (payload) => crypto.createHmac("sha256", sessionSecret()).update(payload).digest("base64url");
 

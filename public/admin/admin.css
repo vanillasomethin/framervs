@@ -227,3 +227,30 @@ textarea.body-input { min-height: 380px; font-size: 15.5px; line-height: 1.65; b
   .image-filled img { width: 100%; height: 180px; }
   .save-state span.long { display: none; }
 }
+
+/* Project media: photo, render, plan, drawing and PDF groups */
+.gallery-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.gallery-item{min-width:0}
+.gallery-item>img{width:100%;height:132px;object-fit:cover;border-radius:8px}
+.gallery-document{height:132px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface,#f5f3ef);color:var(--text);text-decoration:none}
+.gallery-document strong{font:700 22px/1 "Space Grotesk",sans-serif}
+.gallery-document span{font-size:12px;max-width:90%;overflow-wrap:anywhere;text-align:center}
+.gallery-kind-label,.gallery-alt-label{display:flex;flex-direction:column;gap:5px;margin-top:9px;font-size:11px;color:var(--muted)}
+.gallery-kind-label select,.gallery-alt-label input{width:100%;min-width:0;border:1px solid var(--line);border-radius:6px;padding:7px;background:var(--bg,#fff);color:var(--text);font:inherit;font-size:12px}
+.gallery-alt-label input{font-size:11px}
+
+
+/* Search Console dashboard */
+.seo-connect { display:flex; align-items:center; justify-content:space-between; gap:18px; }
+.seo-connect h2 { margin-bottom:4px; }
+.seo-connect p { margin:0; }
+.data-table { width:100%; border-collapse:collapse; font-size:13px; margin-top:14px; }
+.data-table th, .data-table td { text-align:left; padding:11px 12px; border-bottom:1px solid var(--line); }
+.data-table th { color:var(--muted); font-weight:600; background:#faf9f7; }
+.data-table td:not(:first-child), .data-table th:not(:first-child) { text-align:right; font-variant-numeric:tabular-nums; }
+@media (max-width:700px) {
+  .seo-connect { align-items:flex-start; flex-direction:column; }
+  .seo-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .data-table { min-width:620px; }
+  .table-wrap { overflow-x:auto; }
+}

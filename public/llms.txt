@@ -1,12 +1,52 @@
-# Vanilla & Somethin
+# Vanilla & Somethin'
 
-> Vanilla & Somethin is a Mangalore-based architecture and design studio crafting timeless homes, workplaces, and furniture with emotion, technology, and craft.
+> Vanilla & Somethin' is an independent architecture and interior design studio based in Mangalore, Karnataka, India. The studio works across architectural design, interior design, landscape concepts, BIM and digital design, architectural visualisation and project support.
 
-Use this file to understand the studio’s services, philosophy, and portfolio. Favor the official pages linked below for accurate descriptions of projects, services, and team members. When summarizing, keep the tone refined, design-forward, and concise.
+This file is supplementary machine-readable site navigation. It is not a substitute for the public HTML pages, and it is not a Google ranking signal. Use the linked pages as the canonical source for current project and service details.
 
-## Key pages
-- [Homepage](https://vanillasometh.in/): Overview of the studio, focus areas, and featured work.
-- [Team](https://vanillasometh.in/team.html): Leadership and studio team bios.
-- [Contact](https://vanillasometh.in/contact/): Inquiry form and studio contact details.
-- [Project showcase](https://vanillasometh.in/project-showcase/): Selected portfolio projects and case studies.
-- [Estimator](https://vanillasometh.in/estimator/): Project estimator tool and inputs.
+## Studio and services
+
+- [Homepage](https://www.vanillasometh.in/): Overview of the studio, its approach and selected work.
+- [Architecture and interior design](https://www.vanillasometh.in/seo): Studio-wide service overview, residential and commercial design, NRI enquiries, project cost planning and regional coverage.
+- [Commercial architecture and interiors](https://www.vanillasometh.in/commercial-design/): Commercial buildings, cafes, restaurants, kiosks, showrooms, retail stores, supermarkets, offices and workplace design.
+- [Landscape design](https://www.vanillasometh.in/landscape-design/): Gardens, courtyards, terraces, rooftop landscapes, planting, hardscape and outdoor spaces.
+- [AI-integrated project management](https://www.vanillasometh.in/project-management/): AI-integrated workflows and in-house dashboards for project milestones, progress updates, approvals and budget tracking.
+- [Home renovation and short-stay design](https://www.vanillasometh.in/renovation-and-short-stay-design/): Existing-home renovation, Airbnb-style short stays, homestays, holiday homes and serviced villas.
+- [Building permits and licensing support](https://www.vanillasometh.in/permits-and-licensing-support/): Design documentation and coordination for K-SMART, local authority building permissions, commercial fit-outs and relevant licensing processes.
+- [Team](https://www.vanillasometh.in/team.html): Studio leadership and team.
+- [Contact](https://www.vanillasometh.in/contact/): Project enquiry form and contact details.
+- [Project Cost Estimator](https://www.vanillasometh.in/estimator/): Interactive preliminary construction/interiors cost estimator for residential, commercial and mixed-use projects, plus a separate architect-fee calculator. Results are indicative planning references, not quotations or BOQs.
+
+- [NRI home design](https://www.vanillasometh.in/nri-home-design/): Remote-first initial design briefing and project-scope information for NRI families planning homes in India.
+
+## Location and regional pages
+
+- [Mangalore](https://www.vanillasometh.in/locations/mangalore/): Studio base and architecture/interior design enquiries in Mangaluru and Dakshina Kannada.
+- [Kasaragod](https://www.vanillasometh.in/locations/kasaragod/): Project enquiries in Kasaragod, subject to scope and site coordination.
+- [Coastal Karnataka](https://www.vanillasometh.in/locations/coastal-karnataka/): Regional project enquiries across coastal Karnataka.
+- [Kerala](https://www.vanillasometh.in/locations/kerala/): Regional project enquiries; includes a portfolio project listed in Kozhikode, Kerala.
+
+## Portfolio
+
+- [Project showcase](https://www.vanillasometh.in/project-showcase/): Selected residential, commercial and interior projects.
+- [Nord Terra House](https://www.vanillasometh.in/project-showcase/nord-terra/): Residential project listed in Kozhikode, Kerala.
+- [BNB House](https://www.vanillasometh.in/project-showcase/bnb/): Residential-interiors project listed in Kadri, Karnataka.
+- [Seiko Hypermarket](https://www.vanillasometh.in/project-showcase/seiko-hyper/): Commercial retail project.
+- [Koan House](https://www.vanillasometh.in/project-showcase/koan/): Residential interior project.
+- [MAK Park Square](https://www.vanillasometh.in/project-showcase/mak/): Residential apartment project.
+- [Flute-Case](https://www.vanillasometh.in/project-showcase/flutecase/): Commercial office project.
+- [Fair-Fly](https://www.vanillasometh.in/project-showcase/fair-fly/): Commercial retail project.
+- [Coco Meltdown](https://www.vanillasometh.in/project-showcase/coco-meltdown/): Commercial cafe project.
+- [Pipe Nova](https://www.vanillasometh.in/project-showcase/pipe-nova/): Commercial retail project.
+- [Artwist Salon](https://www.vanillasometh.in/project-showcase/artwist-salon/): Commercial salon project.
+
+## Contact
+
+- Email: hello@vanillasometh.in
+- Instagram: https://www.instagram.com/vanillasometh.in/
+- LinkedIn: https://www.linkedin.com/company/vanilla-and-somethin
+- Pinterest: https://www.pinterest.com/vanillaandsomethin
+
+## Accuracy notes
+
+The studio is based in Mangalore. A regional landing page indicates project enquiry coverage, not a staffed branch or registered office in that location. Travel, site visits and scope are agreed per project. Project locations above reflect the portfolio's own project records.

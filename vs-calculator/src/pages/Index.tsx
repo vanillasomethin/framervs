@@ -15,11 +15,12 @@ const Index = () => {
             Project Cost Estimator
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm">
-            Get an accurate estimate for your architecture or interior design project in just a few steps.
+            Explore an indicative construction and interiors budget for a residential, commercial or mixed-use project. Choose your location, area, scope and specification level to see a preliminary cost breakdown.
           </p>
         </div>
         
         <EstimatorWizard />
+        <p className="max-w-3xl mx-auto mt-6 text-center text-xs text-muted-foreground">This is an early-stage planning estimate, not a quotation, bill of quantities, tender price or guarantee of final project cost. Actual costs depend on site conditions, drawings, specifications, consultant inputs and the agreed scope.</p>
       </div>
     </div>
   );

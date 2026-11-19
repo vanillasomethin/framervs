@@ -22,7 +22,7 @@ const BRANCH = process.env.GITHUB_BRANCH || "main";
 const CONTENT_PATH = "public/content.json";
 const UPLOAD_DIR = "public/uploads";
 const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
-const ALLOWED_TYPES = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/avif": "avif" };
+const ALLOWED_TYPES = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/avif": "avif", "application/pdf": "pdf" };
 
 // Login only needs the password. GITHUB_TOKEN is needed to publish website
 // content (journal, portfolio, updates); the private studio works without it.
@@ -72,10 +72,11 @@ const uploadPath = (name, type) => {
 // Stores the image as a git blob only. It's committed together with the next
 // save, so uploading many photos doesn't trigger many deploys.
 const handleUpload = async ({ name, type, data }) => {
-  if (!ALLOWED_TYPES[type]) return json(400, { error: "Only JPG, PNG, WebP, GIF or AVIF images can be uploaded." });
+  if (!ALLOWED_TYPES[type]) return json(400, { error: "Only JPG, PNG, WebP, GIF, AVIF images and PDF documents can be uploaded." });
   const bytes = Buffer.from(String(data || ""), "base64");
   if (!bytes.length) return json(400, { error: "The image was empty." });
-  if (bytes.length > MAX_UPLOAD_BYTES) return json(413, { error: "Image is larger than 4 MB after compression." });
+  if (bytes.length > MAX_UPLOAD_BYTES) return json(413, { error: "File is larger than 4 MB. Please optimise it before uploading." });
+  if (type === "application/pdf" && bytes.subarray(0, 5).toString("ascii") !== "%PDF-") return json(400, { error: "The uploaded document is not a valid PDF." });
   const blob = await github("/git/blobs", { method: "POST", body: JSON.stringify({ content: data, encoding: "base64" }) });
   const path = uploadPath(name, type);
   return json(200, { path, sha: blob.sha, url: `/${path.replace(/^public\//, "")}` });

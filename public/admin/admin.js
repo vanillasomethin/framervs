@@ -38,7 +38,7 @@ const cms = () => state.content.cms;
 // Content types
 // ---------------------------------------------------------------------------
 
-const PROJECT_TYPES = ["Residential", "Residential - Apartment", "Residential - Interiors", "Commercial - Office", "Commercial - Retail", "Commercial - Cafe", "Hospitality", "Landscape", "Interiors", "Urban Design"];
+const PROJECT_TYPES = ["Residential", "Residential - Apartment", "Residential - Interiors", "Residential - Renovation", "Hospitality - Airbnb / Short Stay", "Hospitality - Homestay / Serviced Villa", "Commercial - Office", "Commercial - Retail", "Commercial - Cafe", "Commercial - Healthcare", "Commercial - Restaurant", "Landscape", "Landscape & Public Realm", "Sports & Recreation", "Interiors", "Urban Design", "Building Permit / Compliance Documentation"];
 
 const TYPES = {
   blog: {
@@ -71,7 +71,7 @@ const TYPES = {
     livePath: (item) => `/projects/${item.slug}/`,
     indexPath: "/projects/",
     manualOrder: true,
-    create: () => ({ id: uid(), title: "", slug: "", status: "draft", category: "", location: "", year: String(new Date().getFullYear()), client: "", area: "", projectStatus: "Completed", summary: "", cover: { src: "", alt: "" }, body: "", gallery: [] }),
+    create: () => ({ id: uid(), title: "", slug: "", status: "draft", category: "", location: "", year: "", client: "", area: "", projectStatus: "Scope to confirm", summary: "", seoDescription: "", cover: { src: "", alt: "" }, body: "", tags: [], gallery: [] }),
     preview: (c, item) => renderProject(c, item),
     fields: [
       { key: "title", type: "title", placeholder: "Project name" },
@@ -83,13 +83,15 @@ const TYPES = {
       { row: [
         { key: "year", type: "text", label: "Year" },
         { key: "area", type: "text", label: "Area", placeholder: "e.g. 3,200 sq ft" },
-        { key: "projectStatus", type: "select", label: "Stage", options: ["Completed", "Under construction", "In design", "Concept"] },
+        { key: "projectStatus", type: "select", label: "Stage", options: ["Scope to confirm", "Completed", "Under construction", "In design", "Concept"] },
       ] },
       { key: "client", type: "text", label: "Client (optional)" },
       { key: "summary", type: "textarea", label: "One-line summary", hint: "Shown on the project card and under the title.", rows: 2 },
+      { key: "seoDescription", type: "textarea", label: "Search description (optional)", hint: "A factual 150 to 160 character description for search results.", rows: 2 },
+      { key: "tags", type: "tags", label: "Project keywords", hint: "Relevant services and project terms, separated by commas." },
       { key: "cover", type: "image", label: "Main photo" },
-      { key: "body", type: "markdown", label: "Project story", hint: "The brief, the idea, materials, challenges — whatever tells the story." },
-      { key: "gallery", type: "gallery", label: "Photo gallery", hint: "Add as many photos as you like. Use the arrows to reorder." },
+      { key: "body", type: "markdown", label: "Project story", hint: "Brief, design approach, materials, challenges, services and project outcome." },
+      { key: "gallery", type: "gallery", label: "Project media", hint: "Upload multiple photos, renders, plans, technical drawings and PDF sheets. Choose a category for each item." },
     ],
   },
   updates: {
@@ -278,19 +280,31 @@ const blobToBase64 = (blob) =>
   });
 
 // Compresses, uploads and returns the public URL of an image
-const uploadImage = async (file) => {
-  const { blob, type } = await prepareImage(file);
+const uploadBlob = async (file, blob, type) => {
   const result = await api({ action: "upload", name: file.name, type, data: await blobToBase64(blob) });
   state.pending.set(result.url, { path: result.path, sha: result.sha });
   state.previews.set(result.url, URL.createObjectURL(blob));
   return result.url;
 };
 
+const uploadImage = async (file) => {
+  const { blob, type } = await prepareImage(file);
+  return uploadBlob(file, blob, type);
+};
+
+const uploadPDF = async (file) => {
+  if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) throw new Error(`${file.name} is not a PDF.`);
+  if (file.size > 4 * 1024 * 1024) throw new Error(`${file.name} is larger than 4 MB. Please optimise the PDF first.`);
+  const header = new Uint8Array(await file.slice(0, 5).arrayBuffer());
+  if (String.fromCharCode(...header) !== "%PDF-") throw new Error(`${file.name} is not a valid PDF file.`);
+  return uploadBlob(file, file, "application/pdf");
+};
+
 const pickFiles = (multiple) =>
   new Promise((resolve) => {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = "image/jpeg,image/png,image/webp,image/gif,image/avif";
+    input.accept = "image/jpeg,image/png,image/webp,image/gif,image/avif,application/pdf,.pdf";
     input.multiple = multiple;
     input.onchange = () => resolve(Array.from(input.files || []));
     input.click();
@@ -534,6 +548,7 @@ const render = ({ keepScroll = false } = {}) => {
   else if (TYPES[type] && id) renderEditor(view, type, id);
   else if (TYPES[type]) renderList(view, type);
   else if (section === "settings") renderSettings(view);
+  else if (section === "seo") renderSEO(view);
   else if (section === "projects") (id ? renderProjectDetail(view, id, tab) : renderProjects(view));
   else if (section === "tasks") {
     view.innerHTML = "";
@@ -781,13 +796,17 @@ const imageInner = (image) =>
     : `<div class="image-drop" data-image-pick><strong>Click to upload</strong> or drag a photo here<span>JPG, PNG or WebP — large photos are resized automatically</span></div>`;
 
 const galleryInner = (gallery) => `<div class="gallery-grid">
-    ${gallery
-      .map(
-        (g, i) => `<div class="gallery-item"><img src="${escapeHTML(resolveSrc(g.src))}" alt="${escapeHTML(g.alt || "")}">
-          <div class="gallery-actions"><span><button type="button" title="Move left" data-gallery-move="-1" data-index="${i}">←</button> <button type="button" title="Move right" data-gallery-move="1" data-index="${i}">→</button></span><button type="button" title="Remove" data-gallery-remove="${i}">✕</button></div></div>`
-      )
-      .join("")}
-    <div class="gallery-add" data-gallery-add>＋ Add photos<br>or drag them here</div>
+    ${gallery.map((g, i) => {
+      const isPDF = g.mediaType === "application/pdf" || (g.src || "").toLowerCase().split("?")[0].endsWith(".pdf");
+      const preview = isPDF
+        ? `<a class="gallery-document" href="${escapeHTML(resolveSrc(g.src))}" target="_blank" rel="noopener"><strong>PDF</strong><span>${escapeHTML(g.alt || "Open drawing")}</span></a>`
+        : `<img src="${escapeHTML(resolveSrc(g.src))}" alt="${escapeHTML(g.alt || "")}">`;
+      return `<div class="gallery-item">${preview}
+        <label class="gallery-kind-label">Media type<select data-gallery-kind="${i}">${[["photo","Photo"],["render","3D render"],["plan","Plan"],["drawing","Technical drawing"],["document","Document"]].map(([v,l]) => `<option value="${v}" ${(g.kind || "photo") === v ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+        <label class="gallery-alt-label">Caption / alt text<input type="text" data-gallery-alt="${i}" value="${escapeHTML(g.alt || "")}" placeholder="Describe this image or drawing"></label>
+        <div class="gallery-actions"><span><button type="button" title="Move left" data-gallery-move="-1" data-index="${i}">←</button> <button type="button" title="Move right" data-gallery-move="1" data-index="${i}">→</button></span><button type="button" title="Remove" data-gallery-remove="${i}">✕</button></div></div>`;
+    }).join("")}
+    <div class="gallery-add" data-gallery-add>＋ Add photos or PDFs<br>or drag them here</div>
   </div>`;
 
 const renderEditor = (view, type, id) => {
@@ -1016,8 +1035,9 @@ const renderEditor = (view, type, id) => {
       box.classList.add("uploading");
       for (const file of files) {
         try {
-          const url = await uploadImage(file);
-          list().push({ src: url, alt: altFromName(file.name) });
+          const isPDF = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+          const url = isPDF ? await uploadPDF(file) : await uploadImage(file);
+          list().push({ src: url, alt: altFromName(file.name), kind: isPDF ? "drawing" : "photo", mediaType: isPDF ? "application/pdf" : file.type });
           touch();
           draw();
         } catch (error) {
@@ -1029,6 +1049,8 @@ const renderEditor = (view, type, id) => {
     const draw = () => {
       box.innerHTML = galleryInner(list());
       $("[data-gallery-add]", box).addEventListener("click", async () => add(await pickFiles(true)));
+      $$("[data-gallery-kind]", box).forEach((select) => select.addEventListener("change", () => { list()[Number(select.dataset.galleryKind)].kind = select.value; touch(); }));
+      $$("[data-gallery-alt]", box).forEach((input) => input.addEventListener("input", () => { list()[Number(input.dataset.galleryAlt)].alt = input.value; touch(); }));
       $$("[data-gallery-remove]", box).forEach((b) =>
         b.addEventListener("click", () => {
           list().splice(Number(b.dataset.galleryRemove), 1);
@@ -1064,6 +1086,99 @@ const enableDrop = (box, onFiles) => {
     box.classList.remove("drag");
     const files = Array.from(e.dataTransfer.files || []).filter((f) => f.type.startsWith("image/"));
     if (files.length) onFiles(files);
+  });
+};
+
+
+const seoApi = async (body) => {
+  const response = await fetch("/.netlify/functions/search-console", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.token}` },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`);
+  return data;
+};
+
+const renderSEO = (view) => {
+  const end = new Date(Date.now() - 3 * 86400000);
+  const start = new Date(end);
+  start.setDate(start.getDate() - 27);
+  const iso = (d) => d.toISOString().slice(0, 10);
+  view.innerHTML = `
+    <div class="page-head"><div><h1>Search performance</h1><p>Google Search Console · Organic search visibility for the studio website.</p></div></div>
+    <div class="panel seo-connect">
+      <div><h2>Google Search Console</h2><p class="muted" id="seo-status">Checking connection…</p></div>
+      <button type="button" class="btn primary" id="seo-connect">Connect Google</button>
+    </div>
+    <div class="panel" style="margin-top:18px">
+      <div class="grid-2">
+        <label class="field"><span>Search Console property</span><select id="seo-property"><option value="">Loading properties…</option></select></label>
+        <label class="field"><span>Report</span><select id="seo-dimension"><option value="date">Daily trend</option><option value="query">Search queries</option><option value="page">Top pages</option><option value="country">Countries</option><option value="device">Devices</option></select></label>
+        <label class="field"><span>Start date</span><input id="seo-start" type="date" value="${iso(start)}"></label>
+        <label class="field"><span>End date</span><input id="seo-end" type="date" value="${iso(end)}"></label>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:16px"><button type="button" class="btn primary" id="seo-load">Load report</button><span class="muted" id="seo-message" role="status"></span></div>
+    </div>
+    <div class="stats seo-stats" id="seo-stats" style="margin-top:18px">
+      <div class="panel stat"><span class="label">Clicks</span><span class="num">—</span><span class="sub">Select a property and load data</span></div>
+      <div class="panel stat"><span class="label">Impressions</span><span class="num">—</span><span class="sub">Google organic results</span></div>
+      <div class="panel stat"><span class="label">CTR</span><span class="num">—</span><span class="sub">Click-through rate</span></div>
+      <div class="panel stat"><span class="label">Average position</span><span class="num">—</span><span class="sub">Lower is better</span></div>
+    </div>
+    <div class="panel" style="margin-top:18px"><h2 id="seo-table-title">Search data</h2><p class="muted" id="seo-table-note">Search Console data will appear here. Recent dates may be delayed by Google.</p><div class="table-wrap" id="seo-table"></div></div>
+    <div class="notice warn" style="margin-top:18px">This is Google Search Console data only. Business Profile metrics are not connected. Your Google OAuth app is currently in Testing; its refresh token may expire after 7 days.</div>`;
+  const status = $("#seo-status", view);
+  const property = $("#seo-property", view);
+  const message = $("#seo-message", view);
+  const connect = $("#seo-connect", view);
+  const load = $("#seo-load", view);
+  const fmt = (n) => Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+  const showError = (error) => { message.textContent = error.message; message.style.color = "var(--danger)"; };
+  const loadSites = async () => {
+    status.textContent = "Checking Google authorisation…";
+    const data = await seoApi({ action: "sites" });
+    property.innerHTML = data.sites.length ? data.sites.map((s) => `<option value="${escapeHTML(s.siteUrl)}">${escapeHTML(s.siteUrl)} · ${escapeHTML(s.permissionLevel)}</option>`).join("") : '<option value="">No accessible properties found</option>';
+    status.textContent = data.sites.length ? `Connected · ${data.sites.length} Search Console propert${data.sites.length === 1 ? "y" : "ies"} available` : "Google connected, but no Search Console properties are accessible to this account.";
+  };
+  connect.addEventListener("click", async () => {
+    connect.disabled = true;
+    try {
+      const response = await fetch("/.netlify/functions/google-oauth-start", { method: "POST", headers: { Authorization: `Bearer ${session.token}` } });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not start Google connection.");
+      location.href = data.url;
+    } catch (error) { showError(error); connect.disabled = false; }
+  });
+  load.addEventListener("click", async () => {
+    if (!property.value) { message.textContent = "Choose a property first."; return; }
+    load.disabled = true; message.textContent = "Loading report…"; message.style.color = "var(--muted)";
+    try {
+      const dimension = $("#seo-dimension", view).value;
+      const data = await seoApi({ action: "query", siteUrl: property.value, startDate: $("#seo-start", view).value, endDate: $("#seo-end", view).value, dimensions: [dimension] });
+      const rows = data.rows || [];
+      const totals = rows.reduce((a, r) => ({ clicks:a.clicks+r.clicks, impressions:a.impressions+r.impressions, positionWeighted:a.positionWeighted+r.position*r.impressions }), { clicks:0, impressions:0, positionWeighted:0 });
+      const ctr = totals.impressions ? totals.clicks / totals.impressions : 0;
+      const position = totals.impressions ? totals.positionWeighted / totals.impressions : 0;
+      $("#seo-stats", view).innerHTML = [
+        ["Clicks",fmt(totals.clicks),"Organic visits from Google"],
+        ["Impressions",fmt(totals.impressions),"Appearances in Google results"],
+        ["CTR",`${(ctr*100).toFixed(2)}%`,"Clicks ÷ impressions"],
+        ["Average position",position ? position.toFixed(1) : "—","Impression-weighted average"]
+      ].map(([label,num,sub]) => `<div class="panel stat"><span class="label">${label}</span><span class="num">${num}</span><span class="sub">${sub}</span></div>`).join("");
+      $("#seo-table-title", view).textContent = dimension === "date" ? "Daily search performance" : `Performance by ${dimension}`;
+      $("#seo-table-note", view).textContent = `${rows.length} rows · ${$("#seo-start",view).value} to ${$("#seo-end",view).value}`;
+      const heading = dimension === "date" ? "Date" : dimension[0].toUpperCase()+dimension.slice(1);
+      $("#seo-table", view).innerHTML = rows.length ? `<table class="data-table"><thead><tr><th>${heading}</th><th>Clicks</th><th>Impressions</th><th>CTR</th><th>Position</th></tr></thead><tbody>${rows.map(r => `<tr><td>${escapeHTML(r.keys?.[0] || "")}</td><td>${fmt(r.clicks)}</td><td>${fmt(r.impressions)}</td><td>${(r.ctr*100).toFixed(2)}%</td><td>${Number(r.position || 0).toFixed(1)}</td></tr>`).join("")}</tbody></table>` : '<p class="muted">No rows returned for this property and date range.</p>';
+      message.textContent = "Report loaded."; message.style.color = "var(--ok)";
+    } catch (error) { showError(error); }
+    finally { load.disabled = false; }
+  });
+  loadSites().catch((error) => {
+    status.textContent = "Not connected or connection expired.";
+    connect.textContent = "Connect / reconnect Google";
+    showError(error);
   });
 };
 

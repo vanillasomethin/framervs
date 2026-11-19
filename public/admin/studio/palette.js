@@ -19,6 +19,7 @@ const PAGES = [
   ["Journal", "#/blog", "book"],
   ["Portfolio", "#/portfolio", "image"],
   ["Updates", "#/updates", "megaphone"],
+  ["Search performance (SEO)", "#/seo", "search"],
   ["Settings", "#/settings", "settings"],
 ];
 

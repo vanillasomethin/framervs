@@ -147,8 +147,8 @@ const LocationStep = ({ selectedState, selectedCity, onStateSelect, onCitySelect
         .sort((a, b) => b.score - a.score)
         .map(({ state, city }) => ({ state, city }));
 
-      // Limit results to top 10
-      setSuggestions(results.slice(0, 10));
+      // Keep the dropdown compact so it never creates a second scrolling region.
+      setSuggestions(results.slice(0, 5));
       setShowSuggestions(true);
     } else {
       setSuggestions([]);
@@ -208,7 +208,7 @@ const LocationStep = ({ selectedState, selectedCity, onStateSelect, onCitySelect
           
           {/* Location suggestions dropdown */}
           {showSuggestions && (
-            <div className="absolute z-10 w-full mt-1 bg-white border border-primary/10 rounded-lg shadow-lg max-h-60 overflow-auto">
+            <div className="absolute z-10 w-full mt-1 bg-white border border-primary/10 rounded-lg shadow-lg">
               {suggestions.map((suggestion, index) => (
                 <div
                   key={index}
@@ -239,6 +239,35 @@ const LocationStep = ({ selectedState, selectedCity, onStateSelect, onCitySelect
               )}
             </div>
           )}
+        </div>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+          <span className="w-full text-center text-[11px] uppercase tracking-[0.14em] text-[#4f090c]/55">Popular locations</span>
+          {[
+            { city: "Mangalore", state: "Karnataka" },
+            { city: "Puttur", state: "Karnataka" },
+            { city: "Kasaragod", state: "Kerala" },
+            { city: "Kochi", state: "Kerala" },
+            { city: "Bengaluru", state: "Karnataka" },
+          ].map(({ city, state }) => (
+            <button
+              key={city}
+              type="button"
+              onClick={() => {
+                onStateSelect(state);
+                onCitySelect(city === "Bengaluru" ? "Bangalore" : city);
+                setSearchQuery(`${city === "Bengaluru" ? "Bangalore" : city}, ${state}`);
+                setShowSuggestions(false);
+              }}
+              className={cn(
+                "rounded-full border px-3 py-1.5 text-xs transition-colors",
+                selectedCity === (city === "Bengaluru" ? "Bangalore" : city)
+                  ? "border-vs bg-vs text-white"
+                  : "border-vs/20 bg-white/70 text-vs hover:border-vs hover:bg-vs/5"
+              )}
+            >
+              {city}
+            </button>
+          ))}
         </div>
       </div>
       
