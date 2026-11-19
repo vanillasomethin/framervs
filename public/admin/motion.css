@@ -1,0 +1,19 @@
+/* Motion layer for the Studio admin. Scoped to the admin app only. */
+:root{--vs-motion-ease:cubic-bezier(.22,1,.36,1)}
+@media (prefers-reduced-motion:no-preference){
+  #view.vs-entering .page-head,#view.vs-entering .dash-head{animation:vs-rise .72s var(--vs-motion-ease) both}
+  #view.vs-entering .panel,#view.vs-entering .kpi,#view.vs-entering .site-stat,#view.vs-entering .project-card,#view.vs-entering .list-row{animation:vs-rise .68s var(--vs-motion-ease) both;animation-delay:calc(var(--vs-i,0)*55ms)}
+  #view.vs-entering .panel:nth-of-type(2){--vs-i:1}#view.vs-entering .panel:nth-of-type(3){--vs-i:2}#view.vs-entering .panel:nth-of-type(4){--vs-i:3}
+  #view.vs-entering .kpi:nth-child(2){--vs-i:1}#view.vs-entering .kpi:nth-child(3){--vs-i:2}#view.vs-entering .kpi:nth-child(4){--vs-i:3}
+  #view .panel,#view .kpi,#view .site-stat,#view .btn,#view .list-row{transition:transform .28s var(--vs-motion-ease),border-color .28s ease,box-shadow .28s ease}
+  #view .panel:hover,#view .kpi:hover,#view .site-stat:hover{transform:translateY(-2px)}
+  #view .btn:active{transform:scale(.98)}
+  .sidebar nav a{transition:background .22s ease,color .22s ease,transform .22s var(--vs-motion-ease)}
+  .sidebar nav a:hover{transform:translateX(3px)}
+  .sidebar nav a.active{box-shadow:inset 2px 0 0 var(--accent)}
+  #view .progress i{transform-origin:left;animation:vs-grow .9s var(--vs-motion-ease) both}
+  #view .editor-form,#view .preview-pane{animation:vs-rise .55s var(--vs-motion-ease) both}
+}
+@keyframes vs-rise{from{opacity:0;transform:translate3d(0,18px,0);filter:blur(4px)}to{opacity:1;transform:translate3d(0,0,0);filter:blur(0)}}
+@keyframes vs-grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media(prefers-reduced-motion:reduce){#view *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

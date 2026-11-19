@@ -5,7 +5,7 @@
 // GitHub. Changes are held locally until "Publish", so several edits go out as
 // one commit / one deploy. Previews use the same renderer as the live pages.
 
-import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, renderUpdates } from "/cms/render.mjs";
+import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, renderUpdates } from "/cms/render.mjs";\nimport { animateAdminView, initAdminMotion } from "./motion.js";
 import { session, SESSION_KEY, app, $, $$, clone, uid, api, toast } from "./core.js";
 import { data as studio, loadAll, refresh, sync, onData, hasPendingChanges, meId, team, setMe, isoDate } from "./studio/data.js";
 import { icon, drawerIsOpen } from "./studio/ui.js";
@@ -566,9 +566,11 @@ const render = ({ keepScroll = false } = {}) => {
     const board = $(".board-scroll");
     if (board) board.scrollLeft = boardX;
   }
+  animateAdminView(view);
   updateSaveState();
 };
 
+initAdminMotion();
 app.render = () => render({ keepScroll: true });
 app.onExpired = () => logout(false);
 window.addEventListener("hashchange", () => render());

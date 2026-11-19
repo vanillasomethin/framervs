@@ -188,7 +188,19 @@ export const plainText = (markdown, max = 160) => {
 // ---------------------------------------------------------------------------
 
 const STYLES = `
-:root{--bg:#0d0d0d;--fg:#fff;--muted:#adadad;--line:rgba(255,255,255,.12);--accent:#f21d2f;--card:#151515}
+:root{--bg:#0d0d0d;--fg:#fff;--muted:#adadad;--line:rgba(255,255,255,.12);--accent:#f21d2f;--card:#151515;--vs-ease:cubic-bezier(.22,1,.36,1)}
+@media(prefers-reduced-motion:no-preference){
+.vs-reveal{opacity:0;transform:translate3d(0,28px,0);filter:blur(5px);transition:opacity .75s var(--vs-ease),transform .85s var(--vs-ease),filter .75s ease;transition-delay:var(--vs-delay,0ms)}
+.vs-reveal.vs-visible{opacity:1;transform:translate3d(0,0,0);filter:blur(0)}
+.card .thumb img{transition:transform .9s var(--vs-ease)}
+.card:hover .thumb img,.card:focus-visible .thumb img{transform:scale(1.045)}
+.cover{overflow:hidden}.cover img.vs-parallax{transform:translate3d(0,var(--vs-parallax-y,0px),0) scale(1.06);will-change:transform}
+.project-media-group .media-item img{transition:transform .65s var(--vs-ease),filter .65s ease}
+.project-media-group .media-item:hover img{transform:scale(1.025);filter:brightness(1.05)}
+.btn{transition:transform .25s var(--vs-ease),filter .25s ease}.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.back{transition:color .2s ease,transform .2s var(--vs-ease)}.back:hover{transform:translateX(-4px)}
+}
+@media(prefers-reduced-motion:reduce){.vs-reveal{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}.cover img.vs-parallax{transform:none!important}}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.65}
@@ -327,7 +339,7 @@ ${body}
 <div>${socials}</div>
 </div>
 </div></footer>
-</body>
+<script src="/cms/motion.js" defer></script>\n</body>
 </html>
 `;
 };
