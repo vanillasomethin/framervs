@@ -2767,7 +2767,7 @@
         "id": "king-abdullah-park-riyadh",
         "title": "King Abdullah Park",
         "slug": "king-abdullah-park-riyadh",
-        "status": "draft",
+        "status": "published",
         "category": "Landscape & Public Realm",
         "location": "Riyadh, Saudi Arabia",
         "year": "2026",
@@ -2790,7 +2790,7 @@
           "Riyadh"
         ],
         "gallery": [],
-        "updatedAt": "2026-11-15T13:10:23.430Z"
+        "updatedAt": "2026-11-19T08:14:58.003Z"
       },
       {
         "id": "aestra-clinic-riyadh",
