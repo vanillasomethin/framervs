@@ -461,17 +461,15 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
           )}
         </div>
 
-        {/* Total Estimated Project Cost — single authoritative figure. The
-            engine total already includes professional fees, contingency and GST,
-            so it is shown once (no double-counting). */}
+        {/* Preliminary project cost: contingency included; professional fees and GST excluded. */}
         <div className="bg-vs text-white p-5 rounded-xl text-center border border-vs-dark">
-          <h3 className="text-xs text-white/90 mb-1.5 font-semibold tracking-wide">TOTAL ESTIMATED PROJECT COST</h3>
+          <h3 className="text-xs text-white/90 mb-1.5 font-semibold tracking-wide">PRELIMINARY PROJECT COST</h3>
           <p className="text-3xl font-bold text-white mb-1.5">{formatCurrency(estimate.totalCost)}</p>
           <p className="text-xs text-white/90">
             {formatCurrency(Math.round(estimate.totalCost / Math.max(estimate.area, 1)))} per {estimate.areaUnit}
           </p>
           <p className="text-[10px] text-white/70 mt-1.5">
-            Inclusive of professional fees, contingency &amp; GST
+            Includes a 5% contingency allowance; excludes architect fees, GST and statutory charges
           </p>
         </div>
 
@@ -576,9 +574,9 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 text-xs text-gray-700">
           <p className="font-medium text-orange-800 mb-1">Important Disclaimer:</p>
           <ul className="list-disc list-inside space-y-1 text-gray-700">
-            <li>The total is inclusive of professional fees, contingency and GST</li>
-            <li>Actual costs may vary ±10% based on site conditions and material price fluctuations</li>
-            <li>Detailed BOQ will be provided after site visit and requirement analysis</li>
+            <li>Includes a 5% contingency allowance; excludes architectural professional fees, GST and statutory charges</li>
+            <li>Actual costs may vary with site conditions, specifications, quantities, consultant inputs and contractor quotations</li>
+            <li>This is not a BOQ, tender price, contractor quotation or guarantee</li>
             <li>This is <strong>indicative pricing only</strong> — a formal quote will be shared after a discovery call with our team</li>
           </ul>
         </div>
