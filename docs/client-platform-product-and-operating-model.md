@@ -65,3 +65,58 @@ Site reports, snag workflows, handover, aftercare, client notifications and anal
 
 ## Success measures
 Qualified enquiry rate; discovery-call booking/show rate; discovery-call→appointment conversion; proposal turnaround; approval cycle time; change requests approved before work; budget variance with reason codes; overdue client decisions; site report turnaround; snag closure time; client satisfaction/referrals. Do not optimize for portal logins alone.
+
+## Research translation — studio client-friction priorities
+
+This is an internal studio workflow, not a marketplace. The research is qualitative and exploratory: individual homeowner accounts and regional context help identify design risks and service improvements, but do not establish how common each problem is. Treat these as hypotheses to validate through the studio's own enquiries, project reviews and client feedback.
+
+### Client problems the studio can directly reduce
+
+1. **Unclear first steps and professional responsibilities**
+   - Explain what the studio does, what sits with the structural engineer, contractor and statutory authorities, and when each party becomes involved.
+   - The complimentary discovery call clarifies fit and likely next step; it is not a technical assessment or a paid consultation.
+   - Give clients a short, plain-language "what happens next" summary after the call.
+
+2. **Unclear scope, fees and exclusions**
+   - Use a consistent proposal structure: services, named deliverables, exclusions, assumptions, revision allowance, timeline, client responsibilities, fee stages and payment triggers.
+   - State whether site visits, contractor coordination, procurement support, approval liaison and construction-stage observation are included, excluded or separately scoped.
+   - Compare third-party quotations only when the client has separately engaged the studio for that work; normalize scope and specification differences rather than presenting headline totals as equivalent.
+
+3. **Uncertainty about progress and who owes the next action**
+   - Maintain a project stage, next milestone, next decision, responsible owner, due date and client action required.
+   - Send concise meeting summaries with decisions, unresolved questions and action owners.
+   - Make delays visible with a reason and revised next step rather than silently changing dates.
+
+4. **Fear of hidden costs and uncontrolled changes**
+   - Record the agreed budget as a dated baseline with assumptions and allowances.
+   - Track known commitments, actuals and forecasts only where supported by reliable project information; label estimates and confidence.
+   - Raise variations with reason, scope, cost/time impact and written client approval before treating the baseline as changed.
+   - Do not imply the studio controls contractor pricing, material-market movements or construction outcomes.
+
+5. **Limited visibility during site work, especially for clients who cannot visit**
+   - For contracted site/design-oversight visits, create a dated report with visit purpose, observations, photographs where appropriate, action owner, due date and limitations.
+   - Distinguish a periodic design observation from full-time supervision, quality certification or PMC.
+   - Publish only reviewed, client-appropriate records; never promise remote monitoring where it is not part of the appointment.
+
+6. **Stress at completion and handover**
+   - Use a closeout register for agreed deliverables, open items, responsible parties, warranties/manuals where supplied, final decisions and follow-up.
+   - Record unresolved items honestly; do not imply that a snag list is a guarantee of contractor rectification.
+
+### Product rules
+
+- Extend the existing CRM, onboarding and project records. Do not create a second CRM or a public directory.
+- Keep the complimentary discovery call free, with no booking fee, consultation fee, credit or refund mechanism.
+- Make client-facing commitments explicit and appointment-specific. Internal notes, staff information, margins and unapproved observations remain private.
+- Every client-visible update must have an owner, date, review state and clear next action.
+- Prefer a small number of dependable records over a large portal full of fields that the studio cannot keep current.
+- No marketplace functions: no professional discovery/listings, public architect profiles, public reviews marketplace, lead brokerage, escrow, commissions or contractor matching.
+
+### Delivery order for the studio
+
+**First:** improve enquiry qualification and discovery-call follow-up; standardize proposal scope/fees/exclusions; record client decisions and action owners in the existing CRM.
+
+**Next:** add a lightweight client-facing project summary with current stage, next milestone, pending client decisions and approved documents/updates. Only publish information the team can reliably maintain.
+
+**Then:** add budget baseline and variation approval records; site-visit reports for contracted visits; and a structured handover checklist.
+
+**Validate before expanding:** review actual enquiry drop-off, repeated client questions, proposal clarification cycles, overdue decisions, change approvals, site-report turnaround and handover issues. The research's anecdotes are prompts for these checks, not prevalence statistics.
