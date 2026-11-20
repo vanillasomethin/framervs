@@ -32,7 +32,7 @@ At every stage show current stage, next decision, owner, due date, client action
 
 ## Admin workspace additions
 - Qualification panel: fit indicators are advisory only; show missing data and follow-up date.
-- Consultation record: agenda, notes, recommendations, follow-up and fee status.
+- Complimentary discovery call record: agenda, client questions, fit assessment, agreed follow-up and status. The call is always no-fee.
 - Budget register: baseline version, line items, allowances, contingency, committed, actual, forecast, variance, source/date/confidence. Separate client-visible and internal values.
 - Quote comparison: normalized line items, inclusions, exclusions, taxes, validity, payment terms and clarifications; never auto-select a contractor.
 - Change control: request, reason, cost/time impact, attachments, status, client approval timestamp; revise baseline only after approval.
@@ -55,7 +55,7 @@ consultations, budgetVersions, budgetItems, quotes, quoteItems, changeRequests, 
 
 ## Delivery sequence
 ### Phase 1 — service & conversion
-Publish /home-project-clarity/, add enquiry qualification fields to CRM, consultation workflow, proposal template and service SOP. Track enquiry→consultation→appointment conversion.
+Publish /home-project-clarity/ and keep the first discovery call complimentary. **CRM qualification and discovery-call tracking are now implemented on `feat/consultation-qualification-workflow`**: project/property readiness, client-stated budget and timeline, decision participants, concerns, call booking/held status, call date/outcome, activity types and booked/held/appointment KPIs. Qualification data is retained when a lead converts to a client. Public enquiry capture and proposal-template workflow remain to be implemented and tested.
 ### Phase 2 — client portal MVP
 Token exchange/session, published project timeline, milestones, next actions, document register, client decisions and report publication. Read-only financial summary initially.
 ### Phase 3 — budget/change control
