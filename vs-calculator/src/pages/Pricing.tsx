@@ -17,11 +17,11 @@ const options = [
   {
     title: "Get an architect fee quote",
     description:
-      "COA-compliant professional fees for design & architecture. Priced per-sqft or as a percentage of build cost — whichever serves you.",
+      "Compare percentage, per-square-foot and fixed-fee scenarios, with the COA-published individual-house scale shown separately and conditionally.",
     icon: Ruler,
     to: "/architect-fee",
     cta: "Calculate fees",
-    points: ["₹/sqft or COA percentage", "Transparent fee breakdown", "Payment schedule included"],
+    points: ["Per sq ft, percentage or fixed fee", "Optional COA scale comparison", "Documentation and GST shown separately"],
   },
 ];
 
@@ -84,7 +84,7 @@ const Pricing = () => {
         <div className="text-center mb-5">
           <h3 className="text-xl font-display text-vs-dark mb-1">Prefer to talk first?</h3>
           <p className="text-sm text-muted-foreground">
-            Book a free, no-obligation consultation — no numbers required.
+            Start with a complimentary, no-fee discovery call to discuss your project and see whether the studio is a fit.
           </p>
         </div>
         <MeetingScheduler />
