@@ -15,6 +15,8 @@ This file is supplementary machine-readable site navigation. It is not a substit
 - [Building permits and licensing support](https://www.vanillasometh.in/permits-and-licensing-support/): Design documentation and coordination for K-SMART, local authority building permissions, commercial fit-outs and relevant licensing processes.
 - [Team](https://www.vanillasometh.in/team.html): Studio leadership and team.
 - [Contact](https://www.vanillasometh.in/contact/): Project enquiry form and contact details.
+- [House construction cost in Karnataka](https://www.vanillasometh.in/house-construction-cost-karnataka/): 2026 planning guide to construction cost per square foot, example budgets, scope inclusions and exclusions for Mangaluru and Karnataka.
+- [Interior design cost in Karnataka](https://www.vanillasometh.in/interior-design-cost-karnataka/): 2026 guide to full-home interior budgets, modular kitchen, wardrobe and ceiling cost measurement bases.
 - [Project Cost Estimator](https://www.vanillasometh.in/estimator/): Interactive preliminary construction/interiors cost estimator for residential, commercial and mixed-use projects, plus a separate architect-fee calculator. Results are indicative planning references, not quotations or BOQs.
 
 - [NRI home design](https://www.vanillasometh.in/nri-home-design/): Remote-first initial design briefing and project-scope information for NRI families planning homes in India.
