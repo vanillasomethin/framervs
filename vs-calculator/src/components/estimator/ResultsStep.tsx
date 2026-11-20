@@ -480,7 +480,7 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
           <ImprovedCostVisualization estimate={estimate} />
         </div>
 
-        {/* Cost transparency — drivers ranking + market benchmark */}
+        {/* Cost transparency — cost drivers and indicative unit-rate context */}
         <CostTransparency estimate={estimate} />
 
         {/* Timeline */}
