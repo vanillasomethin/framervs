@@ -1,0 +1,441 @@
+{
+  "generatedAt": "2026-11-20T08:06:23.672Z",
+  "formFactor": "mobile",
+  "lighthouse": "12.8.2",
+  "pages": [
+    {
+      "url": "https://www.vanillasometh.in/",
+      "scores": {
+        "performance": 92,
+        "accessibility": 94,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 1302.5349999999999,
+        "cls": 0.007648739602469664,
+        "tbtMs": 311.5,
+        "fcpMs": 1277.0349999999999,
+        "speedIndexMs": 2835.4259423218805,
+        "bytes": 4969048
+      },
+      "failing": [
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "display": "310 ms"
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "display": "210 ms"
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "display": "9.5 s"
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "display": "5.2 s"
+        },
+        {
+          "id": "bootup-time",
+          "title": "Reduce JavaScript execution time",
+          "display": "1.9 s"
+        },
+        {
+          "id": "font-display",
+          "title": "Ensure text remains visible during webfont load",
+          "display": ""
+        },
+        {
+          "id": "third-party-summary",
+          "title": "Reduce the impact of third-party code",
+          "display": "Third-party code blocked the main thread for 350 ms"
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "display": ""
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "uses-long-cache-ttl",
+          "title": "Serve static assets with an efficient cache policy",
+          "display": "5 resources found"
+        },
+        {
+          "id": "total-byte-weight",
+          "title": "Avoid enormous network payloads",
+          "display": "Total size was 4,853 KiB"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 137 KiB"
+        },
+        {
+          "id": "uses-responsive-images",
+          "title": "Properly size images",
+          "display": "Est savings of 246 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": ""
+        },
+        {
+          "id": "dom-size",
+          "title": "Avoid an excessive DOM size",
+          "display": "1,168 elements"
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/locations/mangalore/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 813.7151,
+        "cls": 0,
+        "tbtMs": 0,
+        "fcpMs": 813.7151,
+        "speedIndexMs": 813.7151,
+        "bytes": 4295
+      },
+      "failing": [
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "display": ""
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "display": "4.5 s"
+        },
+        {
+          "id": "bootup-time",
+          "title": "Reduce JavaScript execution time",
+          "display": "3.9 s"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 76 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": ""
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/",
+      "scores": {
+        "performance": 73,
+        "accessibility": 97,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 8933.9216,
+        "cls": 0.0036242275877978562,
+        "tbtMs": 75.5,
+        "fcpMs": 1916.70565,
+        "speedIndexMs": 2694.8739651500873,
+        "bytes": 1596149
+      },
+      "failing": [
+        {
+          "id": "first-contentful-paint",
+          "title": "First Contentful Paint",
+          "display": "1.9 s"
+        },
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "display": "8.9 s"
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "display": "9.1 s"
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "display": "3.3 s"
+        },
+        {
+          "id": "largest-contentful-paint-element",
+          "title": "Largest Contentful Paint element",
+          "display": "8,930 ms"
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "uses-long-cache-ttl",
+          "title": "Serve static assets with an efficient cache policy",
+          "display": "5 resources found"
+        },
+        {
+          "id": "offscreen-images",
+          "title": "Defer offscreen images",
+          "display": "Est savings of 173 KiB"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 88 KiB"
+        },
+        {
+          "id": "uses-responsive-images",
+          "title": "Properly size images",
+          "display": "Est savings of 472 KiB"
+        },
+        {
+          "id": "crawlable-anchors",
+          "title": "Links are not crawlable",
+          "display": ""
+        },
+        {
+          "id": "cache-insight",
+          "title": "Use efficient cache lifetimes",
+          "display": "Est savings of 17 KiB"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "display": "Est savings of 755 KiB"
+        },
+        {
+          "id": "lcp-discovery-insight",
+          "title": "LCP request discovery",
+          "display": ""
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "display": ""
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/nord-terra/",
+      "scores": {
+        "performance": 73,
+        "accessibility": 97,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 6268.8916,
+        "cls": 0,
+        "tbtMs": 70.5,
+        "fcpMs": 2676.747875,
+        "speedIndexMs": 2676.747875,
+        "bytes": 770765
+      },
+      "failing": [
+        {
+          "id": "first-contentful-paint",
+          "title": "First Contentful Paint",
+          "display": "2.7 s"
+        },
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "display": "6.3 s"
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "display": "140 ms"
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "display": "6.3 s"
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "display": "8.1 s"
+        },
+        {
+          "id": "bootup-time",
+          "title": "Reduce JavaScript execution time",
+          "display": "5.3 s"
+        },
+        {
+          "id": "largest-contentful-paint-element",
+          "title": "Largest Contentful Paint element",
+          "display": "6,270 ms"
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "uses-long-cache-ttl",
+          "title": "Serve static assets with an efficient cache policy",
+          "display": "5 resources found"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 157 KiB"
+        },
+        {
+          "id": "uses-responsive-images",
+          "title": "Properly size images",
+          "display": "Est savings of 40 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": ""
+        },
+        {
+          "id": "cache-insight",
+          "title": "Use efficient cache lifetimes",
+          "display": "Est savings of 17 KiB"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "display": "Est savings of 121 KiB"
+        },
+        {
+          "id": "lcp-discovery-insight",
+          "title": "LCP request discovery",
+          "display": ""
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/house-construction-cost-karnataka/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 830.7087,
+        "cls": 0,
+        "tbtMs": 0,
+        "fcpMs": 830.7087,
+        "speedIndexMs": 830.7087,
+        "bytes": 5111
+      },
+      "failing": [
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "display": "4.4 s"
+        },
+        {
+          "id": "bootup-time",
+          "title": "Reduce JavaScript execution time",
+          "display": "3.9 s"
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/contact/",
+      "scores": {
+        "performance": 85,
+        "accessibility": 97,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 3729.2717499999994,
+        "cls": 0.011799079125219538,
+        "tbtMs": 39.5,
+        "fcpMs": 2715.07835106536,
+        "speedIndexMs": 2715.07835106536,
+        "bytes": 583602
+      },
+      "failing": [
+        {
+          "id": "first-contentful-paint",
+          "title": "First Contentful Paint",
+          "display": "2.7 s"
+        },
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "display": "3.7 s"
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "display": "5.4 s"
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "display": "3.3 s"
+        },
+        {
+          "id": "font-display",
+          "title": "Ensure text remains visible during webfont load",
+          "display": ""
+        },
+        {
+          "id": "largest-contentful-paint-element",
+          "title": "Largest Contentful Paint element",
+          "display": "3,730 ms"
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "uses-long-cache-ttl",
+          "title": "Serve static assets with an efficient cache policy",
+          "display": "5 resources found"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 91 KiB"
+        },
+        {
+          "id": "cache-insight",
+          "title": "Use efficient cache lifetimes",
+          "display": "Est savings of 17 KiB"
+        },
+        {
+          "id": "font-display-insight",
+          "title": "Font display",
+          "display": "Est savings of 10 ms"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "display": ""
+        }
+      ]
+    }
+  ]
+}
