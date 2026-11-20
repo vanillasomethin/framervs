@@ -92,13 +92,11 @@ const locationMultiplierRows: Row[] = [
 ];
 
 const feesRows: Row[] = [
-  { label: "Architectural fee — individual house / interiors", values: ["7.5% of subtotal (COA minimum scale)"] },
-  { label: "Architectural fee — apartment block / commercial / mixed-use", values: ["5.0% of subtotal (COA minimum scale)"] },
-  { label: "Documentation & communication", values: ["10% of the architectural fee (COA, all engagements)"] },
-  { label: "Combined professional fees", values: ["8.25% of subtotal for an individual house; 5.5% for apartment/commercial/mixed-use"] },
-  { label: "Contingency", values: ["5% of subtotal"] },
-  { label: "GST on professional fees", values: ["18% of professional fees (COA regulation — explicit line per COA guidelines)"] },
-  { label: "GST on construction & contingency", values: ["6% of (subtotal + contingency) — net of input credits"] },
+  { label: "Professional fees", values: ["Quoted separately under a written appointment; not automatically included in this construction-cost estimate"] },
+  { label: "COA-published individual-house scale", values: ["7.5% for comprehensive architectural services for an individual house; published scale, not a universal statutory minimum"] },
+  { label: "Documentation & communication", values: ["10% of professional fees only where the appointment adopts or expressly incorporates the COA scale"] },
+  { label: "Contingency allowance", values: ["5% planning allowance used in this estimator; adjust to project risk and scope"] },
+  { label: "GST", values: ["Excluded from this preliminary estimate; applicable tax treatment must be confirmed for the supplier and service"] },
 ];
 
 const foundationRows: Row[] = [
@@ -167,22 +165,11 @@ const fsiRows: Row[] = [
 ];
 
 const architectFeeCalcRows: Row[] = [
-  { label: "Individual House", values: ["8% of construction cost, min ₹20,000"] },
-  { label: "Residential Block", values: ["5% of construction cost, min ₹50,000"] },
-  { label: "Commercial", values: ["4% of construction cost, min ₹80,000"] },
-  { label: "FF&E Procurement add-on", values: ["10% of (15% of construction cost), min ₹30,000"] },
-  { label: "Landscape (detailed) add-on", values: ["₹150/sqm, min ₹25,000"] },
-  { label: "Client type multiplier", values: ["Friend/Family 0.85× · Individual 1.0× · Developer 1.10× · Corporate 1.15×"] },
-  { label: "Complexity multiplier", values: ["Simple 0.9× · Standard 1.0× · Premium 1.2× · Luxury 1.5×"] },
-  { label: "Client involvement multiplier", values: ["Minimal 1.035× · Low 1.075× · Moderate 1.125× · High 1.175× · Flexible 1.10×"] },
-  { label: "Rush-job multiplier", values: ["1.25× when rush delivery requested"] },
-  { label: "Visualisation package", values: ["None ₹0 · Standard ₹25,000 · Premium ₹50,000 · Luxury ₹1,00,000"] },
-  { label: "Extra render add-on", values: ["Interior ₹5,000 · Exterior ₹7,500"] },
-  { label: "Studio overhead allocation", values: ["₹80,000 ÷ 3 ≈ ₹26,667 added to every quote"] },
-  { label: "Studio minimum fee floor", values: ["₹50,000"] },
-  { label: "Profit margin", values: ["15% added on top of subtotal"] },
-  { label: "Tax rate (this calculator)", values: ["18% of (subtotal + profit)"] },
-  { label: "Currency conversion (illustrative)", values: ["USD ₹83/$ · EUR ₹90/€"] },
+  { label: "Fee models", values: ["Percentage, per-square-foot and fixed fee; use the standalone calculator inputs"] },
+  { label: "COA comparison", values: ["Optional 7.5% published individual-house scale; documentation charge shown separately and conditionally"] },
+  { label: "GST", values: ["Optional illustrative input; not automatically added to every quote"] },
+  { label: "Add-ons", values: ["Define visualisation, FF&E procurement and landscape design as separate scoped services"] },
+  { label: "Excluded assumptions", values: ["No automatic studio overhead, profit uplift, client-type discount or rush multiplier"] },
 ];
 
 const sections: Table[] = [
