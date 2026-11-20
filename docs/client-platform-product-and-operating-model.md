@@ -4,7 +4,7 @@
 A design, budget and project-oversight partner for homeowners. The platform makes scope, decisions, money, responsibilities and progress visible. It does not promise guaranteed construction costs, contractor performance, statutory approvals or full-time supervision unless separately contracted.
 
 ## Service ladder
-1. Project Clarity Consultation — paid, fixed-scope discovery. Deliverable: brief summary, constraints/questions and preliminary next-step map. No design or engineering certification.
+1. Complimentary Discovery Call — a no-fee initial conversation to understand the homeowner's goals, location, project stage, broad constraints and whether the studio may be a fit. It is not a paid consultation or professional assessment, and includes no drawings, estimates, quotation audit, structural advice, approvals, supervision or written technical deliverable.
 2. Budget & Scope Advisory — defined review of client brief, options, assumptions, allowances, exclusions and third-party quotations. Indicative planning only; no guarantee or contractor certification.
 3. Design Engagement — architecture/interiors/renovation scope, deliverables, revisions, fee stages, client decisions and exclusions in a written appointment.
 4. Design Oversight — scheduled design/site reviews, decision records, observation reports, action owners and escalation. Explicitly distinguish periodic observation from construction supervision / PMC.
@@ -13,12 +13,12 @@ A design, budget and project-oversight partner for homeowners. The platform make
 Fees are set by the studio per project complexity and appointment. Do not publish invented fixed prices or percentages. Any consultation credit against a larger appointment must be an explicit studio policy.
 
 ## Client journey
-Enquiry → qualification → paid clarity consultation → written scope & fee → appointment / advance → brief freeze → concept → design development → approvals (where appointed) → tender / contractor comparison support → construction-stage design oversight (if contracted) → snag / handover → aftercare.
+Enquiry → qualification → complimentary discovery call → written scope & fee (where there is a fit) → appointment / advance → brief freeze → concept → design development → approvals (where appointed) → tender / contractor comparison support (if separately scoped) → construction-stage design oversight (if contracted) → snag / handover → aftercare.
 
 At every stage show current stage, next decision, owner, due date, client action required, approved scope, approved budget baseline, committed/actual/forecast amounts where reliable, changes awaiting approval, documents and meeting/site notes.
 
 ## Business model
-- Revenue: consultation fees; fixed-fee or milestone-based design fees; separately scoped budget advisory; scheduled oversight retainers or visit packs; additional services/change orders.
+- Revenue: fixed-fee or milestone-based design fees; separately scoped budget advisory; scheduled oversight retainers or visit packs; additional services/change orders. The initial discovery call is complimentary and is a qualification/conversion step, not a revenue line.
 - Qualification: location and travel feasibility; project type/area; plot/property status; target timeline; budget range; decision makers; current stage; service sought.
 - Proposal: scope, deliverables, exclusions, assumptions, timeline, fee schedule, payment milestones, revision allowance, client responsibilities, site visit frequency and reliance limitations.
 - Guardrails: never present an indicative estimate as a quote; never compare contractor quotes without recording scope/specification differences; no hidden referral commissions; log conflicts; written client approval before scope or budget baseline changes.
@@ -64,4 +64,4 @@ Versioned budget baseline, quote comparison, change request approvals and varian
 Site reports, snag workflows, handover, aftercare, client notifications and analytics.
 
 ## Success measures
-Qualified enquiry rate; consultation booking/show rate; consultation→appointment conversion; proposal turnaround; approval cycle time; change requests approved before work; budget variance with reason codes; overdue client decisions; site report turnaround; snag closure time; client satisfaction/referrals. Do not optimize for portal logins alone.
+Qualified enquiry rate; discovery-call booking/show rate; discovery-call→appointment conversion; proposal turnaround; approval cycle time; change requests approved before work; budget variance with reason codes; overdue client decisions; site report turnaround; snag closure time; client satisfaction/referrals. Do not optimize for portal logins alone.
