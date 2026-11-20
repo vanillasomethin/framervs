@@ -128,7 +128,7 @@ export const generateEstimatePDF = (
   doc.setFillColor(79, 9, 12);
   doc.roundedRect(margin, yPos, pageWidth - 2 * margin, 10, 3, 3, 'F');
   doc.setTextColor(255, 255, 255);
-  addText('ESTIMATED PROJECT COST (Incl. GST)', pageWidth / 2, yPos + 7, 12, 'bold', 'center');
+  addText('PRELIMINARY PROJECT COST (Excl. architect fee / GST)', pageWidth / 2, yPos + 7, 12, 'bold', 'center');
   doc.setTextColor(0, 0, 0);
 
   yPos += 18;
@@ -152,7 +152,7 @@ export const generateEstimatePDF = (
     { label: 'Core Components (MEP)', value: estimate.categoryBreakdown.core, color: [200, 220, 255] },
     { label: 'Finishes & Surfaces', value: estimate.categoryBreakdown.finishes, color: [200, 255, 220] },
     { label: 'Interiors & Furnishings', value: estimate.categoryBreakdown.interiors, color: [255, 240, 200] },
-    { label: 'Professional Fees & Tax', value: estimate.categoryBreakdown.fees, color: [230, 215, 215] },
+    { label: 'Contingency Allowance (5%)', value: estimate.categoryBreakdown.fees, color: [230, 215, 215] },
   ];
 
   breakdown.forEach(item => {
@@ -173,7 +173,7 @@ export const generateEstimatePDF = (
 
   // Market Rate Comparison
   checkPageBreak(45);
-  addText('HOW YOUR RATE COMPARES', margin, yPos, 14, 'bold');
+  addText('REFERENCE RATE (NOT A LOCAL AVERAGE)', margin, yPos, 14, 'bold');
   yPos += 10;
   addLine(yPos);
   yPos += 8;
@@ -206,7 +206,7 @@ export const generateEstimatePDF = (
   doc.setFontSize(9);
   doc.setTextColor(60, 60, 60);
   doc.text(
-    `Typical 2026 market band for ${toSentenceCase(estimate.projectType)} projects: Rs. ${band.low.toLocaleString('en-IN')} (lean) - Rs. ${band.typical.toLocaleString('en-IN')} (typical) - Rs. ${band.high.toLocaleString('en-IN')} (premium)`,
+    `Broad reference band for ${toSentenceCase(estimate.projectType)} projects (not a verified local average): Rs. ${band.low.toLocaleString('en-IN')} (lean) - Rs. ${band.typical.toLocaleString('en-IN')} (typical) - Rs. ${band.high.toLocaleString('en-IN')} (premium)`,
     margin + 5,
     yPos,
     { maxWidth: pageWidth - 2 * margin - 5 }
