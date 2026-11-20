@@ -23,6 +23,9 @@ const ACTIVITY = [
   { id: "meeting", label: "Meeting" },
   { id: "email", label: "Email / message" },
   { id: "site", label: "Site visit" },
+  { id: "discovery_call", label: "Complimentary discovery call" },
+  { id: "proposal", label: "Proposal / scope" },
+  { id: "decision", label: "Client decision" },
   { id: "note", label: "Note" },
 ];
 const LOST_REASONS = ["Budget", "Went with someone else", "Timing", "Not a fit", "No response", "Other"];
@@ -49,7 +52,7 @@ export const leadToClient = (lead) => {
   const client = {
     id: uid("cl_"), name: lead.contactName || lead.company, company: lead.contactName ? lead.company : "", email: lead.email || "", phone: lead.phone || "",
     location: lead.city || "", source: CLIENT_SOURCES.includes(lead.source) ? lead.source : "", projectType: lead.projectType || "", owner: lead.owner || "",
-    stage: "enquiry", stageAt: new Date().toISOString(), checks: {}, notes: lead.notes || "",
+    stage: "enquiry", stageAt: new Date().toISOString(), checks: {}, notes: lead.notes || "", qualification: { projectStage: lead.projectStage || "", propertyStatus: lead.propertyStatus || "", budgetRange: lead.budgetRange || "", timeline: lead.timeline || "", decisionMakers: lead.decisionMakers || "", clientConcerns: lead.clientConcerns || "", discoveryCallStatus: lead.discoveryCallStatus || "", discoveryCallAt: lead.discoveryCallAt || "", discoveryCallOutcome: lead.discoveryCallOutcome || "" },
   };
   put("clients", client);
   put("leads", { ...lead, clientId: client.id, stage: "won", closedAt: lead.closedAt || today() });
@@ -76,7 +79,16 @@ export const openLead = (id, defaults = {}) => {
       { key: "city", label: "City", type: "text", half: true },
       { key: "kind", label: "Type", type: "select", options: KINDS, half: true },
       { key: "projectType", label: "Looking for", type: "text", list: PROJECT_TYPES, half: true },
-      { key: "valueRupees", label: "Estimated fee (₹)", type: "number", half: true },
+      { key: "projectStage", label: "Project stage", type: "select", options: ["Exploring ideas", "Own a plot / property", "Planning / design started", "Approvals", "Construction underway", "Renovation / interiors"], blank: "Not yet known", half: true },
+      { key: "propertyStatus", label: "Property status", type: "select", options: ["Owned", "Under purchase / agreement", "Identified, not secured", "Still searching", "Not applicable"], blank: "Not yet known", half: true },
+      { key: "budgetRange", label: "Client-stated budget range", type: "select", options: ["Below ₹25 lakh", "₹25–50 lakh", "₹50 lakh–₹1 crore", "₹1–2 crore", "Above ₹2 crore", "Not decided", "Prefer not to say"], blank: "Not discussed", half: true },
+      { key: "timeline", label: "Target timeline", type: "select", options: ["Within 3 months", "3–6 months", "6–12 months", "12+ months", "Flexible / exploring"], blank: "Not discussed", half: true },
+      { key: "decisionMakers", label: "Decision makers / participants", type: "text", half: true, placeholder: "e.g. Couple, family, business partners" },
+      { key: "clientConcerns", label: "Main questions or concerns", type: "textarea", rows: 2, placeholder: "What feels unclear or risky to the client?" },
+      { key: "discoveryCallStatus", label: "Complimentary discovery call", type: "select", options: [{ id: "not_booked", label: "Not booked" }, { id: "booked", label: "Booked" }, { id: "held", label: "Held" }, { id: "reschedule", label: "Needs rescheduling" }, { id: "declined", label: "Not proceeding" }], blank: "Not recorded", half: true },
+      { key: "discoveryCallAt", label: "Discovery call date", type: "date", half: true },
+      { key: "discoveryCallOutcome", label: "Call outcome / agreed next step", type: "textarea", rows: 2, placeholder: "Fit, open questions and next action. No technical deliverables implied." },
+      { key: "valueRupees", label: "Estimated studio fee (internal)", type: "number", half: true },
       { key: "source", label: "Source", type: "text", list: CLIENT_SOURCES, half: true },
       { key: "owner", label: "Owner", type: "team", half: true },
       { key: "stage", label: "Stage", type: "select", options: LEAD_STAGES, half: true },
@@ -144,6 +156,11 @@ export const renderCrm = (view) => {
   const dueNow = open.filter(due);
   const fy = today().slice(0, 4);
   const wonYear = data.leads.filter((l) => l.stage === "won" && (l.closedAt || "").startsWith(fy));
+  const callsBooked = data.leads.filter((l) => l.discoveryCallStatus === "booked").length;
+  const callsHeld = data.leads.filter((l) => l.discoveryCallStatus === "held").length;
+  const heldLeads = data.leads.filter((l) => l.discoveryCallStatus === "held");
+  const appointedAfterCall = heldLeads.filter((l) => l.stage === "won").length;
+  const callToAppointment = heldLeads.length ? `${Math.round((appointedAfterCall / heldLeads.length) * 100)}%` : "–";
   const root = mount(view, `
     <div class="page-head"><div><h1>CRM</h1><p>Leads from first contact to won. Log every call and meeting, set the next action, and turn a won lead into a client.</p></div>
       <div class="head-actions"><button class="btn primary" data-new>${icon("plus", 16)} New lead</button></div></div>
@@ -152,6 +169,9 @@ export const renderCrm = (view) => {
       <div class="kpi"><span class="k">Pipeline value</span><b>${inr(open.reduce((n, l) => n + (l.valuePaise || 0), 0))}</b><span class="small muted">estimated fees, open leads</span></div>
       <div class="kpi ${dueNow.length ? "warn" : ""}"><span class="k">Actions due</span><b>${dueNow.length}</b><span class="small muted">today or overdue</span></div>
       <div class="kpi"><span class="k">Won this year</span><b>${wonYear.length}</b><span class="small muted">${inr(wonYear.reduce((n, l) => n + (l.valuePaise || 0), 0))}</span></div>
+      <div class="kpi"><span class="k">Discovery calls booked</span><b>${callsBooked}</b><span class="small muted">Complimentary · no fee</span></div>
+      <div class="kpi"><span class="k">Discovery calls held</span><b>${callsHeld}</b><span class="small muted">Recorded in lead qualification</span></div>
+      <div class="kpi"><span class="k">Held call → appointment</span><b>${callToAppointment}</b><span class="small muted">${appointedAfterCall} of ${heldLeads.length} held calls</span></div>
     </div>
     <div class="toolbar"><div class="seg">${[["board", "Board"], ["today", "Follow-ups"], ["table", "All leads"]].map(([id, l]) => `<button type="button" data-view="${id}" class="${ui.view === id ? "on" : ""}">${l}</button>`).join("")}</div>
       <label class="search">${icon("search", 15)}<input type="search" data-q placeholder="Search leads" value="${esc(ui.q)}"></label>
