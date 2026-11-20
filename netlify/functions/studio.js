@@ -265,10 +265,12 @@ const nextNumber = async (store, body) => {
 // Backup / restore (photos are not included: they can be large)
 
 const exportAll = async (store) => {
-  const data = { exportedAt: new Date().toISOString(), version: 1, collections: {}, settings: null };
+  const data = { exportedAt: new Date().toISOString(), version: 1, collections: {}, settings: null, counters: null };
   for (const name of COLLECTIONS) data.collections[name] = ((await readDoc(store, key(name))) || { items: [] }).items;
   const settings = await readDoc(store, "settings");
+  const counters = await readDoc(store, "counters");
   data.settings = settings ? settings.value : null;
+  data.counters = counters ? { rev: counters.rev || 0, counts: counters.counts || {} } : { rev: 0, counts: {} };
   return json(200, data);
 };
 
@@ -279,9 +281,25 @@ const importAll = async (store, { data }) => {
     if (items === undefined) continue;
     if (!Array.isArray(items) || items.length > MAX_ITEMS || !items.every(validItem)) return json(400, { error: `The backup's ${name} data is invalid.` });
   }
+  if (data.counters !== undefined && (!data.counters || typeof data.counters !== "object" || !data.counters.counts || typeof data.counters.counts !== "object" || Array.isArray(data.counters.counts) || Object.entries(data.counters.counts).some(([series, n]) => !/^[A-Z0-9][A-Z0-9/-]{1,24}$/.test(series) || !Number.isSafeInteger(n) || n < 0))) {
+    return json(400, { error: "The backup's numbering counters are invalid." });
+  }
   for (const name of COLLECTIONS) {
     const items = data.collections[name];
     if (items !== undefined) await mutate(store, key(name), (doc) => ({ rev: (doc ? doc.rev : 0) + 1, items: items.map(clean) }));
+  }
+  if (data.counters) {
+    await mutate(store, "counters", (doc) => ({ rev: (doc?.rev || 0) + 1, counts: { ...(doc?.counts || {}), ...data.counters.counts } }));
+  } else {
+    // Older v1 backups did not contain counters. Rebuild them from numbered documents.
+    const counts = {};
+    for (const doc of data.collections.docs || []) {
+      const match = String(doc.number || "").match(/^([A-Z0-9-]+)\/(\d{2}-\d{2})\/(\d+)$/);
+      if (!match) continue;
+      const series = `${match[1]}/${match[2]}`;
+      counts[series] = Math.max(counts[series] || 0, Number(match[3]));
+    }
+    if (Object.keys(counts).length) await mutate(store, "counters", (doc) => ({ rev: (doc?.rev || 0) + 1, counts: { ...(doc?.counts || {}), ...counts } }));
   }
   if (data.settings && typeof data.settings === "object") {
     await mutate(store, "settings", (doc) => ({ rev: (doc ? doc.rev : 0) + 1, value: clean(data.settings) }));
