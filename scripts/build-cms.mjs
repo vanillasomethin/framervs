@@ -18,7 +18,7 @@ const content = JSON.parse(await readFile(join(publicDir, "content.json"), "utf8
 const cms = content.cms || {};
 
 // Start clean so deleted or unpublished items disappear from the site
-for (const dir of ["blog", "projects", "updates"]) {
+for (const dir of ["blog", "projects", "updates", "shop"]) {
   await rm(join(publicDir, dir), { recursive: true, force: true });
 }
 

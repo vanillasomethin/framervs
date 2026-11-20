@@ -21,3 +21,5 @@ public/projects/
 public/sitemap-cms.xml
 public/updates/
 !erp/.env.example
+public/shop/
+public/sitemap-cms.xml

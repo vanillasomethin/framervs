@@ -53,4 +53,4 @@ const parseBody = (event) => {
   }
 };
 
-module.exports = { SESSION_DAYS, json, safeEqual, createSession, isAuthorized, parseBody };
+module.exports = { SESSION_DAYS, sessionSecret, json, safeEqual, createSession, isAuthorized, parseBody };

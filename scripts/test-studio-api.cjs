@@ -102,5 +102,23 @@ const call = async (fn, body, token, method = "POST", qs) => { const r = await f
   r = await call(studio, { action: "import", data: { version: 1, collections: { tasks: [{ nope: 1 }] } } }, T); ok("bad backup rejected", r.status === 400, r);
   r = await call(studio, { action: "rebuild" }, T); ok("rebuild explains missing hook", r.status === 400 && r.body.setup, r);
   r = await call(studio, null, null, "GET"); ok("status endpoint", r.body.configured === true, r);
+  // finance / CRM / HR / operations collections and the invoice counter
+  r = await call(studio, { action: "number.next", series: "VS/26-27" }); ok("number.next needs auth", r.status === 401, r);
+  r = await call(studio, { action: "number.next", series: "bad series!" }, T); ok("number.next rejects a bad series", r.status === 400, r);
+  const nums = await Promise.all(Array.from({ length: 8 }, () => call(studio, { action: "number.next", series: "VS/26-27" }, T)));
+  ok("8 simultaneous invoice numbers are unique and gapless", JSON.stringify(nums.map((x) => x.body.n).sort((a, b) => a - b)) === JSON.stringify([1, 2, 3, 4, 5, 6, 7, 8]), nums.map((x) => x.body));
+  r = await call(studio, { action: "number.next", series: "VSQ/26-27" }, T); ok("each series counts on its own", r.body.n === 1, r);
+  r = await call(studio, { action: "save", ops: [
+    { c: "leads", op: "set", item: { id: "ld_one1", company: "Coastal Builders", stage: "new" } },
+    { c: "docs", op: "set", item: { id: "dc_one1", kind: "invoice", number: "VS/26-27/0001", totalPaise: 118000 } },
+    { c: "expenses", op: "set", item: { id: "ex_one1", vendor: "Printer", amountPaise: 50000 } },
+    { c: "leaves", op: "set", item: { id: "lv_one1", userId: "tm_a", type: "casual", start: "2027-02-01", end: "2027-02-01", days: 1, status: "pending" } },
+    { c: "holidays", op: "set", item: { id: "hd_one1", date: "2027-01-26", name: "Republic Day", kind: "mandatory", year: 2027 } },
+    { c: "incidents", op: "set", item: { id: "in_one1", symptom: "Shuttering rejected", severity: "P1", status: "open", loggedAt: new Date().toISOString() } },
+  ] }, T);
+  ok("new collections accept saves", r.status === 200, r);
+  r = await call(studio, { action: "load" }, T);
+  ok("new collections load back", ["leads", "docs", "expenses", "leaves", "holidays", "incidents"].every((c) => r.body.collections[c].length === 1), Object.fromEntries(Object.entries(r.body.collections).map(([k, v]) => [k, v.length])));
+  r = await call(studio, { action: "save", ops: [{ c: "payroll", op: "set", item: { id: "xx_one1" } }] }, T); ok("unknown collections are refused", r.status === 400, r);
   console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);
 })();

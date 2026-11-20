@@ -4,7 +4,7 @@
   const root=document.documentElement;
   root.classList.add("vs-motion-ready");
   if(reduce){root.classList.add("vs-motion-reduced");return;}
-  const reveal=document.querySelectorAll("main .eyebrow,main h1,main .lede,main .meta,main .facts,main .cover,main .prose > *,main .grid > .card,main .timeline > article,main .project-media-group,main .tags,main .more");
+  const reveal=document.querySelectorAll("main .eyebrow,main h1,main .lede,main .meta,main .facts,main .cover,main .prose > *,main .grid > .card,main .pgrid > .pcard,main .lists > a,main .timeline > article,main .project-media-group,main .tags,main .more");
   if(!("IntersectionObserver" in window)){reveal.forEach(el=>el.classList.add("vs-visible"));return;}
   const io=new IntersectionObserver((entries,observer)=>{
     entries.forEach(entry=>{

@@ -80,6 +80,9 @@ export const DEFAULT_SETTINGS = {
   team: [],
   onboardingChecklist: DEFAULT_CHECKLIST,
   staleVisitDays: 14,
+  // Printed on quotes and invoices. Left blank until you fill them in Settings: nothing is guessed.
+  company: { legalName: "", gstin: "", pan: "", address: "", stateCode: "29", phone: "", email: "", bank: "", upi: "", invoicePrefix: "VS", quotePrefix: "VSQ", terms: "" },
+  leavePolicy: { casualPerYear: 8, casualMaxRun: 3, sickPerYear: 8, sickCertificateOver: 2, earnedPerDaysWorked: 20, earnedMaxPerYear: 12, earnedCarryCap: 30, choicePerYear: 2 },
 };
 
 // ---------------------------------------------------------------------------
@@ -94,13 +97,19 @@ export const data = {
   milestones: [],
   briefs: [],
   activity: [],
+  leads: [],
+  docs: [],
+  expenses: [],
+  leaves: [],
+  holidays: [],
+  incidents: [],
   settings: clone(DEFAULT_SETTINGS),
   tokens: {},
   revs: {},
   loaded: false,
 };
 
-const COLLECTIONS = ["clients", "projects", "tasks", "logs", "snags", "milestones", "briefs", "activity"];
+const COLLECTIONS = ["clients", "projects", "tasks", "logs", "snags", "milestones", "briefs", "activity", "leads", "docs", "expenses", "leaves", "holidays", "incidents"];
 
 const listeners = new Set();
 export const onData = (fn) => {

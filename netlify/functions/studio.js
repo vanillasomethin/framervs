@@ -13,7 +13,7 @@ const { json, isAuthorized, parseBody } = require("./lib/auth");
 const { getStudioStore, readDoc, mutate } = require("./lib/store");
 
 // briefs are written only by the public onboarding form (onboard.js)
-const WRITABLE = ["clients", "projects", "tasks", "logs", "snags", "milestones", "activity"];
+const WRITABLE = ["clients", "projects", "tasks", "logs", "snags", "milestones", "activity", "leads", "docs", "expenses", "leaves", "holidays", "incidents"];
 const COLLECTIONS = [...WRITABLE, "briefs"];
 const MAX_ITEMS = 5000;
 const MAX_ITEM_BYTES = 24 * 1024;
@@ -252,14 +252,25 @@ const rebuild = async () => {
   return json(200, { ok: true });
 };
 
+// Gapless document numbers (invoices must be sequential): one atomic counter per
+// series and financial year, e.g. series "VS-INV/26-27".
+const nextNumber = async (store, body) => {
+  const series = String(body.series || "");
+  if (!/^[A-Z0-9][A-Z0-9/-]{1,24}$/.test(series)) throw badRequest("Invalid number series.");
+  const doc = await mutate(store, "counters", (current) => ({ rev: (current?.rev || 0) + 1, counts: { ...(current?.counts || {}), [series]: ((current?.counts || {})[series] || 0) + 1 } }));
+  return json(200, { n: doc.counts[series] });
+};
+
 // ---------------------------------------------------------------------------
 // Backup / restore (photos are not included: they can be large)
 
 const exportAll = async (store) => {
-  const data = { exportedAt: new Date().toISOString(), version: 1, collections: {}, settings: null };
+  const data = { exportedAt: new Date().toISOString(), version: 1, collections: {}, settings: null, counters: null };
   for (const name of COLLECTIONS) data.collections[name] = ((await readDoc(store, key(name))) || { items: [] }).items;
   const settings = await readDoc(store, "settings");
+  const counters = await readDoc(store, "counters");
   data.settings = settings ? settings.value : null;
+  data.counters = counters ? { rev: counters.rev || 0, counts: counters.counts || {} } : { rev: 0, counts: {} };
   return json(200, data);
 };
 
@@ -270,9 +281,25 @@ const importAll = async (store, { data }) => {
     if (items === undefined) continue;
     if (!Array.isArray(items) || items.length > MAX_ITEMS || !items.every(validItem)) return json(400, { error: `The backup's ${name} data is invalid.` });
   }
+  if (data.counters !== undefined && (!data.counters || typeof data.counters !== "object" || !data.counters.counts || typeof data.counters.counts !== "object" || Array.isArray(data.counters.counts) || Object.entries(data.counters.counts).some(([series, n]) => !/^[A-Z0-9][A-Z0-9/-]{1,24}$/.test(series) || !Number.isSafeInteger(n) || n < 0))) {
+    return json(400, { error: "The backup's numbering counters are invalid." });
+  }
   for (const name of COLLECTIONS) {
     const items = data.collections[name];
     if (items !== undefined) await mutate(store, key(name), (doc) => ({ rev: (doc ? doc.rev : 0) + 1, items: items.map(clean) }));
+  }
+  if (data.counters) {
+    await mutate(store, "counters", (doc) => ({ rev: (doc?.rev || 0) + 1, counts: { ...(doc?.counts || {}), ...data.counters.counts } }));
+  } else {
+    // Older v1 backups did not contain counters. Rebuild them from numbered documents.
+    const counts = {};
+    for (const doc of data.collections.docs || []) {
+      const match = String(doc.number || "").match(/^([A-Z0-9-]+)\/(\d{2}-\d{2})\/(\d+)$/);
+      if (!match) continue;
+      const series = `${match[1]}/${match[2]}`;
+      counts[series] = Math.max(counts[series] || 0, Number(match[3]));
+    }
+    if (Object.keys(counts).length) await mutate(store, "counters", (doc) => ({ rev: (doc?.rev || 0) + 1, counts: { ...(doc?.counts || {}), ...counts } }));
   }
   if (data.settings && typeof data.settings === "object") {
     await mutate(store, "settings", (doc) => ({ rev: (doc ? doc.rev : 0) + 1, value: clean(data.settings) }));
@@ -314,6 +341,8 @@ exports.handler = async (event) => {
         return await revokeToken(store, body);
       case "brief.del":
         return await deleteBrief(store, body);
+      case "number.next":
+        return await nextNumber(store, body);
       case "export":
         return await exportAll(store);
       case "import":

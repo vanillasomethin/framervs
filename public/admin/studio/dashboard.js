@@ -9,6 +9,7 @@ import {
 } from "./data.js";
 import { icon, esc, avatar, pill, progressBar, fmtDate, relDue, mount, emptyState } from "./ui.js";
 import { openTask, setTaskStatus } from "./tasks.js";
+import { breach } from "./ops.js";
 import { openProject } from "./projects.js";
 import { openClient } from "./clients.js";
 import { openLog, openSnag } from "./sites.js";
@@ -31,6 +32,10 @@ export const renderDashboard = (view, website = {}) => {
   const openTasks = data.tasks.filter((t) => !isDone(t));
   const overdue = openTasks.filter(isOverdue);
   const projects = activeProjects();
+  const dueLeads = data.leads.filter((l) => ["new", "contacted", "pitched", "negotiating"].includes(l.stage) && l.nextActionAt && l.nextActionAt <= today()).length;
+  const unpaid = data.docs.filter((d) => d.kind === "invoice" && d.status === "issued");
+  const lateIncidents = data.incidents.filter((i) => i.status !== "resolved" && breach(i)).length;
+  const inrShort = (paise) => { const r = paise / 100; return r >= 1e7 ? `₹${(r / 1e7).toFixed(2)}Cr` : r >= 1e5 ? `₹${(r / 1e5).toFixed(1)}L` : `₹${Math.round(r).toLocaleString("en-IN")}`; };
   const atRisk = projects.filter((p) => p.health === "at_risk" || p.health === "delayed");
   const pipeline = data.clients.filter((c) => ONBOARDING.some((s) => s.id === c.stage));
   const newBriefs = data.clients.filter(hasNewBrief);
@@ -112,6 +117,10 @@ export const renderDashboard = (view, website = {}) => {
       <a class="kpi ${overdue.length ? "warn" : ""}" href="#/tasks"><span class="k">Open tasks</span><b>${openTasks.length}</b><span class="muted small">${overdue.length ? `<i class="tone bad"></i>${overdue.length} overdue` : "none overdue"}</span></a>
       <a class="kpi" href="#/clients"><span class="k">In onboarding</span><b>${pipeline.length}</b><span class="muted small">${newBriefs.length ? `<i class="tone ok"></i>${newBriefs.length} new brief${newBriefs.length === 1 ? "" : "s"}` : "client pipeline"}</span></a>
       <a class="kpi ${needVisit.length ? "warn" : ""}" href="#/sites"><span class="k">Open snags</span><b>${snags.length}</b><span class="muted small">${needVisit.length ? `<i class="tone warn"></i>${needVisit.length} site${needVisit.length === 1 ? " needs" : "s need"} a visit` : `${liveSites.length} live site${liveSites.length === 1 ? "" : "s"}`}</span></a>
+      <a class="kpi ${dueLeads ? "warn" : ""}" href="#/crm"><span class="k">Open leads</span><b>${data.leads.filter((l) => ["new", "contacted", "pitched", "negotiating"].includes(l.stage)).length}</b><span class="muted small">${dueLeads ? `${dueLeads} follow-up${dueLeads === 1 ? "" : "s"} due` : "no follow-ups due"}</span></a>
+      <a class="kpi ${unpaid.some((d) => d.dueDate && d.dueDate < today()) ? "warn" : ""}" href="#/billing"><span class="k">Unpaid invoices</span><b>${inrShort(unpaid.reduce((n, d) => n + d.totalPaise, 0))}</b><span class="muted small">${unpaid.length} outstanding</span></a>
+      <a class="kpi ${data.leaves.some((l) => l.status === "pending") ? "warn" : ""}" href="#/people"><span class="k">Leave to approve</span><b>${data.leaves.filter((l) => l.status === "pending").length}</b><span class="muted small">${data.leaves.filter((l) => l.status === "approved" && l.start <= today() && l.end >= today()).length} away today</span></a>
+      <a class="kpi ${lateIncidents ? "warn" : ""}" href="#/incidents"><span class="k">Open incidents</span><b>${data.incidents.filter((i) => i.status !== "resolved").length}</b><span class="muted small">${lateIncidents ? `${lateIncidents} past target` : "within target"}</span></a>
     </div>
 
     <div class="grid-main">

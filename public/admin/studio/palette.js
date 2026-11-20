@@ -8,6 +8,10 @@ import { openTask } from "./tasks.js";
 import { openProject } from "./projects.js";
 import { openClient } from "./clients.js";
 import { openLog, openSnag } from "./sites.js";
+import { openLead } from "./crm.js";
+import { openDoc, openExpense } from "./billing.js";
+import { openLeave } from "./hr.js";
+import { openIncident } from "./ops.js";
 
 const PAGES = [
   ["Dashboard", "#/", "dashboard"],
@@ -15,6 +19,12 @@ const PAGES = [
   ["Tasks", "#/tasks", "tasks"],
   ["Clients & onboarding", "#/clients", "users"],
   ["Site management", "#/sites", "site"],
+  ["CRM & leads", "#/crm", "pulse"],
+  ["Billing: quotes, invoices, expenses", "#/billing", "file"],
+  ["Team & leave", "#/people", "calendar"],
+  ["Incidents", "#/incidents", "shield"],
+  ["Shop products", "#/shop", "image"],
+  ["Shop orders", "#/orders", "tasks"],
   ["Website controls", "#/website", "globe"],
   ["Journal", "#/blog", "book"],
   ["Portfolio", "#/portfolio", "image"],
@@ -29,6 +39,12 @@ const ACTIONS = [
   ["New client", "plus", () => openClient(null)],
   ["Log a site visit", "site", () => openLog(null)],
   ["Add a snag", "alert", () => openSnag(null)],
+  ["New lead", "plus", () => openLead(null)],
+  ["New invoice", "plus", () => openDoc(null, { kind: "invoice" })],
+  ["New quote", "plus", () => openDoc(null, { kind: "quote" })],
+  ["New expense", "plus", () => openExpense(null)],
+  ["Request leave", "calendar", () => openLeave(null)],
+  ["Log an incident", "shield", () => openIncident(null)],
 ];
 
 let open = false;

@@ -2843,6 +2843,226 @@
           "Khobar"
         ],
         "gallery": []
+      },
+      {
+        "id": "155c224a09",
+        "title": "Flute-Case",
+        "slug": "flute-case",
+        "status": "draft",
+        "category": "Commercial - Office",
+        "location": "",
+        "year": "",
+        "client": "John Salins",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "Office Space for Rapid Solution Pvt.Ltd -  The design intent was to use minimal colors, patterns, and textures to create a sense of lightness for the inhabitants to experience calm while working, which in turn increases their productivity at work.",
+        "seoDescription": "",
+        "cover": {
+          "src": "https://framerusercontent.com/images/B4xFhzEhd6G5mQnlYF6h0KEzxAo.png?lossless=1&width=1024&height=1024",
+          "alt": "Flute-Case project"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [],
+        "importedFrom": "/project-showcase/flutecase"
+      },
+      {
+        "id": "e3af20a610",
+        "title": "Fair-Fly",
+        "slug": "fair-fly",
+        "status": "draft",
+        "category": "Commercial - Retail",
+        "location": "",
+        "year": "",
+        "client": "Sorbete",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "a vibrant outdoor popsicle pop-up store designed by Vanilla & Somethin Architects, featuring playful colors, lightweight materials, and a breezy open form that blends seamlessly with the lively food street atmosphere.",
+        "seoDescription": "",
+        "cover": {
+          "src": "https://framerusercontent.com/images/ju0gSS3ymm8N5DMB9UWKr52GHzs.png?width=864&height=507",
+          "alt": "Fair-Fly project"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [],
+        "importedFrom": "/project-showcase/fair-fly"
+      },
+      {
+        "id": "e691bce382",
+        "title": "Nord Terra House",
+        "slug": "nord-terra-house",
+        "status": "draft",
+        "category": "Residential",
+        "location": "",
+        "year": "",
+        "client": "Mr. Sadath",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "Architectural compositions of Nordterra House bathed in natural light and shadow, capturing raw textures and refined geometry in a cinematic, moody tone that evokes calm strength and understated luxury",
+        "seoDescription": "",
+        "cover": {
+          "src": "https://framerusercontent.com/images/atHnzlC0bxos7mKbhByERKoYC0o.jpg?width=2000&height=1025",
+          "alt": "Nord Terra House"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [],
+        "importedFrom": "/project-showcase/nord-terra"
+      },
+      {
+        "id": "3716036cca",
+        "title": "MAK Park Square",
+        "slug": "mak-park-square",
+        "status": "draft",
+        "category": "Residential - Apartment",
+        "location": "",
+        "year": "",
+        "client": "MAK Builders",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "",
+        "seoDescription": "",
+        "cover": {
+          "src": "https://framerusercontent.com/images/oOgqrwl6b9KzDzwvQVDCzrzBd2Q.png?width=3840&height=1675",
+          "alt": "MAK Park Square"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [],
+        "importedFrom": "/project-showcase/mak"
+      },
+      {
+        "id": "a7c3850ccb",
+        "title": "BNB House",
+        "slug": "bnb-house",
+        "status": "draft",
+        "category": "Residential - Interiors",
+        "location": "",
+        "year": "",
+        "client": "Mr. Ashraf",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "",
+        "seoDescription": "",
+        "cover": {
+          "src": "https://framerusercontent.com/images/YD7oXldVe8icRp2bb27r8w9GIoc.jpg?width=2000&height=1414",
+          "alt": "BNB House"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [],
+        "importedFrom": "/project-showcase/bnb"
+      },
+      {
+        "id": "558c6e5357",
+        "title": "Coco Meltdown",
+        "slug": "coco-meltdown",
+        "status": "draft",
+        "category": "Commercial - Cafe",
+        "location": "",
+        "year": "",
+        "client": "Dip'N'Melt",
+        "area": "",
+        "projectStatus": "Completed",
+        "summary": "",
+        "seoDescription": "",
+        "cover": {
+          "src": "https://framerusercontent.com/images/iGACg6EJ6JWKeROxDsUB60pUqt8.jpg?width=2000&height=1414",
+          "alt": "Coco Meltdown"
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [],
+        "importedFrom": "/project-showcase/coco-meltdown"
+      },
+      {
+        "id": "dcccc6dad8",
+        "title": "Artwist Salon",
+        "slug": "artwist-salon",
+        "status": "draft",
+        "category": "",
+        "location": "",
+        "year": "",
+        "client": "",
+        "area": "",
+        "projectStatus": "Scope to confirm",
+        "summary": "Artwist Salon is envisioned as a creative beauty space where elegance meets expression. The design blends soft curves, warm lighting, and refined textures to craft an inviting environment that feels both luxurious and personal. Each zone ,  from styling stations to the wash area ,  is arranged to enhance comfort while maintaining an efficient workflow for the stylists. A muted, modern palette acts as a calm backdrop, allowing the artistry of hair, beauty, and makeup to take center stage.",
+        "seoDescription": "",
+        "cover": {
+          "src": "",
+          "alt": ""
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [],
+        "importedFrom": "/project-showcase/artwist-salon"
+      },
+      {
+        "id": "de477e365b",
+        "title": "Koan",
+        "slug": "koan",
+        "status": "draft",
+        "category": "",
+        "location": "",
+        "year": "",
+        "client": "",
+        "area": "",
+        "projectStatus": "Scope to confirm",
+        "summary": "",
+        "seoDescription": "",
+        "cover": {
+          "src": "",
+          "alt": ""
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [],
+        "importedFrom": "/project-showcase/koan"
+      },
+      {
+        "id": "ef31ce90aa",
+        "title": "Pipe Nova",
+        "slug": "pipe-nova",
+        "status": "draft",
+        "category": "",
+        "location": "",
+        "year": "",
+        "client": "",
+        "area": "",
+        "projectStatus": "Scope to confirm",
+        "summary": "",
+        "seoDescription": "",
+        "cover": {
+          "src": "",
+          "alt": ""
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [],
+        "importedFrom": "/project-showcase/pipe-nova"
+      },
+      {
+        "id": "614a9879e6",
+        "title": "Seiko Hypermarket",
+        "slug": "seiko-hypermarket",
+        "status": "draft",
+        "category": "",
+        "location": "",
+        "year": "",
+        "client": "",
+        "area": "",
+        "projectStatus": "Scope to confirm",
+        "summary": "Seiko Hypermarket is designed as a seamless, customer-centered retail environment that prioritizes clarity, flow, and visual comfort. The layout organizes diverse product zones into an intuitive circulation system, ensuring effortless navigation even during peak hours. A bright, neutral palette combined with clean signage and strategic lighting enhances product visibility while maintaining a pleasant shopping atmosphere. Durable materials, well-defined departmental identities, and thoughtful detailing allow the space to feel both contemporary and highly functional ,  delivering an elevated retail experience that aligns with Seiko’s commitment to quality and convenience.",
+        "seoDescription": "",
+        "cover": {
+          "src": "",
+          "alt": ""
+        },
+        "body": "",
+        "tags": [],
+        "gallery": [],
+        "importedFrom": "/project-showcase/seiko-hyper"
       }
     ],
     "pagesIntro": {

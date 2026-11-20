@@ -7,16 +7,18 @@
   <title>Studio Admin · Vanilla &amp; Somethin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/admin/admin.css?v=7">
-  <link rel="stylesheet" href="/admin/studio.css?v=7">
-  <link rel="stylesheet" href="/admin/motion.css?v=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fragment+Mono&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/brand/vs-mark-light.png">
+  <link rel="stylesheet" href="/admin/admin.css?v=10">
+  <link rel="stylesheet" href="/admin/studio.css?v=10">
+  <link rel="stylesheet" href="/admin/brand.css?v=10">
+  <link rel="stylesheet" href="/admin/motion.css?v=2">
 </head>
 <body>
   <!-- Login -->
   <div id="login-view" class="login-screen" hidden>
     <form id="login-form" class="login-card">
-      <div class="brand">VANILLA <span>&amp;</span> SOMETHIN</div>
+      <div class="brand"><img class="logo" src="/brand/vs-mark-light.png" alt="" width="30" height="30"><span>VANILLA <span class="amp">&amp;</span> SOMETHIN</span></div>
       <h1>Studio admin</h1>
       <p class="muted">Projects, clients, site management and the website, in one place.</p>
       <div id="setup-notice" class="notice warn" hidden></div>
@@ -32,19 +34,30 @@
   <!-- App -->
   <div id="app-view" class="app" hidden>
     <aside class="sidebar">
-      <div class="brand">VANILLA <span>&amp;</span> SOMETHIN</div>
+      <div class="brand"><img class="logo" src="/brand/vs-mark-light.png" alt="" width="30" height="30"><span>VANILLA <span class="amp">&amp;</span> SOMETHIN</span></div>
       <nav id="main-nav" aria-label="Main">
         <a href="#/" data-route="dashboard"><span class="icon" data-icon="dashboard"></span>Dashboard</a>
-        <div class="nav-label">Studio</div>
+        <div class="nav-label">Sales</div>
+        <a href="#/crm" data-route="crm"><span class="icon" data-icon="pulse"></span>CRM</a>
+        <a href="#/clients" data-route="clients"><span class="icon" data-icon="users"></span>Clients</a>
+        <div class="nav-label">Operations</div>
         <a href="#/projects" data-route="projects"><span class="icon" data-icon="folder"></span>Projects</a>
         <a href="#/tasks" data-route="tasks"><span class="icon" data-icon="tasks"></span>Tasks</a>
-        <a href="#/clients" data-route="clients"><span class="icon" data-icon="users"></span>Clients</a>
         <a href="#/sites" data-route="sites"><span class="icon" data-icon="site"></span>Site management</a>
+        <a href="#/incidents" data-route="incidents"><span class="icon" data-icon="shield"></span>Incidents</a>
+        <div class="nav-label">Finance</div>
+        <a href="#/billing" data-route="billing"><span class="icon" data-icon="file"></span>Billing</a>
+        <div class="nav-label">People</div>
+        <a href="#/people" data-route="people"><span class="icon" data-icon="calendar"></span>Team &amp; leave</a>
         <div class="nav-label">Website</div>
         <a href="#/website" data-route="website"><span class="icon" data-icon="globe"></span>Website controls</a>
         <a href="#/blog" data-route="blog"><span class="icon" data-icon="book"></span>Journal</a>
         <a href="#/portfolio" data-route="portfolio"><span class="icon" data-icon="image"></span>Portfolio</a>
         <a href="#/updates" data-route="updates"><span class="icon" data-icon="megaphone"></span>Updates</a>
+        <div class="nav-label">Shop</div>
+        <a href="#/shop" data-route="shop"><span class="icon" data-icon="image"></span>Products</a>
+        <a href="#/lists" data-route="lists"><span class="icon" data-icon="book"></span>Curated lists</a>
+        <a href="#/orders" data-route="orders"><span class="icon" data-icon="tasks"></span>Orders</a>
         <a href="#/seo" data-route="seo"><span class="icon" data-icon="search"></span>SEO</a>
         <div class="nav-label"></div>
         <a href="#/settings" data-route="settings"><span class="icon" data-icon="settings"></span>Settings</a>
@@ -73,6 +86,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="loading" class="loading-screen"><div class="spinner"></div></div>
 
-  <script type="module" src="/admin/admin.js?v=8"></script>
+  <script type="module" src="/admin/admin.js?v=10"></script>
 </body>
 </html>
