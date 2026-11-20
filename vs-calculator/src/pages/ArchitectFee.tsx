@@ -57,7 +57,6 @@ export default function ArchitectFee() {
   }, [area, constructionCost, model, percentage, rate, fixedFee, useCoaScale, documentation, addGst, gstRate]);
 
   const fmt = (n: number) => money(n);
-  const band = serviceBands[service];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
