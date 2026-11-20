@@ -16,6 +16,7 @@ import { renderClients, renderClientDetail } from "./studio/clients.js";
 import { renderSitesPage } from "./studio/sites.js";
 import { renderWebsite } from "./studio/website.js";
 import { renderOrders } from "./studio/orders.js";
+import { animateAdminView, initAdminMotion } from "./motion.js";
 import { renderStudioSettings } from "./studio/settings.js";
 import { openPalette } from "./studio/palette.js";
 
@@ -625,9 +626,11 @@ const render = ({ keepScroll = false } = {}) => {
     const board = $(".board-scroll");
     if (board) board.scrollLeft = boardX;
   }
+  animateAdminView(view);
   updateSaveState();
 };
 
+initAdminMotion();
 app.render = () => render({ keepScroll: true });
 app.onExpired = () => logout(false);
 window.addEventListener("hashchange", () => render());
