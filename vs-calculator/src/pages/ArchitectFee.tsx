@@ -1,30 +1,31 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Calculator, FileText, Info, Printer } from "lucide-react";
-import { motion } from "framer-motion";
 import AnimatedText from "@/components/AnimatedText";
 
 type FeeModel = "percentage" | "perSqft" | "fixed";
-type ServiceLevel = "drawings" | "design" | "comprehensive";
+type ServiceLevel = "drawings" | "working" | "design" | "comprehensive" | "premium";
 
 const money = (value: number) => new Intl.NumberFormat("en-IN", {
   style: "currency", currency: "INR", maximumFractionDigits: 0,
 }).format(Number.isFinite(value) ? value : 0);
 
 const serviceBands: Record<ServiceLevel, { label: string; range: string; low: number; high: number; summary: string }> = {
-  drawings: { label: "Basic drawings", range: "₹15–₹40 / sq ft", low: 15, high: 40, summary: "Limited drawing package; confirm exactly which plans, elevations and details are supplied." },
-  design: { label: "Complete design", range: "₹40–₹80 / sq ft", low: 40, high: 80, summary: "Design development and documentation; engineering, approvals and site services depend on the agreement." },
-  comprehensive: { label: "Comprehensive services", range: "₹80–₹150+ / sq ft", low: 80, high: 150, summary: "A broader appointment with defined periodic construction-stage services—not continuous site supervision by default." },
+  drawings: { label: "Complete architectural drawings", range: "₹15–₹40 / sq ft", low: 15, high: 40, summary: "Design-only drawing packages. Confirm plans, elevations, sections, details and revision limits." },
+  working: { label: "Detailed working drawings", range: "₹25–₹60 / sq ft", low: 25, high: 60, summary: "Construction documentation; structural, electrical and plumbing drawings are not assumed included." },
+  design: { label: "Design + approval coordination", range: "₹40–₹80 / sq ft", low: 40, high: 80, summary: "Design and approval coordination. Statutory charges and submission follow-up must be stated separately." },
+  comprehensive: { label: "Comprehensive design + periodic services", range: "₹80–₹150 / sq ft", low: 80, high: 150, summary: "A wider appointment with a defined inspection programme—not continuous day-to-day site supervision." },
+  premium: { label: "Premium / bespoke architecture", range: "₹150–₹300+ / sq ft", low: 150, high: 300, summary: "Higher-detail bespoke work; scope, consultants, visualisation and site services vary substantially." },
 };
 
 const milestones = [
-  ["Appointment and briefing", 10],
-  ["Concept design", 15],
-  ["Design development and freeze", 15],
-  ["Statutory submission package", 10],
-  ["Working drawings and coordination", 25],
-  ["Construction-stage services", 20],
-  ["Completion and handover", 5],
+  ["Appointment, brief and site analysis", 10],
+  ["Concept design and preliminary estimate", 15],
+  ["Design development and client approval", 20],
+  ["Statutory submission drawings", 15],
+  ["Working drawings and BOQ", 20],
+  ["Construction-stage services", 15],
+  ["Completion documents and handover", 5],
 ] as const;
 
 export default function ArchitectFee() {
@@ -83,7 +84,7 @@ export default function ArchitectFee() {
               <div className="grid gap-2 sm:grid-cols-3">
                 {([["perSqft","Per sq ft"],["percentage","Percentage"],["fixed","Fixed fee"]] as const).map(([v,label])=><button key={v} onClick={()=>{setModel(v);setUseCoaScale(false)}} className={`rounded-lg border px-3 py-3 text-sm font-medium ${model===v&&!useCoaScale?"border-vs bg-vs/5 text-vs":"hover:border-vs/50"}`}>{label}</button>)}
               </div>
-              {model==="perSqft"&&!useCoaScale&&<label className="mt-4 block text-sm">Architectural fee rate (₹ / sq ft)<input type="number" min="0" value={rate} onChange={e=>setRate(e.target.value)} className="mt-2 w-full rounded-lg border bg-background px-3 py-3" /><span className="mt-1 block text-xs text-muted-foreground">Indicative guide: drawings ₹15–₹40; design and documentation ₹40–₹80; comprehensive services ₹80–₹150+ per sq ft.</span></label>}
+              {model==="perSqft"&&!useCoaScale&&<label className="mt-4 block text-sm">Architectural fee rate (₹ / sq ft)<input type="number" min="0" value={rate} onChange={e=>setRate(e.target.value)} className="mt-2 w-full rounded-lg border bg-background px-3 py-3" /><span className="mt-1 block text-xs text-muted-foreground">Indicative planning bands only; choose the matching service scope below. These are not audited transaction averages.</span></label>}
               {model==="percentage"&&!useCoaScale&&<label className="mt-4 block text-sm">Agreed percentage (%)<input type="number" min="0" max="100" step=".1" value={percentage} onChange={e=>setPercentage(e.target.value)} className="mt-2 w-full rounded-lg border bg-background px-3 py-3" /><span className="mt-1 block text-xs text-muted-foreground">Broad indicative market guide: 3%–10%+. Not an official rate or city-wide average.</span></label>}
               {model==="fixed"&&!useCoaScale&&<label className="mt-4 block text-sm">Agreed lump-sum professional fee (₹)<input type="number" min="0" value={fixedFee} onChange={e=>setFixedFee(e.target.value)} className="mt-2 w-full rounded-lg border bg-background px-3 py-3" /></label>}
             </div>
@@ -119,7 +120,7 @@ export default function ArchitectFee() {
           <div className="rounded-2xl border p-5 md:p-7">
             <h2 className="text-xl font-semibold">Indicative per-square-foot bands</h2>
             <div className="mt-5 space-y-4">
-              {(Object.keys(serviceBands) as ServiceLevel[]).map(key=><button key={key} onClick={()=>{setService(key);setModel("perSqft");setUseCoaScale(false);setRate(String(serviceBands[key].low))}} className={`block w-full rounded-xl border p-4 text-left ${service===key?"border-vs bg-vs/5":"hover:border-vs/50"}`}><span className="flex items-center justify-between gap-3"><strong>{serviceBands[key].label}</strong><span className="text-sm font-semibold text-vs">{serviceBands[key].range}</span></span><span className="mt-2 block text-xs leading-5 text-muted-foreground">{serviceBands[key].summary}</span></button>)}
+              {(Object.keys(serviceBands) as ServiceLevel[]).map(key=><button key={key} onClick={()=>{setService(key);setModel("perSqft");setUseCoaScale(false);setRate(String(Math.round((serviceBands[key].low + serviceBands[key].high) / 2)))}} className={`block w-full rounded-xl border p-4 text-left ${service===key?"border-vs bg-vs/5":"hover:border-vs/50"}`}><span className="flex items-center justify-between gap-3"><strong>{serviceBands[key].label}</strong><span className="text-sm font-semibold text-vs">{serviceBands[key].range}</span></span><span className="mt-2 block text-xs leading-5 text-muted-foreground">{serviceBands[key].summary}</span></button>)}
             </div>
           </div>
           <div className="rounded-2xl border p-5 md:p-7">
@@ -133,6 +134,47 @@ export default function ArchitectFee() {
               <li>• Contractor coordination, BOQ, tender support and handover.</li>
             </ul>
           </div>
+        </section>
+
+        <section className="mt-12 rounded-2xl border p-5 md:p-7">
+          <h2 className="text-xl font-semibold">Regional comparison bands · Karnataka & Kerala</h2>
+          <p className="mt-2 text-sm text-muted-foreground">Suggested quotation-comparison ranges from the research, not statistically measured city averages or guaranteed market prices.</p>
+          <div className="mt-5 overflow-x-auto">
+            <table className="w-full min-w-[620px] text-left text-sm">
+              <thead><tr className="border-b text-xs uppercase tracking-wide text-muted-foreground"><th className="py-3 pr-4">Location</th><th className="py-3 pr-4">Design-only</th><th className="py-3">Full-service planning band</th></tr></thead>
+              <tbody className="divide-y">
+                {[
+                  ["Bengaluru","₹30–₹100 / sq ft","5%–10%"],
+                  ["Mysuru","₹20–₹70 / sq ft","4%–7%"],
+                  ["Mangaluru","₹20–₹75 / sq ft","4%–7%"],
+                  ["Udupi","₹20–₹70 / sq ft","4%–7%"],
+                  ["Kochi","₹30–₹100 / sq ft","5%–10%"],
+                  ["Thiruvananthapuram","₹25–₹85 / sq ft","4%–8%"],
+                  ["Kozhikode","₹20–₹80 / sq ft","4%–8%"],
+                ].map(([place,design,full])=><tr key={place}><td className="py-3 pr-4 font-medium">{place}</td><td className="py-3 pr-4">{design}</td><td className="py-3">{full}</td></tr>)}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-3 text-xs leading-5 text-muted-foreground">These are working bands for comparing quotations—not sourced statistical medians. Actual fees can fall outside them. Scope and complexity matter more than city labels alone.</p>
+        </section>
+
+        <section className="mt-12 rounded-2xl border p-5 md:p-7">
+          <h2 className="text-xl font-semibold">Additional services to price separately</h2>
+          <p className="mt-2 text-sm text-muted-foreground">Indicative budgeting allowances from the supplied research; confirm the scope and consultant appointment.</p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              ["Approval drawings & coordination","₹10,000–₹50,000+"],
+              ["Structural engineering","₹15,000–₹60,000+"],
+              ["Soil investigation","₹10,000–₹30,000+"],
+              ["Electrical drawings","₹8,000–₹25,000+"],
+              ["Plumbing drawings","₹8,000–₹25,000+"],
+              ["3D exterior views","₹5,000–₹25,000 per view/set"],
+              ["Animated walkthrough","₹15,000–₹75,000+"],
+              ["Additional site visit","₹2,000–₹10,000+ per visit"],
+              ["As-built drawings","₹10,000–₹40,000+"],
+            ].map(([label,price])=><div key={label} className="rounded-xl bg-muted/50 p-4"><span className="block text-sm font-medium">{label}</span><strong className="mt-2 block text-vs">{price}</strong></div>)}
+          </div>
+          <p className="mt-3 text-xs leading-5 text-muted-foreground">These are not regulated tariffs. Statutory charges, soil tests, consultant fees, travel and reimbursables should be identified separately in the proposal.</p>
         </section>
 
         <section className="mt-12 rounded-2xl border p-5 md:p-7">
