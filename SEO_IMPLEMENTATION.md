@@ -88,3 +88,39 @@ Publicly visible signals reviewed in November 2026:
 - Niche targets include whole-home renovation, extensions, apartment renovation, NRI renovation, Airbnb/holiday homes, homestays, serviced villas, clinic design, cafe/restaurant fit-outs, landscape/public realm, building permit drawings, K-SMART building permissions and commercial fit-out documentation.
 - Regulatory language is intentionally limited to design documentation and coordination. The studio does not claim to issue licences, certify compliance or guarantee statutory approvals. K-SMART, Karnataka local-authority processes, Kerala Tourism and Saudi Balady/Tourism are authority-led processes whose requirements depend on location and activity.
 - Fixed the CMS sitemap generation to create `sitemap-cms.xml` and register it in the sitemap index. The SEO workflow now runs the CMS build before auditing the generated pages and sitemap.
+
+
+## Free SEO automation system (November 2026)
+No paid SEO subscriptions. Everything runs on GitHub Actions, Netlify Functions, Google Search Console and Lighthouse.
+
+### Critical fix: rendered titles
+The Framer runtime rewrites `<title>` and the description after hydration with values from its JS bundle, which were the generic "Vanilla & Somethin" on **every** Framer page (home, contact, team, showcase and all case studies). Google indexes the rendered DOM, so static `<head>` edits alone were invisible to it.
+- `scripts/seo/framer-pages.mjs` is the single source of truth for Framer page titles, descriptions, canonicals and project facts.
+- `node scripts/seo/apply-framer-seo.mjs` writes those values into the static HTML and generates `public/seo-meta.js`, which re-applies them after hydration and on Framer client-side navigation. **Re-run it after every new Framer export.** CI fails if the output is out of sync.
+- Long-term fix: set each page's SEO title and description inside Framer's page settings and re-export, so the bundle and the guard agree.
+
+### Checks
+| Check | Where | When |
+| --- | --- | --- |
+| Static audit: single title/canonical per page, canonical = served URL (trailing slash) and present in a sitemap, unique titles, broken internal links, robots.txt, GA present, JSON-LD validity | `scripts/audit-seo.mjs` | Every PR / push to main |
+| Rendered audit: every sitemap URL rendered in Chromium; fails on generic or duplicate titles, missing descriptions, canonical mismatch, redirects, noindex, invalid JSON-LD | `scripts/seo/audit-rendered.mjs` | Every PR (local build), weekly (live site) |
+| Lighthouse CI: SEO >= 90 is blocking; performance, accessibility, LCP, CLS, TBT budgets warn | `lighthouserc.json` | Every PR |
+| Lighthouse mobile + desktop on key live pages | `scripts/seo/lighthouse-report.mjs` | Weekly |
+
+The weekly workflow (`.github/workflows/seo-monitor.yml`, Mondays 07:47 IST, or run manually) stores `latest.json` and a 52-week `history.json` on the `seo-reports` branch. Netlify does not build that branch.
+
+### Admin > SEO
+- **Site health:** latest weekly report: rendered SEO errors to fix first, Lighthouse by page, weekly trend, "Run monitor now" (needs the GitHub token to have *Actions: Read and write*; otherwise run it from the Actions tab).
+- **Keyword opportunities:** from Search Console (existing Google connection). Striking-distance queries (position 4 to 20) and page-one results with CTR under half the expected rate, with a suggested action, local/NRI intent filter and CSV export.
+
+### Other fixes in this pass
+- Canonicals and `og:url` on Framer pages pointed at slashless URLs that Netlify 301s; now the 200 URL. `/seo` sitemap entry fixed.
+- Case-study pages: unique titles and descriptions (five had photography-template placeholder text), `CreativeWork` + `BreadcrumbList` schema, `og:type=article`.
+- Removed the legacy Framer head snippet (duplicate tags plus unverified phone/postcode/hours/coordinates that conflicted with the contact page). Add LocalBusiness schema back only with verified NAP that matches Google Business Profile.
+- Team page email links were Cloudflare-obfuscated `/cdn-cgi/` URLs that 404 on Netlify; restored to `mailto:`.
+- `/canonical-url` (copy of Google's docs, off-topic) removed and 301'd to home.
+- Google Analytics added to the 14 SEO landing pages that had none; gtag now loads after first interaction or 3.5 s after page load to reduce main-thread blocking.
+
+### Known content issues to fix in Framer (visible copy comes from the Framer bundle)
+- Case-study body copy still contains photography-template placeholder text: BNB House intro and "Behind the design" (volcanic rock, glaciers, golden hour), Coco Meltdown / Koan / MAK / Pipe Nova intros, Fair-Fly "Bold streetwear" item.
+- Mobile LCP on the showcase (9.6 s) and case studies (about 7 s) is caused by 2048 px images served to phones and a 4 MB autoplay hero video on the home page. Lower image sizes in Framer and compress the hero video to under 1.5 MB (or use a poster on mobile).

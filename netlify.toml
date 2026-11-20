@@ -27,6 +27,20 @@
   to = "/estimator"
   status = 301
 
+# Retired off-topic page (copy of Google's canonicalization docs). 301 to home
+# so any links or index entries consolidate instead of 404ing.
+[[redirects]]
+  from = "/canonical-url"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/canonical-url/*"
+  to = "/"
+  status = 301
+  force = true
+
 # Client-side routing fallback for the estimator SPA. Real files (assets,
 # images, fonts) are served directly; unknown sub-paths fall back to the app
 # shell so deep links like /estimator/architect-fee work on refresh.

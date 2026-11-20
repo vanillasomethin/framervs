@@ -5,6 +5,8 @@ on:
     paths:
       - "public/**"
       - "scripts/audit-seo.mjs"
+      - "scripts/seo/**"
+      - "lighthouserc.json"
       - "scripts/build-cms.mjs"
       - "public/cms/**"
       - "public/admin/**"
@@ -22,7 +24,7 @@ on:
 
 jobs:
   static-seo-audit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -38,5 +40,19 @@ jobs:
         run: cd vs-calculator && npm ci && npm run build
       - name: Generate CMS pages and sitemap
         run: node scripts/build-cms.mjs
+      - name: Framer metadata is in sync with scripts/seo/framer-pages.mjs
+        run: |
+          node scripts/seo/apply-framer-seo.mjs
+          git diff --exit-code -- public || (echo "::error::Run node scripts/seo/apply-framer-seo.mjs and commit the result" && exit 1)
       - name: Audit static SEO metadata and sitemaps
         run: node scripts/audit-seo.mjs
+      - name: Install headless Chromium
+        # Pin the runner to Ubuntu 24.04: Playwright 1.55 does not recognise
+        # ubuntu-26.04 yet when installing system dependencies with --with-deps.
+        run: |
+          npm i --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Audit rendered pages (what Google indexes after JavaScript)
+        run: node scripts/seo/audit-rendered.mjs
+      - name: Lighthouse CI (SEO must stay >= 90; performance and accessibility warn)
+        run: npx --yes @lhci/cli@0.14.0 autorun

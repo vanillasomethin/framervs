@@ -319,7 +319,7 @@ ${ogImage ? `<meta property="og:image" content="${escapeHTML(ogImage)}">\n<meta 
 <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>${STYLES}</style>
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, "\\u003c")}</script>` : ""}
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-88SHPS1HB3"></script>
+<script>(function(){var d=0;function l(){if(d)return;d=1;var s=document.createElement("script");s.async=1;s.src="https://www.googletagmanager.com/gtag/js?id=G-88SHPS1HB3";document.head.appendChild(s)}["pointerdown","keydown","scroll","touchstart"].forEach(function(e){addEventListener(e,l,{once:true,passive:true})});function t(){setTimeout(l,3500)}document.readyState==="complete"?t():addEventListener("load",t)})();</script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-88SHPS1HB3");</script>
 </head>
 <body>
