@@ -32,6 +32,32 @@ exports.handler = async (event) => {
   if (!authorized(event)) return json(401, { error: "Your admin session has expired. Log in again." });
   let body;
   try { body = JSON.parse(event.body || "{}"); } catch { return json(400, { error: "Invalid request." }); }
+  // Weekly SEO monitor report (GitHub Actions -> `seo-reports` branch). Needs GITHUB_TOKEN only.
+  if (body.action === "report" || body.action === "run-monitor") {
+    if (!process.env.GITHUB_TOKEN) return json(503, { error: "Add GITHUB_TOKEN to Netlify environment variables to read SEO monitor reports." });
+    const repo = process.env.GITHUB_REPO || "vanillasomethin/framervs";
+    const gh = (p, init = {}) => fetch(`https://api.github.com/repos/${repo}${p}`, { ...init, headers: { Accept: "application/vnd.github+json", Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, "User-Agent": "vs-admin", ...(init.headers || {}) } });
+    try {
+      if (body.action === "run-monitor") {
+        const r = await gh("/actions/workflows/seo-monitor.yml/dispatches", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ref: process.env.GITHUB_BRANCH || "main" }) });
+        if (r.status === 204) return json(200, { ok: true });
+        if (r.status === 403 || r.status === 404) return json(403, { error: "The GitHub token cannot start workflows. Give it 'Actions: Read and write' permission, or run 'SEO monitor (weekly)' from the repository's Actions tab." });
+        return json(502, { error: `GitHub returned ${r.status} when starting the monitor.` });
+      }
+      const file = async (name) => {
+        const r = await gh(`/contents/${name}?ref=seo-reports`, { headers: { Accept: "application/vnd.github.raw+json" } });
+        if (r.status === 404) return null;
+        if (!r.ok) throw new Error(`GitHub returned ${r.status} reading ${name}.`);
+        return r.json();
+      };
+      const [latest, history] = await Promise.all([file("latest.json"), file("history.json")]);
+      if (!latest) return json(404, { error: "No SEO monitor report yet. It runs every Monday, or start it with 'Run monitor now'." });
+      return json(200, { latest, history: history || [] });
+    } catch (error) {
+      console.error("SEO report error:", error.message);
+      return json(502, { error: error.message });
+    }
+  }
   try {
     const token = await accessToken();
     const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
@@ -49,7 +75,7 @@ exports.handler = async (event) => {
       const dimensions = Array.isArray(body.dimensions) ? body.dimensions.filter((d) => allowedDimensions.includes(d)).slice(0, 2) : ["date"];
       if (!siteUrl || !/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^\d{4}-\d{2}-\d{2}$/.test(endDate) || !dimensions.length) return json(400, { error: "Choose a Search Console property and valid date range." });
       const endpoint = `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`;
-      const response = await fetch(endpoint, { method: "POST", headers, body: JSON.stringify({ startDate, endDate, dimensions, rowLimit: 250, dataState: "final" }) });
+      const response = await fetch(endpoint, { method: "POST", headers, body: JSON.stringify({ startDate, endDate, dimensions, rowLimit: dimensions.length > 1 ? 2500 : 250, dataState: "final" }) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error?.message || "Search Analytics query failed.");
       return json(200, { rows: data.rows || [], responseAggregationType: data.responseAggregationType || null });

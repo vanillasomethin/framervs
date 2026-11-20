@@ -1,0 +1,67 @@
+name: SEO monitor (weekly)
+
+# Free, self-hosted SEO monitoring: renders every sitemap URL on the LIVE site,
+# runs Lighthouse (mobile + desktop) on key pages, and stores the report on the
+# `seo-reports` branch, which the admin SEO panel reads. Netlify only deploys
+# the production branch, so report commits never trigger a site build.
+
+on:
+  schedule:
+    - cron: "17 2 * * 1" # Mondays 02:17 UTC (07:47 IST)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seo-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install audit tooling
+        # Keep the same supported OS as PR validation; Playwright 1.55
+        # does not yet recognise the ubuntu-26.04 image for --with-deps.
+        run: |
+          npm i --no-save --no-package-lock playwright@1.55.0 lighthouse@12.8.2 chrome-launcher@1.2.0
+          npx playwright install --with-deps chromium
+      - name: Load previous history
+        run: |
+          mkdir -p reports
+          if git fetch --depth=1 origin seo-reports 2>/dev/null; then
+            git show FETCH_HEAD:history.json > reports/history.json 2>/dev/null || true
+          fi
+      - name: Rendered audit of the live site
+        run: node scripts/seo/audit-rendered.mjs --live --json reports/rendered.json || echo "::warning::Live rendered audit found errors (see report)"
+      - name: Lighthouse (mobile)
+        run: node scripts/seo/lighthouse-report.mjs --json reports/lighthouse-mobile.json || true
+      - name: Lighthouse (desktop)
+        run: node scripts/seo/lighthouse-report.mjs --desktop --json reports/lighthouse-desktop.json || true
+      - name: Build report
+        run: node scripts/seo/build-report.mjs reports
+      - name: Publish to seo-reports branch
+        run: |
+          cd reports
+          git init -q -b seo-reports
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add latest.json history.json rendered.json lighthouse-mobile.json lighthouse-desktop.json 2>/dev/null || git add -A
+          git commit -q -m "SEO report $(date -u +%F)"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" seo-reports
+      - name: Summary
+        run: |
+          node -e '
+            const r = require("./reports/latest.json");
+            const lines = ["## SEO monitor", "", `Rendered audit: ${r.rendered?.errors.length ?? "n/a"} error(s), ${r.rendered?.warnings.length ?? "n/a"} warning(s)`, ""];
+            for (const e of (r.rendered?.errors || []).slice(0, 30)) lines.push(`- ❌ ${e}`);
+            lines.push("", "| Page | Mobile perf | SEO | LCP | TBT |", "|---|---|---|---|---|");
+            for (const p of r.lighthouse.mobile?.pages || []) if (p.scores) lines.push(`| ${p.url} | ${p.scores.performance} | ${p.scores.seo} | ${Math.round(p.metrics.lcpMs)} ms | ${Math.round(p.metrics.tbtMs)} ms |`);
+            require("fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join("\n") + "\n");
+          '

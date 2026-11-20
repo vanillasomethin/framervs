@@ -114,6 +114,78 @@ for (const slug of ["mangalore", "kasaragod", "coastal-karnataka", "kerala"]) {
   if (!locations.includes(`/locations/${slug}/`)) errors.push(`Location sitemap missing ${slug}`);
 }
 
+// ---------------------------------------------------------------------------
+// Site-wide checks across every public HTML page (not just the required list).
+// ---------------------------------------------------------------------------
+const SITE = "https://www.vanillasometh.in";
+const PRIVATE = /^(admin|onboard|cdn-cgi|estimator)\//;
+const walk = (dir) => fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap((d) => {
+  const rel = dir ? `${dir}/${d.name}` : d.name;
+  return d.isDirectory() ? walk(rel) : rel.endsWith(".html") ? [rel] : [];
+});
+const allPages = walk("").filter((f) => !PRIVATE.test(f) && !f.startsWith("uploads/"));
+const urlFor = (f) => `${SITE}/${f === "index.html" ? "" : f.endsWith("/index.html") ? f.slice(0, -"index.html".length) : f}`;
+const fileFor = (url) => {
+  const p = new URL(url).pathname.slice(1);
+  if (!p) return "index.html";
+  if (p.endsWith("/")) return `${p}index.html`;
+  return p.endsWith(".html") ? p : null; // slashless directory URLs 301 on Netlify
+};
+
+const sitemapLocs = sitemapFiles.flatMap((f) => (fs.existsSync(path.join(root, f)) && f !== "sitemap.xml" ? [...read(f).matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]) : []));
+const titles = new Map();
+for (const file of allPages) {
+  const html = read(file);
+  const count = (re) => (html.match(re) || []).length;
+  if (count(/<title>/gi) !== 1) errors.push(`${file}: ${count(/<title>/gi)} <title> tags`);
+  if (count(/<link\s+rel=["']canonical["']/gi) > 1) errors.push(`${file}: multiple canonical tags`);
+  if (count(/<meta\s+name=["']description["']/gi) > 1) errors.push(`${file}: multiple meta descriptions`);
+  const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+  const noindex = /<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(html);
+  if (!canonical && !noindex) errors.push(`${file}: missing canonical`);
+  if (canonical && !noindex && canonical !== urlFor(file)) errors.push(`${file}: canonical ${canonical} should be ${urlFor(file)} (the URL Netlify serves with 200)`);
+  if (canonical && !noindex && !sitemapLocs.includes(canonical)) errors.push(`${file}: indexable page missing from sitemaps (${canonical})`);
+  const decode = (v) => v?.replace(/&amp;/g, "&").replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"');
+  const title = decode(html.match(/<title>(.*?)<\/title>/is)?.[1]?.trim());
+  if (title) titles.set(title, [...(titles.get(title) || []), file]);
+  if (title && title.length > 70) warnings.push(`${file}: title is ${title.length} chars`);
+  const desc = decode(html.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i)?.[1]);
+  if (desc && desc.length > 165) warnings.push(`${file}: description is ${desc.length} chars`);
+  if (!html.includes("G-88SHPS1HB3")) errors.push(`${file}: Google Analytics tag missing`);
+  if (/<!-- Snippet: nnXbnDc1w -->/.test(html)) errors.push(`${file}: legacy Framer SEO snippet present; run node scripts/seo/apply-framer-seo.mjs`);
+  if (/"telephone"\s*:/.test(html)) warnings.push(`${file}: telephone in structured data; confirm it matches the verified public number`);
+
+  // Internal links must resolve to a file in public/ (or a known app/redirect route).
+  for (const [, href] of html.matchAll(/<a\b[^>]*\shref="([^"#?]+)[^"]*"/gi)) {
+    if (/^(https?:|mailto:|tel:|javascript:|data:|\/\/)/i.test(href)) {
+      if (!href.startsWith(SITE)) continue;
+    }
+    const abs = new URL(href, urlFor(file));
+    if (abs.origin !== SITE) continue;
+    let p = decodeURIComponent(abs.pathname).replace(/^\//, "");
+    if (/^(estimator|pricing|admin|blog|projects|updates)(\/|$)/.test(p)) continue; // built at deploy or redirected
+    const exists = [p, `${p}index.html`, `${p}/index.html`, `${p}.html`].some((c) => c === "" ? true : fs.existsSync(path.join(root, c)) && fs.statSync(path.join(root, c)).isFile());
+    if (!exists) errors.push(`${file}: broken internal link ${href}`);
+  }
+}
+for (const [title, files] of titles) if (files.length > 1) errors.push(`duplicate <title> "${title}" on ${files.join(", ")}`);
+for (const loc of sitemapLocs) {
+  const f = fileFor(loc);
+  if (f === null) errors.push(`sitemap URL ${loc} redirects (directory without trailing slash)`);
+  else if (!/^(estimator|blog|projects|updates)\//.test(f) && !fs.existsSync(path.join(root, f))) errors.push(`sitemap URL ${loc} has no file (public/${f})`);
+}
+
+const robots = read("robots.txt");
+if (!/^Sitemap:\s*https:\/\/www\.vanillasometh\.in\/sitemap\.xml\s*$/m.test(robots)) errors.push("robots.txt: Sitemap line missing or wrong");
+if (/^Disallow:\s*\/\s*$/m.test(robots)) errors.push("robots.txt: site-wide Disallow");
+for (const p of ["/admin/", "/onboard/"]) if (!robots.includes(`Disallow: ${p}`)) errors.push(`robots.txt: should disallow ${p}`);
+
+const seoMeta = fs.existsSync(path.join(root, "seo-meta.js")) ? read("seo-meta.js") : "";
+if (!seoMeta.includes("MutationObserver")) errors.push("public/seo-meta.js missing; run node scripts/seo/apply-framer-seo.mjs");
+for (const file of allPages) {
+  if (/data-framer-hydrate/.test(read(file)) && !read(file).includes('src="/seo-meta.js"')) errors.push(`${file}: Framer page without /seo-meta.js (rendered title will be generic)`);
+}
+
 console.log(`SEO audit: ${errors.length} error(s), ${warnings.length} warning(s)`);
 for (const warning of warnings) console.warn(`WARN  ${warning}`);
 for (const error of errors) console.error(`ERROR ${error}`);
