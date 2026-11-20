@@ -207,22 +207,6 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
     return FOUNDATION_MULTIPLIERS[foundationType] ?? 1.0;
   }, []);
 
-  // COA (Council of Architecture) minimum scale of professional charges, per the
-  // Architects (Professional Conduct) Regulations, 1989:
-  //   - Individual residential house & interior architecture: 7.5% of cost of works
-  //   - Housing blocks (single block / sites up to 0.5 ha), commercial &
-  //     other non-housing buildings: 5.0%
-  // Documentation & communication charges (a further 10% of the professional
-  // fee) are added separately in the main calculation, also per COA.
-  const getArchitectFeeRate = useCallback((
-    projectType: string,
-    constructionSubtype?: string
-  ): number => {
-    if (projectType === "commercial" || projectType === "mixed-use") return 0.05;
-    if (projectType === "residential" && constructionSubtype === "apartment") return 0.05;
-    return 0.075; // individual house / interior architecture
-  }, []);
-
   // Get size-based cost multiplier
   const getSizeMultiplier = useCallback((areaInSqM: number): number => {
     if (areaInSqM < 50) return 1.20; // Very small projects - high fixed costs
@@ -536,34 +520,18 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
 
     const subtotal = baseSubtotal * combinedMultiplier + amenitiesCost;
 
-    // 5. Professional fees — COA minimum scale of charges. The architectural fee
-    //    rate varies by project type (7.5% individual house / interiors, 5% for
-    //    apartment blocks, commercial & mixed-use), plus COA's documentation &
-    //    communication charge of a further 10% of the professional fee.
-    const architectFeeRate = getArchitectFeeRate(
-      currentEstimate.projectType,
-      currentEstimate.constructionSubtype
-    );
-    const architecturalFees = subtotal * architectFeeRate;
-    const documentationFees = architecturalFees * 0.10;
-    const professionalFees = architecturalFees + documentationFees;
-
-    // 6. Contingency (5%)
+    // 5. Contingency allowance (5%). Architectural professional fees, GST and
+    //    statutory charges are excluded and must be quoted/confirmed separately.
     const contingency = subtotal * 0.05;
 
-    // 7. GST — per COA, professional fees get 18% GST, construction/contingency get 6%
-    const feeGst = professionalFees * 0.18;
-    const constructionGst = (subtotal + contingency) * 0.06;
-    const totalGst = feeGst + constructionGst;
+    // 6. Preliminary project-cost total. No automatic architect fee or GST is
+    //    added: fee models and tax treatment depend on the actual appointment.
+    const totalCost = subtotal + contingency;
 
-    // 8. Final total cost
-    const totalCost = subtotal + professionalFees + contingency + totalGst;
-
-    // 9. Category breakdown. Scale each work category by the same multiplier so
-    //     the four categories sum to `subtotal`, then add a fifth "fees" bucket
-    //     (professional fees + contingency + GST). All five sum to totalCost, so
+    // 7. Category breakdown. Work categories sum to `subtotal`; the fifth
+    //    bucket is the contingency allowance only. All five sum to totalCost, so
     //     every chart/percentage derived from them reconciles to the headline.
-    const overheads = professionalFees + contingency + totalGst; // = totalCost - subtotal
+    const overheads = contingency; // contingency allowance only
     // Demolition rolls into the construction category; amenities (location-scaled
     // only) are added on top so the four categories still sum to `subtotal`.
     const constructionScaled = (constructionCost + demolitionCost) * combinedMultiplier + amenitiesCost;
@@ -608,7 +576,7 @@ export const EstimatorProvider = ({ children }: { children: React.ReactNode }) =
       },
       timeline,
     };
-  }, [calculateConstructionCost, calculateComponentCosts, getProjectTypeMultiplier, getFoundationMultiplier, getArchitectFeeRate, calculateTimeline]);
+  }, [calculateConstructionCost, calculateComponentCosts, getProjectTypeMultiplier, getFoundationMultiplier, calculateTimeline]);
 
   // Auto-adjust component selections based on work types
   useEffect(() => {
