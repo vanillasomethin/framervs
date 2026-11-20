@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   monitor:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +27,8 @@ jobs:
         with:
           node-version: 20
       - name: Install audit tooling
+        # Keep the same supported OS as PR validation; Playwright 1.55
+        # does not yet recognise the ubuntu-26.04 image for --with-deps.
         run: |
           npm i --no-save --no-package-lock playwright@1.55.0 lighthouse@12.8.2 chrome-launcher@1.2.0
           npx playwright install --with-deps chromium
