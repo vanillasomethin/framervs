@@ -154,13 +154,10 @@ const BudgetMatchingStep = ({
     subtotal *= locationMultiplier;
     subtotal *= projectMultiplier;
 
-    // Add professional fees and contingency (aligned with architects4design.com)
-    const professionalFees = subtotal * 0.03; // 3% (reduced from 13%)
-    const contingency = subtotal * 0.05; // 5% (reduced from 9%)
-    const totalBeforeTax = subtotal + professionalFees + contingency;
-    const gst = totalBeforeTax * 0.06; // 6% effective (reduced from 12%)
-
-    return Math.round(totalBeforeTax + gst);
+    // Keep this aligned with the main estimator: 5% contingency only.
+    // Architectural professional fees, GST and statutory charges are excluded.
+    const contingency = subtotal * 0.05;
+    return Math.round(subtotal + contingency);
   };
 
   // Calculate minimum viable budget
