@@ -20,3 +20,5 @@ public/blog/
 public/projects/
 public/updates/
 !erp/.env.example
+public/shop/
+public/sitemap-cms.xml

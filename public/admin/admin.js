@@ -5,7 +5,7 @@
 // GitHub. Changes are held locally until "Publish", so several edits go out as
 // one commit / one deploy. Previews use the same renderer as the live pages.
 
-import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, renderUpdates } from "/cms/render.mjs";
+import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, renderUpdates, renderShopProduct, renderShopList, AFFILIATE } from "/cms/render.mjs";
 import { session, SESSION_KEY, app, $, $$, clone, uid, api, toast } from "./core.js";
 import { data as studio, loadAll, refresh, sync, onData, hasPendingChanges, meId, team, setMe, isoDate } from "./studio/data.js";
 import { icon, drawerIsOpen } from "./studio/ui.js";
@@ -15,6 +15,7 @@ import { renderTasksPage } from "./studio/tasks.js";
 import { renderClients, renderClientDetail } from "./studio/clients.js";
 import { renderSitesPage } from "./studio/sites.js";
 import { renderWebsite } from "./studio/website.js";
+import { renderOrders } from "./studio/orders.js";
 import { renderStudioSettings } from "./studio/settings.js";
 import { openPalette } from "./studio/palette.js";
 
@@ -39,6 +40,8 @@ const cms = () => state.content.cms;
 // ---------------------------------------------------------------------------
 
 const PROJECT_TYPES = ["Residential", "Residential - Apartment", "Residential - Interiors", "Residential - Renovation", "Hospitality - Airbnb / Short Stay", "Hospitality - Homestay / Serviced Villa", "Commercial - Office", "Commercial - Retail", "Commercial - Cafe", "Commercial - Healthcare", "Commercial - Restaurant", "Landscape", "Landscape & Public Realm", "Sports & Recreation", "Interiors", "Urban Design", "Building Permit / Compliance Documentation"];
+
+const PRODUCT_CATEGORIES = ["Furniture", "Furnishing", "Accessories", "Lighting", "Decor"];
 
 const TYPES = {
   blog: {
@@ -94,6 +97,56 @@ const TYPES = {
       { key: "gallery", type: "gallery", label: "Project media", hint: "Upload multiple photos, renders, plans, technical drawings and PDF sheets. Choose a category for each item." },
     ],
   },
+  products: {
+    label: "Shop products",
+    singular: "product",
+    blurb: "Pieces you sell yourselves (with checkout) or recommend with an affiliate link to a partner store.",
+    livePath: (item) => `/shop/${item.slug}/`,
+    indexPath: "/shop/",
+    manualOrder: true,
+    create: () => ({ id: uid(), title: "", slug: "", status: "draft", type: "Sold by us", category: "", brand: "", price: "", comparePrice: "", inStock: "Yes", affiliateUrl: "", affiliateStore: "", options: [], summary: "", body: "", seoDescription: "", gallery: [] }),
+    preview: (c, item) => renderShopProduct(c, item),
+    fields: [
+      { key: "title", type: "title", placeholder: "Product name" },
+      { key: "slug", type: "slug", base: "/shop/" },
+      { row: [
+        { key: "type", type: "select", label: "How it is sold", options: ["Sold by us", AFFILIATE] },
+        { key: "category", type: "text", label: "Category", placeholder: "e.g. Furniture", list: PRODUCT_CATEGORIES },
+        { key: "brand", type: "text", label: "Brand / maker" },
+      ] },
+      { row: [
+        { key: "price", type: "text", label: "Price (₹)", placeholder: "e.g. 18500" },
+        { key: "comparePrice", type: "text", label: "Old price (₹, optional)", hint: "Shown struck through." },
+        { key: "inStock", type: "select", label: "In stock", options: ["Yes", "No"] },
+      ] },
+      { row: [
+        { key: "affiliateUrl", type: "text", label: "Affiliate link", placeholder: "https://… (for affiliate products)" },
+        { key: "affiliateStore", type: "text", label: "Partner store", placeholder: "e.g. Pepperfry" },
+      ] },
+      { key: "options", type: "tags", label: "Options (optional)", hint: "e.g. sizes or finishes, separated by commas. Shoppers pick one." },
+      { key: "summary", type: "textarea", label: "Short description", rows: 2 },
+      { key: "gallery", type: "gallery", label: "Photos", hint: "The first photo is the main one; the second shows on hover." },
+      { key: "body", type: "markdown", label: "Details", hint: "Materials, dimensions, care, why you picked it." },
+      { key: "seoDescription", type: "textarea", label: "Search description (optional)", rows: 2 },
+    ],
+  },
+  shopLists: {
+    label: "Curated lists",
+    singular: "list",
+    blurb: "Hand-picked collections, like “Small living rooms” or “Under ₹10,000”. Each gets its own page in the shop.",
+    livePath: (item) => `/shop/lists/${item.slug}/`,
+    indexPath: "/shop/",
+    manualOrder: true,
+    create: () => ({ id: uid(), title: "", slug: "", status: "draft", description: "", cover: { src: "", alt: "" }, productIds: [] }),
+    preview: (c, item) => renderShopList(c, item),
+    fields: [
+      { key: "title", type: "title", placeholder: "List name" },
+      { key: "slug", type: "slug", base: "/shop/lists/" },
+      { key: "description", type: "textarea", label: "Intro", rows: 3 },
+      { key: "cover", type: "image", label: "Cover photo" },
+      { key: "productIds", type: "productpick", label: "Products in this list" },
+    ],
+  },
   updates: {
     label: "Updates",
     singular: "update",
@@ -117,9 +170,11 @@ const TYPES = {
 };
 
 // The public portfolio lives under "Portfolio" in the admin so it isn't confused with studio Projects
-const routeOf = (type) => (type === "projects" ? "portfolio" : type);
-const typeOf = (route) => (route === "portfolio" ? "projects" : route);
-const WEBSITE_ROUTES = ["blog", "portfolio", "updates"];
+const ROUTE_TYPE = { portfolio: "projects", shop: "products", lists: "shopLists" };
+const TYPE_ROUTE = Object.fromEntries(Object.entries(ROUTE_TYPE).map(([r, t]) => [t, r]));
+const routeOf = (type) => TYPE_ROUTE[type] || type;
+const typeOf = (route) => ROUTE_TYPE[route] || route;
+const WEBSITE_ROUTES = ["blog", "portfolio", "updates", "shop", "lists"];
 
 const ensureShape = (content) => {
   content.cms = content.cms || {};
@@ -127,9 +182,12 @@ const ensureShape = (content) => {
   c.blog = c.blog || [];
   c.projects = c.projects || [];
   c.updates = c.updates || [];
+  c.products = c.products || [];
+  c.shopLists = c.shopLists || [];
+  c.shop = c.shop || { shippingFlat: "", freeShippingOver: "", codEnabled: "Yes", deliveryNote: "" };
   c.contact = c.contact || { phone: "", email: "", locations: [], social: [] };
   c.pagesIntro = c.pagesIntro || {};
-  for (const key of ["blog", "projects", "updates"]) c.pagesIntro[key] = c.pagesIntro[key] || { title: "", description: "" };
+  for (const key of ["blog", "projects", "updates", "shop"]) c.pagesIntro[key] = c.pagesIntro[key] || { title: "", description: "" };
   return content;
 };
 
@@ -180,7 +238,7 @@ const countChanges = () => {
       if (kept !== before.filter((b) => now.some((i) => i.id === b.id)).map((b) => b.id).join()) count += 1;
     }
   }
-  for (const key of ["contact", "pagesIntro"]) {
+  for (const key of ["contact", "pagesIntro", "shop"]) {
     if (JSON.stringify(cms()[key]) !== JSON.stringify(saved[key])) count += 1;
   }
   return count;
@@ -547,6 +605,7 @@ const render = ({ keepScroll = false } = {}) => {
   if (TYPES[type] && !state.content) needsGithub(view);
   else if (TYPES[type] && id) renderEditor(view, type, id);
   else if (TYPES[type]) renderList(view, type);
+  else if (section === "orders") renderOrders(view);
   else if (section === "settings") renderSettings(view);
   else if (section === "seo") renderSEO(view);
   else if (section === "projects") (id ? renderProjectDetail(view, id, tab) : renderProjects(view));
@@ -618,6 +677,8 @@ const listRow = (type, item, { compact = false, index = 0, total = 0 } = {}) => 
     compact ? `<span>${config.label}</span>` : "",
     item.date ? `<span>${escapeHTML(formatDate(item.date))}</span>` : "",
     item.category ? `<span>${escapeHTML(item.category)}</span>` : "",
+    type === "products" ? `<span>${item.type === AFFILIATE ? "Affiliate" : "Sold by us"}${item.price ? ` · ₹${escapeHTML(String(item.price))}` : ""}</span>` : "",
+    type === "shopLists" ? `<span>${(item.productIds || []).length} products</span>` : "",
     item.location ? `<span>${escapeHTML(item.location)}</span>` : "",
   ].join("");
   const live = JSON.parse(state.savedJSON).cms?.[type]?.find((i) => i.id === item.id && i.status === "published");
@@ -675,6 +736,16 @@ const bindRows = (root, type) => {
 
 const listFilters = {};
 
+const shopSettingsPanel = () => {
+  const s = cms().shop;
+  return `<section class="showcase" id="shop-settings"><div class="showcase-head"><span class="eyebrow">Shop settings</span><p class="muted">Delivery and payment rules used at checkout. Orders appear under <a href="#/orders">Orders</a>. Online payment (cards, UPI) turns on when Razorpay keys are added in Netlify; until then customers pay on delivery.</p></div>
+  <div class="shop-set panel">
+    <label class="field"><span>Delivery charge (₹)</span><input type="text" data-shop="shippingFlat" value="${escapeHTML(s.shippingFlat)}" placeholder="0 = free"></label>
+    <label class="field"><span>Free delivery over (₹)</span><input type="text" data-shop="freeShippingOver" value="${escapeHTML(s.freeShippingOver)}" placeholder="e.g. 15000"></label>
+    <label class="field"><span>Cash on delivery</span><select data-shop="codEnabled"><option ${s.codEnabled !== "No" ? "selected" : ""}>Yes</option><option ${s.codEnabled === "No" ? "selected" : ""}>No</option></select></label>
+  </div></section>`;
+};
+
 const showcasePanel = () => {
   const cards = (cms().caseStudies || []).filter((c) => c && c.title);
   if (!cards.length) return "";
@@ -707,7 +778,7 @@ const renderList = (view, type) => {
       </select>
     </div>
     <div id="list-body"></div>
-    ${type === "projects" ? showcasePanel() : ""}`;
+    ${type === "projects" ? showcasePanel() : ""}${type === "products" ? shopSettingsPanel() : ""}`;
 
   $("#list-status", view).value = filters.status;
 
@@ -734,6 +805,7 @@ const renderList = (view, type) => {
     bindRows(body, type);
   };
 
+  $$("[data-shop]", view).forEach((input) => input.addEventListener("input", () => { cms().shop[input.dataset.shop] = input.value; changed(); }));
   $("#new-item", view).addEventListener("click", () => createItem(type));
   $("#list-search", view).addEventListener("input", (e) => {
     filters.q = e.target.value;
@@ -792,6 +864,8 @@ const fieldHTML = (field, item) => {
         </div></div>`;
     case "image":
       return `<div class="field">${label(field.label)}<div class="image-field" data-image="${field.key}">${imageInner(value)}</div></div>`;
+    case "productpick":
+      return `<div class="field">${label(field.label)}<div class="pick" data-pick="${field.key}">${cms().products.length ? cms().products.map((p) => `<label><input type="checkbox" value="${escapeHTML(p.id)}" ${(value || []).includes(p.id) ? "checked" : ""}> ${escapeHTML(p.title || "Untitled")} <em>${p.status === "published" ? "" : "draft"}</em></label>`).join("") : '<p class="muted">Add products first.</p>'}</div></div>`;
     case "gallery":
       return `<div class="field">${label(field.label)}<div class="image-field" data-gallery="${field.key}">${galleryInner(value || [])}</div></div>`;
     default:
@@ -1038,6 +1112,13 @@ const renderEditor = (view, type, id) => {
     enableDrop(box, (files) => files[0] && set(files[0]));
     draw();
   });
+
+  $$("[data-pick]", view).forEach((box) =>
+    box.addEventListener("change", () => {
+      setPath(item, box.dataset.pick, $$("input:checked", box).map((i) => i.value));
+      touch();
+    })
+  );
 
   // Galleries ---------------------------------------------------------------
   $$("[data-gallery]", view).forEach((box) => {

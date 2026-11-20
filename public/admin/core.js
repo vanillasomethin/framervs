@@ -44,6 +44,8 @@ const call = async (url, body) => {
 export const api = (body) => call("/.netlify/functions/cms", body);
 // Private studio data
 export const studioApi = (body) => call("/.netlify/functions/studio", body);
+// Shop orders
+export const shopApi = (body) => call("/.netlify/functions/shop", body);
 
 let toastTimer;
 export const toast = (html, { error = false, duration = 4500 } = {}) => {
