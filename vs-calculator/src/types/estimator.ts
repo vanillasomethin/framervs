@@ -9,7 +9,7 @@ export interface CategoryBreakdown {
   core: number;
   finishes: number;
   interiors: number;
-  fees: number; // professional fees + contingency + GST
+  fees: number; // contingency allowance only; professional fees and GST excluded
 }
 
 // Phase breakdown for project timeline
