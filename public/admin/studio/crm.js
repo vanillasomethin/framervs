@@ -52,7 +52,7 @@ export const leadToClient = (lead) => {
   const client = {
     id: uid("cl_"), name: lead.contactName || lead.company, company: lead.contactName ? lead.company : "", email: lead.email || "", phone: lead.phone || "",
     location: lead.city || "", source: CLIENT_SOURCES.includes(lead.source) ? lead.source : "", projectType: lead.projectType || "", owner: lead.owner || "",
-    stage: "enquiry", stageAt: new Date().toISOString(), checks: {}, notes: lead.notes || "",
+    stage: "enquiry", stageAt: new Date().toISOString(), checks: {}, notes: lead.notes || "", qualification: { projectStage: lead.projectStage || "", propertyStatus: lead.propertyStatus || "", budgetRange: lead.budgetRange || "", timeline: lead.timeline || "", decisionMakers: lead.decisionMakers || "", clientConcerns: lead.clientConcerns || "", discoveryCallStatus: lead.discoveryCallStatus || "", discoveryCallAt: lead.discoveryCallAt || "", discoveryCallOutcome: lead.discoveryCallOutcome || "" },
   };
   put("clients", client);
   put("leads", { ...lead, clientId: client.id, stage: "won", closedAt: lead.closedAt || today() });
