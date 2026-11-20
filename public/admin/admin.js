@@ -1111,6 +1111,7 @@ const renderSEO = (view) => {
   const iso = (d) => d.toISOString().slice(0, 10);
   view.innerHTML = `
     <div class="page-head"><div><h1>Search performance</h1><p>Google Search Console · Organic search visibility for the studio website.</p></div></div>
+    <div id="seo-health"></div>
     <div class="panel seo-connect">
       <div><h2>Google Search Console</h2><p class="muted" id="seo-status">Checking connection…</p></div>
       <button type="button" class="btn primary" id="seo-connect">Connect Google</button>
@@ -1131,6 +1132,17 @@ const renderSEO = (view) => {
       <div class="panel stat"><span class="label">Average position</span><span class="num">—</span><span class="sub">Lower is better</span></div>
     </div>
     <div class="panel" style="margin-top:18px"><h2 id="seo-table-title">Search data</h2><p class="muted" id="seo-table-note">Search Console data will appear here. Recent dates may be delayed by Google.</p><div class="table-wrap" id="seo-table"></div></div>
+    <div class="panel" id="seo-opps" style="margin-top:18px">
+      <h2>Keyword opportunities</h2>
+      <p class="muted">Uses the property and dates above. <b>Striking distance</b>: queries ranking 4 to 20 with real impressions, the fastest wins (add the query to that page's title, H1 and copy). <b>Low CTR</b>: page-one results that get far fewer clicks than their position should (rewrite the title and description).</p>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px">
+        <button type="button" class="btn primary" id="opp-load">Find opportunities</button>
+        <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="opp-local"> Local and NRI intent only</label>
+        <button type="button" class="btn" id="opp-csv" disabled>Export CSV</button>
+        <span class="muted" id="opp-message" role="status"></span>
+      </div>
+      <div id="opp-out" style="margin-top:14px"></div>
+    </div>
     <div class="notice warn" style="margin-top:18px">This is Google Search Console data only. Business Profile metrics are not connected. Your Google OAuth app is currently in Testing; its refresh token may expire after 7 days.</div>`;
   const status = $("#seo-status", view);
   const property = $("#seo-property", view);
@@ -1182,6 +1194,93 @@ const renderSEO = (view) => {
     status.textContent = "Not connected or connection expired.";
     connect.textContent = "Connect / reconnect Google";
     showError(error);
+  });
+  mountSeoHealth($("#seo-health", view));
+  mountSeoOpportunities(view, () => ({ siteUrl: property.value, startDate: $("#seo-start", view).value, endDate: $("#seo-end", view).value }));
+};
+
+// Weekly SEO monitor (GitHub Actions -> seo-reports branch): rendered audit + Lighthouse.
+const mountSeoHealth = async (box) => {
+  const fmtDate = (iso) => new Date(iso).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+  const score = (n) => n == null ? "—" : `<span style="color:${n >= 90 ? "var(--ok)" : n >= 50 ? "var(--warn)" : "var(--danger)"};font-weight:700">${n}</span>`;
+  const avg = (pages, k) => { const v = (pages || []).filter((p) => p.scores).map((p) => p.scores[k]); return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : null; };
+  box.innerHTML = '<div class="panel"><h2>Site health</h2><p class="muted">Loading the latest weekly SEO monitor report…</p></div>';
+  let data;
+  try { data = await seoApi({ action: "report" }); }
+  catch (error) {
+    box.innerHTML = `<div class="panel"><h2>Site health</h2><p class="muted">${escapeHTML(error.message)}</p><button type="button" class="btn" id="seo-run">Run monitor now</button> <span class="muted" id="seo-run-msg"></span></div>`;
+    bindRun(box); return;
+  }
+  const { latest, history } = data;
+  const r = latest.rendered || { errors: [], warnings: [], pages: 0 };
+  const mob = latest.lighthouse?.mobile?.pages || [];
+  const desk = latest.lighthouse?.desktop?.pages || [];
+  box.innerHTML = `
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start">
+        <div><h2>Site health</h2><p class="muted">Weekly monitor of the live site · last run ${escapeHTML(fmtDate(latest.generatedAt))}${latest.runUrl ? ` · <a href="${escapeHTML(latest.runUrl)}" target="_blank" rel="noopener">run log</a>` : ""}</p></div>
+        <div><button type="button" class="btn" id="seo-run">Run monitor now</button> <span class="muted" id="seo-run-msg"></span></div>
+      </div>
+      <div class="stats" style="margin-top:14px">
+        <div class="panel stat"><span class="label">Rendered SEO errors</span><span class="num" style="color:${r.errors.length ? "var(--danger)" : "var(--ok)"}">${r.errors.length}</span><span class="sub">${r.pages} pages checked as Google renders them · ${r.warnings.length} warnings</span></div>
+        <div class="panel stat"><span class="label">Mobile performance</span><span class="num">${score(avg(mob, "performance"))}</span><span class="sub">Lighthouse average, key pages</span></div>
+        <div class="panel stat"><span class="label">Desktop performance</span><span class="num">${score(avg(desk, "performance"))}</span><span class="sub">Lighthouse average, key pages</span></div>
+        <div class="panel stat"><span class="label">SEO / Accessibility</span><span class="num">${score(avg(mob, "seo"))} / ${score(avg(mob, "accessibility"))}</span><span class="sub">Lighthouse, mobile</span></div>
+      </div>
+      ${r.errors.length ? `<h3>Fix first</h3><ul>${r.errors.slice(0, 25).map((e) => `<li>${escapeHTML(e)}</li>`).join("")}</ul>` : '<p class="notice ok">No rendered SEO errors: every sitemap URL returns 200 with a unique title, description and matching canonical.</p>'}
+      ${r.warnings.length ? `<details><summary>${r.warnings.length} warnings</summary><ul>${r.warnings.map((w) => `<li>${escapeHTML(w)}</li>`).join("")}</ul></details>` : ""}
+      ${mob.length ? `<h3 style="margin-top:16px">Lighthouse by page (mobile)</h3><div class="table-wrap"><table class="data-table"><thead><tr><th>Page</th><th>Perf</th><th>SEO</th><th>A11y</th><th>LCP</th><th>TBT</th><th>CLS</th><th>Top issues</th></tr></thead><tbody>${mob.map((p) => p.scores ? `<tr><td>${escapeHTML(new URL(p.url).pathname)}</td><td>${score(p.scores.performance)}</td><td>${score(p.scores.seo)}</td><td>${score(p.scores.accessibility)}</td><td>${(p.metrics.lcpMs / 1000).toFixed(1)} s</td><td>${Math.round(p.metrics.tbtMs)} ms</td><td>${p.metrics.cls.toFixed(3)}</td><td class="muted">${escapeHTML(p.failing.slice(0, 3).map((f) => f.title).join("; "))}</td></tr>` : `<tr><td>${escapeHTML(p.url)}</td><td colspan="7">${escapeHTML(p.error || "")}</td></tr>`).join("")}</tbody></table></div>` : ""}
+      ${history.length > 1 ? `<h3 style="margin-top:16px">Trend</h3><div class="table-wrap"><table class="data-table"><thead><tr><th>Week</th><th>Errors</th><th>Mobile perf</th><th>Desktop perf</th><th>SEO</th><th>A11y</th></tr></thead><tbody>${history.slice(-12).reverse().map((h) => `<tr><td>${escapeHTML(h.date)}</td><td>${h.renderedErrors ?? "—"}</td><td>${score(h.mobilePerformance)}</td><td>${score(h.desktopPerformance)}</td><td>${score(h.mobileSeo)}</td><td>${score(h.accessibility)}</td></tr>`).join("")}</tbody></table></div>` : ""}
+    </div>`;
+  bindRun(box);
+};
+const bindRun = (box) => {
+  const btn = $("#seo-run", box), msg = $("#seo-run-msg", box);
+  btn?.addEventListener("click", async () => {
+    btn.disabled = true; msg.textContent = "Starting…";
+    try { await seoApi({ action: "run-monitor" }); msg.textContent = "Started. The report updates in about 10 minutes; reload this page then."; }
+    catch (error) { msg.textContent = error.message; btn.disabled = false; }
+  });
+};
+
+// Expected organic CTR by rounded position (conservative industry curve), used to flag weak titles.
+const EXPECTED_CTR = [0, 0.28, 0.15, 0.1, 0.07, 0.05, 0.04, 0.03, 0.025, 0.02, 0.018];
+const LOCAL_INTENT = /mangal|mangaluru|udupi|kasarag|kerala|karnataka|dakshina|kochi|calicut|kozhikode|kannur|nri|gulf|dubai|saudi|near me/i;
+const mountSeoOpportunities = (view, params) => {
+  const out = $("#opp-out", view), msg = $("#opp-message", view), csvBtn = $("#opp-csv", view);
+  let rows = [], last = [];
+  const fmt = (n) => Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 1 });
+  const draw = () => {
+    const local = $("#opp-local", view).checked;
+    const pool = rows.filter((r) => !local || LOCAL_INTENT.test(r.query));
+    const striking = pool.filter((r) => r.position >= 4 && r.position <= 20 && r.impressions >= 10).sort((a, b) => b.impressions / b.position - a.impressions / a.position).slice(0, 40);
+    const lowCtr = pool.filter((r) => r.position < 10.5 && r.impressions >= 30).map((r) => ({ ...r, expected: EXPECTED_CTR[Math.max(1, Math.round(r.position))] })).filter((r) => r.ctr < r.expected * 0.5).sort((a, b) => b.impressions - a.impressions).slice(0, 25);
+    last = [...striking.map((r) => ({ type: "striking distance", ...r })), ...lowCtr.map((r) => ({ type: "low CTR", ...r }))];
+    csvBtn.disabled = !last.length;
+    const path = (u) => { try { return new URL(u).pathname; } catch { return u; } };
+    const table = (list, extra) => list.length ? `<div class="table-wrap"><table class="data-table"><thead><tr><th>Query</th><th>Page</th><th>Impr.</th><th>Clicks</th><th>CTR</th><th>Pos.</th><th>Action</th></tr></thead><tbody>${list.map((r) => `<tr><td>${escapeHTML(r.query)}</td><td><a href="${escapeHTML(r.page)}" target="_blank" rel="noopener">${escapeHTML(path(r.page))}</a></td><td>${fmt(r.impressions)}</td><td>${fmt(r.clicks)}</td><td>${(r.ctr * 100).toFixed(1)}%</td><td>${r.position.toFixed(1)}</td><td class="muted">${extra(r)}</td></tr>`).join("")}</tbody></table></div>` : '<p class="muted">None in this range.</p>';
+    out.innerHTML = `<h3>Striking distance (${striking.length})</h3>${table(striking, (r) => r.position <= 10 ? "Strengthen: put the query in the title and H1" : "Add a section answering this query, link to it internally")}
+      <h3 style="margin-top:16px">Low click-through (${lowCtr.length})</h3>${table(lowCtr, (r) => `Expected about ${(r.expected * 100).toFixed(0)}% CTR: rewrite title and description`)}`;
+  };
+  $("#opp-local", view).addEventListener("change", () => rows.length && draw());
+  $("#opp-load", view).addEventListener("click", async () => {
+    const p = params();
+    if (!p.siteUrl) { msg.textContent = "Connect Google and choose a property first."; return; }
+    msg.textContent = "Loading query and page data…";
+    try {
+      const data = await seoApi({ action: "query", ...p, dimensions: ["query", "page"] });
+      rows = (data.rows || []).map((r) => ({ query: r.keys[0], page: r.keys[1], clicks: r.clicks, impressions: r.impressions, ctr: r.ctr, position: r.position }));
+      msg.textContent = `${rows.length} query and page pairs analysed.`;
+      draw();
+    } catch (error) { msg.textContent = error.message; }
+  });
+  csvBtn.addEventListener("click", () => {
+    const q = (v) => `"${String(v).replace(/"/g, '""')}"`;
+    const csv = ["type,query,page,impressions,clicks,ctr,position", ...last.map((r) => [r.type, r.query, r.page, r.impressions, r.clicks, r.ctr.toFixed(4), r.position.toFixed(1)].map(q).join(","))].join("\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    a.download = `seo-opportunities-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
   });
 };
 
