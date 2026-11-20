@@ -67,7 +67,7 @@ export const openDoc = (id, defaults = {}) => {
     return { state, ...docTotals(lines, rupeesToPaise(val("discountRupees")), state, supplierState(), GST_RATE) };
   };
 
-  openDrawer({
+  const drawer = openDrawer({
     title: existing ? `${kind === "quote" ? "Quote" : "Invoice"} ${existing.number}` : kind === "quote" ? "New quote" : "New invoice",
     subtitle: existing ? esc(statusOf(existing).label) : "Numbered automatically when you save",
     spec,
@@ -127,6 +127,7 @@ export const openDoc = (id, defaults = {}) => {
       });
     },
     onSave: async (out) => {
+      if (readOnly) { toast("Paid or cancelled documents are locked and cannot be edited.", { error: true }); return false; }
       const gstin = String(out.gstin || "").trim().toUpperCase();
       if (gstin && !GSTIN_RE.test(gstin)) { toast("That GSTIN doesn't look right. It has 15 characters, like 29ABCDE1234F1Z5.", { error: true }); return false; }
       const cleaned = lines.filter((l) => l.description.trim()).map((l) => ({ description: l.description.trim().slice(0, 300), qty: Math.max(0, Number(l.qty) || 0), unit: (l.unit || "").trim().slice(0, 40), ratePaise: Math.max(0, Math.round(l.ratePaise || 0)) })).filter((l) => l.qty > 0);
@@ -151,9 +152,14 @@ export const openDoc = (id, defaults = {}) => {
       ui.tab = kind === "quote" ? "quotes" : "invoices";
       app.render();
     },
-    onDelete: existing && existing.status !== "paid" ? () => { del("docs", existing.id); app.render(); } : null,
-    deleteLabel: "Delete (drafts only)",
+    onDelete: existing && existing.status === "draft" ? () => { del("docs", existing.id); app.render(); } : null,
+    deleteLabel: "Delete draft",
   });
+  if (readOnly) {
+    drawer.el.querySelectorAll(".drawer-body input, .drawer-body select, .drawer-body textarea, .drawer-body button").forEach((el) => { el.disabled = true; });
+    drawer.el.querySelector("[data-save]")?.remove();
+    drawer.el.querySelector("[data-delete]")?.remove();
+  }
 };
 
 const openPaid = (doc) => {
