@@ -2,6 +2,8 @@
 // backup & restore, sample data. Rendered below the website settings.
 
 import { $, $$, uid, app, studioApi, toast } from "../core.js";
+import { STATE_OPTIONS } from "./finance.js";
+import { DEFAULT_POLICY } from "./leave.js";
 import { data, team, saveSettings, DEFAULT_CHECKLIST, ONBOARDING, loadAll, meId, setMe, isoDate, waitForSave, discardQueue } from "./data.js";
 import { icon, esc, optionsHTML, confirmBox } from "./ui.js";
 import { seedDemo, clearDemo, hasDemoData } from "./demo.js";
@@ -24,6 +26,18 @@ export const renderStudioSettings = (container) => {
         <div class="rows-edit" data-checklist>${checklist.map((i) => `<div class="row-edit" data-id="${esc(i.id)}"><input type="text" value="${esc(i.label)}" data-f="label" aria-label="Checklist item"><select data-f="stage" aria-label="Stage">${optionsHTML(ONBOARDING, i.stage)}</select><button type="button" class="icon-btn small" data-rm-item="${esc(i.id)}" aria-label="Remove">${icon("x", 14)}</button></div>`).join("")}</div>
         <div class="panel-actions"><button class="btn small" data-add-item>${icon("plus", 14)} Add item</button><button class="btn small ghost" data-reset-checklist>Reset to default</button></div>
       </div>
+      <div class="panel" id="company-panel">
+        <h2>Company (printed on quotes and invoices)</h2><p class="muted">Nothing here is filled in for you. Add your registered details; they appear on every document you print.</p>
+        <div class="form-grid">${[["legalName", "Legal name", "e.g. Vanilla & Somethin' Architects"], ["gstin", "GSTIN", "15 characters"], ["pan", "PAN", ""], ["phone", "Phone", ""], ["email", "Email", ""], ["upi", "UPI ID", ""], ["invoicePrefix", "Invoice number prefix", "VS"], ["quotePrefix", "Quote number prefix", "VSQ"]].map(([k, l, ph]) => `<label class="field half"><span class="lbl">${l}</span><input type="text" data-company="${k}" value="${esc((data.settings.company || {})[k] || "")}" placeholder="${esc(ph)}"></label>`).join("")}
+          <label class="field half"><span class="lbl">Registered state (GST)</span><select data-company="stateCode">${STATE_OPTIONS.map((o) => `<option value="${o.id}" ${((data.settings.company || {}).stateCode || "29") === o.id ? "selected" : ""}>${esc(o.label)}</option>`).join("")}</select></label>
+          <label class="field wide"><span class="lbl">Address</span><textarea data-company="address" rows="2">${esc((data.settings.company || {}).address || "")}</textarea></label>
+          <label class="field wide"><span class="lbl">Bank details</span><textarea data-company="bank" rows="3" placeholder="Account name, number, IFSC, bank and branch">${esc((data.settings.company || {}).bank || "")}</textarea></label>
+          <label class="field wide"><span class="lbl">Terms printed on documents</span><textarea data-company="terms" rows="3" placeholder="Payment terms, scope notes, validity">${esc((data.settings.company || {}).terms || "")}</textarea></label></div>
+      </div>
+      <div class="panel">
+        <h2>Leave policy</h2><p class="muted">Defaults follow the ALIVE team policy. Earned leave accrues 1 day for every N days worked. The office works the 2nd and 4th Saturdays.</p>
+        <div class="form-grid">${[["casualPerYear", "Casual days a year"], ["casualMaxRun", "Casual: max in a row"], ["sickPerYear", "Sick days a year"], ["sickCertificateOver", "Certificate needed over (days)"], ["earnedPerDaysWorked", "Earned: 1 day per N days worked"], ["earnedMaxPerYear", "Earned: max a year"], ["earnedCarryCap", "Earned: carry-over cap"], ["choicePerYear", "Choice days a year"]].map(([k, l]) => `<label class="field half"><span class="lbl">${l}</span><input type="number" min="0" data-policy="${k}" value="${esc(((data.settings.leavePolicy || {})[k]) ?? DEFAULT_POLICY[k])}"></label>`).join("")}</div>
+      </div>
       <div class="panel">
         <h2>Site visits</h2>
         <label class="field half"><span class="lbl">Flag a live site if it hasn't been visited for <em>days</em></span><input type="number" min="1" max="90" value="${esc(data.settings.staleVisitDays || 14)}" data-stale></label>
@@ -43,6 +57,8 @@ export const renderStudioSettings = (container) => {
     if (e.target.closest("[data-team]") && e.target.name !== "me") saveSettings({ team: members() });
     else if (e.target.name === "me") setMe(e.target.value);
     else if (e.target.closest("[data-checklist]")) saveSettings({ onboardingChecklist: items() });
+    else if (e.target.matches("[data-company]")) saveSettings({ company: { ...(data.settings.company || {}), [e.target.dataset.company]: e.target.value.trim() } });
+    else if (e.target.matches("[data-policy]")) saveSettings({ leavePolicy: { ...(data.settings.leavePolicy || {}), [e.target.dataset.policy]: Math.max(0, Number(e.target.value) || 0) } });
     else if (e.target.matches("[data-stale]")) saveSettings({ staleVisitDays: Math.max(1, Math.min(90, Number(e.target.value) || 14)) });
   });
 

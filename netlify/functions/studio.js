@@ -13,7 +13,7 @@ const { json, isAuthorized, parseBody } = require("./lib/auth");
 const { getStudioStore, readDoc, mutate } = require("./lib/store");
 
 // briefs are written only by the public onboarding form (onboard.js)
-const WRITABLE = ["clients", "projects", "tasks", "logs", "snags", "milestones", "activity"];
+const WRITABLE = ["clients", "projects", "tasks", "logs", "snags", "milestones", "activity", "leads", "docs", "expenses", "leaves", "holidays", "incidents"];
 const COLLECTIONS = [...WRITABLE, "briefs"];
 const MAX_ITEMS = 5000;
 const MAX_ITEM_BYTES = 24 * 1024;
@@ -252,6 +252,15 @@ const rebuild = async () => {
   return json(200, { ok: true });
 };
 
+// Gapless document numbers (invoices must be sequential): one atomic counter per
+// series and financial year, e.g. series "VS-INV/26-27".
+const nextNumber = async (store, body) => {
+  const series = String(body.series || "");
+  if (!/^[A-Z0-9][A-Z0-9/-]{1,24}$/.test(series)) throw badRequest("Invalid number series.");
+  const doc = await mutate(store, "counters", (current) => ({ rev: (current?.rev || 0) + 1, counts: { ...(current?.counts || {}), [series]: ((current?.counts || {})[series] || 0) + 1 } }));
+  return json(200, { n: doc.counts[series] });
+};
+
 // ---------------------------------------------------------------------------
 // Backup / restore (photos are not included: they can be large)
 
@@ -314,6 +323,8 @@ exports.handler = async (event) => {
         return await revokeToken(store, body);
       case "brief.del":
         return await deleteBrief(store, body);
+      case "number.next":
+        return await nextNumber(store, body);
       case "export":
         return await exportAll(store);
       case "import":

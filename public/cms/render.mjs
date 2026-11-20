@@ -212,6 +212,7 @@ header.site{position:sticky;top:0;z-index:10;background:rgba(13,13,13,.92);backd
 header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px}
 .brand{font-family:"Space Grotesk",sans-serif;font-weight:700;letter-spacing:.02em;text-decoration:none;font-size:18px;white-space:nowrap}
 .brand span{color:var(--accent)}
+.brand{display:inline-flex;align-items:center;gap:10px}.brand img{width:30px;height:30px;border-radius:50%}
 nav.site{display:flex;gap:22px;overflow-x:auto;scrollbar-width:none}
 nav.site::-webkit-scrollbar{display:none}
 nav.site a{font-family:"Fragment Mono",monospace;font-size:13px;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;color:var(--muted);white-space:nowrap}
@@ -380,7 +381,8 @@ export const layout = ({ title, description, path, image, section, body, cms, js
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHTML(fullTitle)}</title>
 <meta name="description" content="${escapeHTML(description || "")}">
-${noindex ? '<meta name="robots" content="noindex, nofollow">\n' : ""}<link rel="canonical" href="${escapeHTML(url)}">
+${noindex ? '<meta name="robots" content="noindex, nofollow">\n' : ""}<link rel="icon" type="image/png" href="/brand/vs-mark-light.png">
+<link rel="canonical" href="${escapeHTML(url)}">
 <meta property="og:type" content="${section === "blog" && path !== "/blog/" ? "article" : "website"}">
 <meta property="og:site_name" content="${escapeHTML(SITE_NAME)}">
 <meta property="og:title" content="${escapeHTML(title || SITE_NAME)}">
@@ -397,7 +399,7 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(
 </head>
 <body>
 <header class="site"><div class="wrap${shop ? " wide" : ""}">
-<a class="brand" href="/">VANILLA <span>&amp;</span> SOMETHIN</a>
+<a class="brand" href="/"><img src="/brand/vs-mark-light.png" alt="" width="30" height="30">VANILLA <span>&amp;</span> SOMETHIN</a>
 <nav class="site" aria-label="Main">${NAV.map(
     (n) => `<a href="${n.href}"${n.key && n.key === section ? ' aria-current="page"' : ""}>${n.label}</a>`
   ).join("")}${shop ? '<a href="/shop/account/" data-account-link>Account</a><a href="/shop/checkout/" data-bag-link>Bag (<span data-bag-count>0</span>)</a>' : ""}</nav>
@@ -406,7 +408,7 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(
 ${body}
 </div></main>
 <footer class="site"><div class="wrap${shop ? " wide" : ""}">
-<div><a class="brand" href="/">VANILLA <span>&amp;</span> SOMETHIN</a><p>${(contact.locations || []).map(escapeHTML).join(" · ")}</p></div>
+<div><a class="brand" href="/"><img src="/brand/vs-mark-light.png" alt="" width="30" height="30">VANILLA <span>&amp;</span> SOMETHIN</a><p>${(contact.locations || []).map(escapeHTML).join(" · ")}</p></div>
 <div class="cols">
 <div>${contact.phone ? `<a href="tel:${escapeHTML(String(contact.phone).replace(/\s+/g, ""))}">${escapeHTML(contact.phone)}</a><br>` : ""}${contact.email ? `<a href="mailto:${escapeHTML(contact.email)}">${escapeHTML(contact.email)}</a>` : ""}</div>
 <div>${socials}</div>

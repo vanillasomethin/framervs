@@ -53,3 +53,36 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 .showcase-meta strong { font-family: "Space Grotesk", sans-serif; text-transform: uppercase; letter-spacing: .01em; }
 .showcase-meta span { color: var(--muted); font-size: 13px; }
 .showcase-meta em { font-style: normal; font-family: var(--mono); font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: .06em; }
+
+.brand { display: inline-flex; align-items: center; gap: 10px; }
+.brand .logo { width: 30px; height: 30px; border-radius: 50%; flex: none; }
+.brand .amp { color: var(--accent); }
+.login-card .brand .logo { width: 44px; height: 44px; }
+.brand > span { color: inherit; }
+/* Finance / CRM / HR / operations */
+.kpis.money .kpi b { font-size: 26px; }
+.doc-lines { margin-top: 18px; }
+.doc-lines h3 { font-size: 14px; margin-bottom: 8px; }
+.doc-head, .doc-line { display: grid; grid-template-columns: 1fr 64px 70px 92px 92px 28px; gap: 8px; align-items: center; margin-bottom: 8px; }
+.doc-line input { padding: 8px 10px; }
+.doc-line [data-amt] { text-align: right; font-size: 13.5px; }
+.doc-totals { margin-top: 14px; display: grid; gap: 6px; max-width: 320px; margin-left: auto; }
+.doc-totals > div { display: flex; justify-content: space-between; font-size: 14px; }
+.doc-totals .grand { border-top: 1px solid var(--line-strong); padding-top: 8px; font-size: 16px; }
+td.r, th.r { text-align: right; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: var(--mute-bg); }
+@media (max-width: 640px) { .doc-head { display: none; } .doc-line { grid-template-columns: 1fr 1fr; } .doc-line input:first-child { grid-column: 1 / -1; } }
+.col { background: rgba(255,255,255,.03); border: 1px solid var(--line); }
+.col > header b { background: var(--mute-bg); }
+.card.lead { display: grid; gap: 4px; }
+.card.lead.due { border-color: var(--warn); }
+.lead-top { display: flex; justify-content: space-between; gap: 8px; }
+.lead-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+.late { color: var(--danger); }
+.crm-log { margin-top: 22px; } .crm-log h3 { font-size: 14px; margin-bottom: 10px; }
+.crm-add { display: grid; grid-template-columns: 110px 1fr 130px auto; gap: 8px; margin-bottom: 12px; }
+.crm-act { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+@media (max-width: 640px) { .crm-add { grid-template-columns: 1fr 1fr; } .crm-add input[type=text] { grid-column: 1 / -1; } }
+.sidebar .brand { font-size: 12.5px; letter-spacing: .04em; white-space: nowrap; }
+.sidebar .brand .logo { width: 28px; height: 28px; }
