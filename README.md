@@ -39,10 +39,12 @@ Studio data (clients, fees, site photos…) is stored in **Netlify Blobs**, neve
 | `ADMIN_PASSWORD` | Everything | The admin password |
 | `GITHUB_TOKEN` | Publishing website content | GitHub fine-grained token with **Contents: Read and write** on `vanillasomethin/framervs` |
 | `NETLIFY_BUILD_HOOK` | "Rebuild website" button (optional) | A Netlify build hook URL (Build & deploy → Build hooks) |
+| `PAGESPEED_API_KEY` | Daily mobile + desktop PageSpeed monitoring | Google PageSpeed Insights API key (server-side only) |
+| `PAGESPEED_URLS` | Extra pages to monitor (optional) | Comma-separated HTTPS URLs on `vanillasometh.in`; defaults to the homepage |
 
 Optional: `GITHUB_REPO` (default `vanillasomethin/framervs`), `GITHUB_BRANCH` (default `main`), `SESSION_SECRET`, `SITE_URL` (for health checks). The studio works with only `ADMIN_PASSWORD`; add `GITHUB_TOKEN` when you want to publish website content. Redeploy after adding variables.
 
-Functions: `netlify/functions/cms.js` (login + website publishing), `studio.js` (private studio API), `onboard.js` (public brief form endpoint). Their only dependency, `@netlify/blobs`, is listed in `netlify/functions/package.json`.
+Functions: `netlify/functions/cms.js` (login + website publishing), `studio.js` (private studio API), `onboard.js` (public brief form endpoint), `pagespeed-monitor.js` (daily scheduled mobile + desktop Lighthouse checks), and `pagespeed-report.js` (admin-session-protected report API). PageSpeed results are stored privately in the Netlify Blobs store named `pagespeed`; fetch `/.netlify/functions/pagespeed-report` with the admin Bearer session to read the latest report and up to 90 days of history. The API key is never returned. The PageSpeed schedule runs daily at 05:00 UTC (10:30 IST).
 
 ### Tests
 `node scripts/test-studio-api.cjs` checks the studio and onboarding functions (auth, conflict-safe saves, photos, brief links, backup/restore) with no network.
