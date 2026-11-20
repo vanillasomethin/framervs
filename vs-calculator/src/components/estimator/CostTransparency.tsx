@@ -6,7 +6,7 @@ interface CostTransparencyProps {
   estimate: ProjectEstimate;
 }
 
-// Indicative all-in ₹/sqft bands (inclusive of fees, contingency & GST) used only
+// Indicative all-in ₹/sqft bands (legacy reference; not used as a fee calculation) used only
 // to position the user's estimate against the wider market. Sourced from 2026
 // metro-India ranges (architects4design / InfraLens). Not a calculation input.
 const BENCHMARK_BANDS: Record<string, { low: number; typical: number; high: number }> = {
@@ -20,7 +20,7 @@ const CATEGORY_LABELS: Record<string, { label: string; hint: string }> = {
   core: { label: "MEP / Core Systems", hint: "Plumbing, electrical, HVAC, lift" },
   finishes: { label: "Finishes & Envelope", hint: "Facade, waterproofing, flooring, ceilings" },
   interiors: { label: "Interiors & FF&E", hint: "Furniture, furnishings, appliances" },
-  fees: { label: "Fees, Contingency & GST", hint: "Professional fees + contingency + taxes" },
+  fees: { label: "Contingency allowance", hint: "5% preliminary planning allowance; architect fees and GST excluded" },
 };
 
 const CostTransparency = ({ estimate }: CostTransparencyProps) => {
@@ -60,13 +60,13 @@ const CostTransparency = ({ estimate }: CostTransparencyProps) => {
 
   let verdict: { text: string; color: string };
   if (perSqft < band.low) {
-    verdict = { text: "Below the typical market range — a lean, budget-conscious spec.", color: "text-blue-700" };
+    verdict = { text: "Lower than the reference band. Check scope and exclusions before comparing.", color: "text-blue-700" };
   } else if (perSqft <= band.typical) {
-    verdict = { text: "In the value end of the market range for this project type.", color: "text-green-700" };
+    verdict = { text: "Within the lower part of the reference band. Compare like-for-like scope.", color: "text-green-700" };
   } else if (perSqft <= band.high) {
-    verdict = { text: "In the premium end of the typical market range.", color: "text-amber-700" };
+    verdict = { text: "Within the upper part of the reference band. Compare like-for-like scope.", color: "text-amber-700" };
   } else {
-    verdict = { text: "Above the typical range — a high-spec / luxury configuration.", color: "text-vs" };
+    verdict = { text: "Above the reference band. Check specification, scope and site conditions.", color: "text-vs" };
   }
 
   return (
@@ -117,7 +117,7 @@ const CostTransparency = ({ estimate }: CostTransparencyProps) => {
           <h3 className="text-base font-semibold text-vs-dark">How your ₹/sqft compares</h3>
         </div>
         <p className="text-xs text-muted-foreground mb-4">
-          Your all-in rate against typical 2026 market bands for {estimate.projectType} projects.
+          Your estimated project-cost rate. This is not a verified city-wide market comparison.
         </p>
 
         <div className="flex items-baseline gap-2 mb-3">
@@ -135,9 +135,9 @@ const CostTransparency = ({ estimate }: CostTransparencyProps) => {
           />
         </div>
         <div className="flex justify-between text-[11px] text-muted-foreground mb-3">
-          <span>₹{band.low.toLocaleString("en-IN")} (lean)</span>
-          <span>₹{band.typical.toLocaleString("en-IN")} (typical)</span>
-          <span>₹{band.high.toLocaleString("en-IN")} (premium)</span>
+          <span>₹{band.low.toLocaleString("en-IN")} (reference low)</span>
+          <span>₹{band.typical.toLocaleString("en-IN")} (reference mid)</span>
+          <span>₹{band.high.toLocaleString("en-IN")} (reference high)</span>
         </div>
 
         <div className="flex items-start gap-2 bg-gray-50 rounded-lg p-3">
