@@ -84,12 +84,11 @@ const DetailedBreakdownSection = ({ estimate }: DetailedBreakdownSectionProps) =
     },
     {
       key: "fees",
-      category: "Professional Fees & Taxes",
+      category: "Contingency Allowance",
       value: cb.fees,
       items: [
-        { name: "Architectural & documentation fees (8.25%)", level: undefined },
-        { name: "Contingency (5%)", level: undefined },
-        { name: "GST (6%)", level: undefined },
+        { name: "Contingency allowance (5%)", level: undefined },
+        { name: "Architectural professional fees and GST are excluded; quote separately", level: undefined },
       ],
     },
   ]
