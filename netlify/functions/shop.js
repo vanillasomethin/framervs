@@ -191,8 +191,20 @@ exports.handler = async (event) => {
         if (!order) return json(404, { error: "Order not found." });
         const expected = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET).update(`${body.razorpay_order_id}|${body.razorpay_payment_id}`).digest("hex");
         if (!safeEqual(expected, String(body.razorpay_signature || ""))) return json(400, { error: "The payment could not be verified." });
-        const updated = await patchOrder(store, order.id, (o) => ({ ...o, status: "new", payment: { ...o.payment, status: "paid", paymentId: clean(body.razorpay_payment_id, 60) } }));
-        return json(200, { order: publicOrder(updated.items.find((o) => o.id === order.id)) });
+        const updated = await patchOrder(store, order.id, (o) => {
+          // Payment callbacks may be replayed after fulfilment has advanced. Record
+          // the first verified payment, but never roll a shipped/delivered/cancelled
+          // order back to "new" or replace the original payment reference.
+          if (o.payment?.status === "paid") return o;
+          return {
+            ...o,
+            status: o.status === "awaiting_payment" ? "new" : o.status,
+            payment: { ...o.payment, status: "paid", paymentId: clean(body.razorpay_payment_id, 60) },
+          };
+        });
+        const verifiedOrder = updated?.items?.find((o) => o.id === order.id);
+        if (!verifiedOrder) return json(404, { error: "Order not found." });
+        return json(200, { order: publicOrder(verifiedOrder) });
       }
 
       case "admin-orders": {
