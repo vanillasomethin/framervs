@@ -13,7 +13,7 @@ const { json, isAuthorized, parseBody } = require("./lib/auth");
 const { getStudioStore, readDoc, mutate } = require("./lib/store");
 
 // briefs are written only by the public onboarding form (onboard.js)
-const WRITABLE = ["clients", "projects", "tasks", "logs", "snags", "milestones", "activity", "leads", "docs", "expenses", "leaves", "holidays", "incidents"];
+const WRITABLE = ["clients", "projects", "tasks", "logs", "snags", "milestones", "activity", "leads", "docs", "expenses", "leaves", "holidays", "incidents", "enquiries", "consultations"];
 const COLLECTIONS = [...WRITABLE, "briefs"];
 const MAX_ITEMS = 5000;
 const MAX_ITEM_BYTES = 24 * 1024;

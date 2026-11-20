@@ -6,6 +6,7 @@ import { $, $$, uid, app, toast } from "../core.js";
 import { data, put, del, note, today, addDays, member, team, meName, meId, CLIENT_SOURCES, PROJECT_TYPES } from "./data.js";
 import { icon, esc, avatar, pill, fmtDate, timeAgo, optionsHTML, openDrawer, openMenu, emptyState, mount } from "./ui.js";
 import { inr } from "./finance.js";
+import { openConsultation, consultationsOf, enquiryOf, FEE_STATUS, OUTCOMES } from "./consultations.js";
 
 export const LEAD_STAGES = [
   { id: "new", label: "New", tone: "mute" },
@@ -86,7 +87,7 @@ export const openLead = (id, defaults = {}) => {
       { key: "notes", label: "Notes", type: "textarea", rows: 3 },
     ],
     values,
-    after: `<section class="crm-log"><h3>Activity</h3>
+    after: `${existing ? consultationsSection(existing) : ""}<section class="crm-log"><h3>Activity</h3>
       <div class="crm-add"><select data-act-type>${optionsHTML(ACTIVITY, "call")}</select><input type="text" data-act-note placeholder="What was discussed?"><input type="date" data-act-due title="Follow-up date (optional)"><button type="button" class="btn small" data-act-add>Log</button></div>
       <div data-acts></div></section>`,
     bind: (root) => {
@@ -97,6 +98,13 @@ export const openLead = (id, defaults = {}) => {
           : '<p class="muted small">Nothing logged yet.</p>';
       };
       draw();
+      if (existing) {
+        root.addEventListener("click", (e) => {
+          const cons = e.target.closest("[data-cons]");
+          if (cons) return openConsultation(cons.dataset.cons);
+          if (e.target.closest("[data-cons-new]")) openConsultation(null, { leadId: existing.id });
+        });
+      }
       $("[data-act-add]", root).addEventListener("click", () => {
         const text = $("[data-act-note]", root).value.trim();
         if (!text) return toast("Write a short note first.", { error: true });
@@ -126,6 +134,25 @@ export const openLead = (id, defaults = {}) => {
 
 // ---------------------------------------------------------------------------
 
+const consultationsSection = (existing) => {
+  const enq = enquiryOf(existing);
+  const details = enq
+    ? ["budgetRange", "timeline", "stage", "message"].map((k) => enq[k]).filter(Boolean).map((v) => esc(v)).join(" · ")
+    : "";
+  const cons = consultationsOf(existing.id);
+  const labelOf = (list, id) => list.find((x) => x.id === id) || list[0] || { label: "", tone: "mute" };
+  return `<section class="crm-log"><h3>Consultations</h3>
+    ${enq ? `<p class="muted small">From a website enquiry on ${fmtDate(enq.createdAt, { year: true })}${details ? `<br>${details}` : ""}</p>` : ""}
+    ${cons.length
+      ? cons.map((c) => {
+        const fee = labelOf(FEE_STATUS, c.feeStatus);
+        const out = labelOf(OUTCOMES, c.outcome);
+        return `<div class="crm-act" data-cons="${esc(c.id)}" style="cursor:pointer"><div>${esc(c.scheduledAt ? fmtDate(c.scheduledAt) : "No date")}</div><div>${pill(fee.label, fee.tone)} ${pill(out.label, out.tone)}</div></div>`;
+      }).join("")
+      : '<p class="muted small">No consultation yet.</p>'}
+    <button type="button" class="btn small" data-cons-new>Start consultation</button></section>`;
+};
+
 const cardHTML = (l) => {
   const o = member(l.owner);
   return `<article class="card lead ${due(l) ? "due" : ""}" draggable="true" data-lead="${l.id}">
@@ -144,6 +171,7 @@ export const renderCrm = (view) => {
   const dueNow = open.filter(due);
   const fy = today().slice(0, 4);
   const wonYear = data.leads.filter((l) => l.stage === "won" && (l.closedAt || "").startsWith(fy));
+  const newEnquiries = (data.enquiries || []).filter((e) => e.status === "new").length;
   const root = mount(view, `
     <div class="page-head"><div><h1>CRM</h1><p>Leads from first contact to won. Log every call and meeting, set the next action, and turn a won lead into a client.</p></div>
       <div class="head-actions"><button class="btn primary" data-new>${icon("plus", 16)} New lead</button></div></div>
@@ -152,6 +180,7 @@ export const renderCrm = (view) => {
       <div class="kpi"><span class="k">Pipeline value</span><b>${inr(open.reduce((n, l) => n + (l.valuePaise || 0), 0))}</b><span class="small muted">estimated fees, open leads</span></div>
       <div class="kpi ${dueNow.length ? "warn" : ""}"><span class="k">Actions due</span><b>${dueNow.length}</b><span class="small muted">today or overdue</span></div>
       <div class="kpi"><span class="k">Won this year</span><b>${wonYear.length}</b><span class="small muted">${inr(wonYear.reduce((n, l) => n + (l.valuePaise || 0), 0))}</span></div>
+      <a class="kpi ${newEnquiries ? "warn" : ""}" href="#/consultations"><span class="k">Website enquiries</span><b>${newEnquiries}</b><span class="small muted">new, not yet reviewed</span></a>
     </div>
     <div class="toolbar"><div class="seg">${[["board", "Board"], ["today", "Follow-ups"], ["table", "All leads"]].map(([id, l]) => `<button type="button" data-view="${id}" class="${ui.view === id ? "on" : ""}">${l}</button>`).join("")}</div>
       <label class="search">${icon("search", 15)}<input type="search" data-q placeholder="Search leads" value="${esc(ui.q)}"></label>
