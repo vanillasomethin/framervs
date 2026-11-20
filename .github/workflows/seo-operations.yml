@@ -1,0 +1,45 @@
+name: Free SEO operations
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 2 * * 1"
+  pull_request:
+    paths:
+      - "public/**"
+      - "scripts/seo/**"
+      - ".github/workflows/seo-operations.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build CMS pages
+        run: node scripts/build-cms.mjs
+      - name: Run existing static SEO audit
+        run: node scripts/audit-seo.mjs
+      - name: Run live technical crawl
+        run: node scripts/seo/audit.mjs
+        env:
+          SEO_SITE_URL: https://www.vanillasometh.in
+          SEO_MAX_PAGES: "150"
+      - name: Validate structured data
+        run: node scripts/seo/schema-check.mjs
+      - name: Check AI discoverability files
+        run: node scripts/seo/geo-check.mjs
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vanilla-somethin-seo-reports
+          path: reports/seo/
+          if-no-files-found: ignore
+          retention-days: 30
