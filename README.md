@@ -7,6 +7,15 @@ Preferred domain: `https://www.vanillasometh.in`.
 * **Redirects:** Netlify-style redirects live in `public/_redirects` and force all `http` and non-`www` requests to the preferred domain with 301s.
 * **Canonical tags:** Static HTML pages in `public/` contain `<link rel="canonical">` tags that point to the preferred domain plus the current path.
 
+## Running without Framer's servers
+
+The Framer pages (home, showcase, contact, team) are an export of the Framer site that now runs entirely from this repository: the Framer runtime and page modules live in `public/js/`, and every image, font and video lives in `public/fr/`. Nothing loads from `framerusercontent.com`, so every animation and scroll effect behaves as before and the site keeps working if the Framer project is changed or removed. Only Google Fonts and Google Analytics are still loaded from Google.
+
+* `scripts/selfhost-framer.mjs <export-folder>` produced this from a Framer export (copy the runtime, download the assets, rewrite the pages, drop the editor bridge and Framer analytics). It is safe to run again on a fresh export.
+* To change the design of those pages you still need Framer (or edit the exported HTML/modules by hand). The CMS-driven pages (`/blog`, `/projects`, `/updates`, `/shop`) are generated from the admin and do not use Framer at all.
+* `public/js/vs-framercms-range.js` lets Framer's CMS files (project showcase) be read from a normal static host.
+* The two `*.mp4` files and the larger images are the biggest assets; large photos were resized to 2400px wide.
+
 ## Admin (`/admin`)
 
 One private admin for the whole studio: **project management, client onboarding, site management and the website**.
