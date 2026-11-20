@@ -171,52 +171,14 @@ export const generateEstimatePDF = (
 
   yPos += 8;
 
-  // Market Rate Comparison
-  checkPageBreak(45);
-  addText('REFERENCE RATE (NOT A LOCAL AVERAGE)', margin, yPos, 14, 'bold');
-  yPos += 10;
-  addLine(yPos);
-  yPos += 8;
-
-  const benchmarkBands: Record<string, { low: number; typical: number; high: number }> = {
-    residential: { low: 1800, typical: 2600, high: 4000 },
-    commercial: { low: 2200, typical: 3200, high: 5000 },
-    'mixed-use': { low: 2500, typical: 3600, high: 5500 },
-  };
+  // Per-unit estimate — arithmetic only, not a market-rate comparison.
   const areaInSqft = estimate.areaUnit === 'sqft' ? estimate.area : estimate.area * 10.764;
   const perSqft = areaInSqft > 0 ? estimate.totalCost / areaInSqft : 0;
-  const band = benchmarkBands[estimate.projectType] || benchmarkBands.residential;
-  let verdictText: string;
-  if (perSqft < band.low) {
-    verdictText = 'Below the typical market range - a lean, budget-conscious spec.';
-  } else if (perSqft <= band.typical) {
-    verdictText = 'In the value end of the market range for this project type.';
-  } else if (perSqft <= band.high) {
-    verdictText = 'In the premium end of the typical market range.';
-  } else {
-    verdictText = 'Above the typical range - a high-spec / luxury configuration.';
-  }
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(79, 9, 12);
-  doc.text(`Rs. ${Math.round(perSqft).toLocaleString('en-IN')} / sqft (all-in)`, margin + 5, yPos);
-  yPos += 7;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(60, 60, 60);
-  doc.text(
-    `Broad reference band for ${toSentenceCase(estimate.projectType)} projects (not a verified local average): Rs. ${band.low.toLocaleString('en-IN')} (lean) - Rs. ${band.typical.toLocaleString('en-IN')} (typical) - Rs. ${band.high.toLocaleString('en-IN')} (premium)`,
-    margin + 5,
-    yPos,
-    { maxWidth: pageWidth - 2 * margin - 5 }
-  );
-  yPos += 12;
-  doc.setFont('helvetica', 'italic');
-  doc.setTextColor(0, 0, 0);
-  doc.text(verdictText, margin + 5, yPos);
-  doc.setFont('helvetica', 'normal');
-  yPos += 12;
+  checkPageBreak(30);
+  addText('ESTIMATED UNIT COST (NOT A MARKET AVERAGE)', margin, yPos, 12, 'bold');
+  yPos += 8;
+  addText(`Rs. ${Math.round(perSqft).toLocaleString('en-IN')} / sqft`, margin + 5, yPos, 10, 'normal');
+  yPos += 14;
 
   // Timeline
   checkPageBreak(50);
