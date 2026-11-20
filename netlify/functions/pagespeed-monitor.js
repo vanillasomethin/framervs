@@ -3,6 +3,7 @@
 // Optional PAGESPEED_URLS: comma-separated HTTPS URLs on vanillasometh.in.
 
 const { connectLambda, getStore } = require("@netlify/blobs");
+const { isAuthorized } = require("./lib/auth");
 const DEFAULT_URLS = ["https://www.vanillasometh.in/"];
 const DEVICES = ["mobile", "desktop"];
 const HISTORY_LIMIT = 90;
@@ -16,6 +17,7 @@ const AUDIT_IDS = [
 function configuredUrls() {
   const raw = process.env.PAGESPEED_URLS;
   const urls = raw ? raw.split(",").map((v) => v.trim()).filter(Boolean) : DEFAULT_URLS;
+  if (urls.length > 8) throw new Error("PAGESPEED_URLS supports up to 8 URLs.");
   return [...new Set(urls)].map((value) => {
     const url = new URL(value);
     if (url.protocol !== "https:" || !["vanillasometh.in", "www.vanillasometh.in"].includes(url.hostname)) {
@@ -82,6 +84,9 @@ async function runPage(url, strategy, apiKey) {
 }
 
 exports.handler = async (event) => {
+  // Scheduled invocations have no httpMethod. Manual HTTP runs require the admin session.
+  if (event.httpMethod && event.httpMethod !== "POST") return { statusCode: 405, body: "Method not allowed." };
+  if (event.httpMethod && !isAuthorized(event)) return { statusCode: 401, body: "Admin login required." };
   const apiKey = process.env.PAGESPEED_API_KEY;
   if (!apiKey) {
     console.error("PageSpeed monitor: PAGESPEED_API_KEY is not configured.");
