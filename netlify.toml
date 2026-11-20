@@ -79,3 +79,8 @@
   from = "/admin/"
   to = "/admin/index.html"
   status = 200
+
+
+# Daily mobile + desktop Google PageSpeed Insights checks (05:00 UTC).
+[functions."pagespeed-monitor"]
+  schedule = "0 5 * * *"
