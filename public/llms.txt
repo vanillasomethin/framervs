@@ -15,9 +15,16 @@ This file is supplementary machine-readable site navigation. It is not a substit
 - [Building permits and licensing support](https://www.vanillasometh.in/permits-and-licensing-support/): Design documentation and coordination for K-SMART, local authority building permissions, commercial fit-outs and relevant licensing processes.
 - [Team](https://www.vanillasometh.in/team.html): Studio leadership and team.
 - [Contact](https://www.vanillasometh.in/contact/): Project enquiry form and contact details.
+- [Home Project Clarity Consultation](https://www.vanillasometh.in/home-project-clarity-consultation/): Complimentary discovery call for homeowners to discuss goals, location, project stage, broad constraints and possible next steps. It is an initial fit and qualification conversation, not a paid consultation or a technical deliverable.
 - [House construction cost in Karnataka](https://www.vanillasometh.in/house-construction-cost-karnataka/): 2026 planning guide to construction cost per square foot, example budgets, scope inclusions and exclusions for Mangaluru and Karnataka.
 - [Interior design cost in Karnataka](https://www.vanillasometh.in/interior-design-cost-karnataka/): 2026 guide to full-home interior budgets, modular kitchen, wardrobe and ceiling cost measurement bases.
+- [Architect vs engineer vs contractor](https://www.vanillasometh.in/architect-engineer-contractor-roles/): Who does what on a home project in India, responsibilities, deliverables and questions to ask before appointing anyone.
+- [How to compare construction quotations](https://www.vanillasometh.in/compare-construction-quotations/): Guide to comparing contractor quotations by scope, specification and exclusions, with a free in-browser comparison worksheet.
+- [Home budget allocation](https://www.vanillasometh.in/home-budget-allocation/): Illustrative scenarios for splitting a home budget between construction, interiors, fees and contingency.
+- [Home renovation planning checklist](https://www.vanillasometh.in/home-renovation-planning-checklist/): Printable checklist for assessing, scoping, budgeting and sequencing a home renovation.
+- [Architect fees in Karnataka](https://www.vanillasometh.in/architect-fees-karnataka/): How architecture fees are structured, what each design stage should deliver and how to compare fee proposals.
 - [Architect fees in India (2026)](https://www.vanillasometh.in/blog/architect-fees-india-2026/): Homeowner guide to percentage, per-square-foot and fixed fee models, the COA-published individual-house scale, scope comparison, GST assumptions and payment milestones.
+- [Duplex and rental-unit home design](https://www.vanillasometh.in/duplex-rental-home-design/): Feasibility, layout and lifecycle-cost considerations for homes with rental units.
 - [Project Cost Estimator](https://www.vanillasometh.in/estimator/): Interactive preliminary construction/interiors cost estimator for residential, commercial and mixed-use projects, plus a separate architect-fee calculator. Results are indicative planning references, not quotations or BOQs.
 
 - [NRI home design](https://www.vanillasometh.in/nri-home-design/): Remote-first initial design briefing and project-scope information for NRI families planning homes in India.
