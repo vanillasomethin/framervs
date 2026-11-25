@@ -188,8 +188,15 @@ for (const file of allPages) {
 
 // Template placeholder copy must never return (e.g. after a fresh Framer export).
 const { FORBIDDEN } = await import("./seo/framer-cms-copy.mjs");
-const activeCms = new Set(walk("js").filter((f) => f.endsWith(".mjs")).flatMap((f) => [...read(f).matchAll(/new URL\("js\/([^"]+\.framercms)"/g)].map((m) => `js/${m[1]}`)));
-for (const file of [...allPages, ...activeCms, ...walk("").filter((f) => /searchindex[^/]*\.json$/i.test(f))]) {
+// walk() returns HTML only; the CMS data and search indexes need every file type.
+const walkFiles = (dir) => fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap((d) => {
+  const rel = dir ? `${dir}/${d.name}` : d.name;
+  return d.isDirectory() ? walkFiles(rel) : [rel];
+});
+const activeCms = new Set(walkFiles("js").filter((f) => f.endsWith(".mjs")).flatMap((f) => [...read(f).matchAll(/new URL\("js\/([^"]+\.framercms)"/g)].map((m) => `js/${m[1]}`)));
+const searchIndexes = [...walkFiles("js"), ...walkFiles("fr")].filter((f) => /searchindex[^/]*\.json$/i.test(f));
+if (!activeCms.size) errors.push("placeholder audit found no Framer CMS data files; check the js/ module scan");
+for (const file of [...allPages, ...activeCms, ...searchIndexes]) {
   const text = fs.readFileSync(path.join(root, file), "latin1").toLowerCase();
   for (const phrase of FORBIDDEN) if (text.includes(phrase)) errors.push(`${file}: template placeholder copy "${phrase}"; run node scripts/seo/patch-framer-cms.mjs`);
 }
