@@ -194,6 +194,10 @@ for (const file of [...allPages, ...activeCms, ...walk("").filter((f) => /search
   for (const phrase of FORBIDDEN) if (text.includes(phrase)) errors.push(`${file}: template placeholder copy "${phrase}"; run node scripts/seo/patch-framer-cms.mjs`);
 }
 
+// The Home Project Clarity Consultation is free (owner decision, November 2026).
+const PAID_CONSULTATION = /consultation fee|consultation is paid|paid first-step consultation|paid consultation/i;
+for (const file of [...allPages, "llms.txt"]) if (PAID_CONSULTATION.test(read(file))) errors.push(`${file}: describes the Clarity Consultation as paid; it is free`);
+
 console.log(`SEO audit: ${errors.length} error(s), ${warnings.length} warning(s)`);
 for (const warning of warnings) console.warn(`WARN  ${warning}`);
 for (const error of errors) console.error(`ERROR ${error}`);
