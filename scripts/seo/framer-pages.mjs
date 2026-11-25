@@ -59,8 +59,8 @@ export const PROJECTS = [
 export const PAGES = [
   {
     file: "index.html", path: "/",
-    title: "Vanilla & Somethin' | Architects & Interior Designers, Mangalore",
-    description: "Architecture and interior design studio in Mangalore designing homes, offices, cafes and retail spaces across coastal Karnataka, Kerala and the Gulf.",
+    title: "Architecture & Interior Design in Mangalore | Vanilla & Somethin'",
+    description: "Mangalore architecture and interior design for homes, workplaces and retail spaces across coastal Karnataka and Kerala.",
     keepExistingSchema: true,
   },
   {
@@ -71,14 +71,14 @@ export const PAGES = [
   },
   {
     file: "contact/index.html", path: "/contact/",
-    title: "Contact Our Mangalore Architecture Studio | Vanilla & Somethin'",
-    description: "Start a home, interior or commercial design project with Vanilla & Somethin'. Share your brief and we will reply with next steps and a consultation slot.",
+    title: "Contact an Architect in Mangalore | Vanilla & Somethin'",
+    description: "Enquire about home, interior or commercial design with our Mangalore studio. Share your brief and discuss the next steps.",
     contact: true,
   },
   {
     file: "team.html", path: "/team.html", altPaths: ["/team", "/team/"],
-    title: "Our Architects & Designers | Vanilla & Somethin' Team",
-    description: "Meet Ar. Hisham Khalid, Ar. Zeba Ali Khan and the Vanilla & Somethin' team designing homes, workplaces and commercial interiors from Mangalore.",
+    title: "Our Architecture Team | Vanilla & Somethin'",
+    description: "Meet the Vanilla & Somethin' architecture team in Mangalore, designing homes, workplaces and commercial interiors.",
     keepExistingSchema: true,
   },
   ...PROJECTS.map(project),
