@@ -459,6 +459,7 @@ export const renderBlogIndex = (cms) => {
     body: `<p class="eyebrow">[Journal]</p>
 <h1>${escapeHTML(intro.title || "Journal")}</h1>
 <p class="lede">${escapeHTML(intro.description || "Ideas, process notes and stories from the Vanilla & Somethin studio.")}</p>
+${intro.body ? `<div class="narrow prose">${markdownToHTML(intro.body)}</div>` : ""}
 ${posts.length ? `<div class="grid">${posts.map(postCard).join("\n")}</div>` : '<p class="empty">New stories are on the way.</p>'}`,
   });
 };
@@ -510,6 +511,7 @@ export const renderProjectsIndex = (cms) => {
     body: `<p class="eyebrow">[Projects]</p>
 <h1>${escapeHTML(intro.title || "Projects")}</h1>
 <p class="lede">${escapeHTML(intro.description || "Architecture, interiors and landscape projects by Vanilla & Somethin.")}</p>
+${intro.body ? `<div class="narrow prose">${markdownToHTML(intro.body)}</div>` : ""}
 ${projects.length ? `<div class="grid">${projects.map(projectCard).join("\n")}</div>` : '<p class="empty">New projects are on the way.</p>'}
 <p class="more"><a class="btn" href="/project-showcase">See the full showcase →</a></p>`,
   });
@@ -585,6 +587,7 @@ export const renderUpdates = (cms) => {
     body: `<p class="eyebrow">[Updates]</p>
 <h1>${escapeHTML(intro.title || "Studio Updates")}</h1>
 <p class="lede">${escapeHTML(intro.description || "News, milestones and announcements from the Vanilla & Somethin studio.")}</p>
+${intro.body ? `<div class="narrow prose">${markdownToHTML(intro.body)}</div>` : ""}
 ${updates.length ? `<div class="timeline">${updates
       .map(
         (u) => `<article id="${escapeHTML(u.slug || slugify(u.title))}">

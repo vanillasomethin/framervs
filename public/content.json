@@ -3068,15 +3068,18 @@
     "pagesIntro": {
       "projects": {
         "title": "Selected Projects",
-        "description": "Architecture, interiors, landscape and project delivery across residential, commercial and public-realm environments."
+        "description": "Residential, commercial, interior and landscape work by Vanilla & Somethin', with project locations and scope identified where confirmed.",
+        "body": "Our portfolio brings together selected work across residential architecture, apartment and home interiors, offices, retail, hospitality and landscape or public-realm design coordination. Each project responds to a different brief, site, client and delivery context.\n\nThe studio is based in Mangalore, Karnataka. Portfolio locations are shown project by project; they do not imply that the studio maintains an office in every location. Where a project record has limited published information, we keep the description to the scope that is confirmed rather than filling gaps with assumptions.\n\nUse the project categories and location details to explore relevant work, then [contact the studio](/contact/) with your own site, brief and project stage."
       },
       "blog": {
-        "title": "",
-        "description": ""
+        "title": "Journal",
+        "description": "Practical guides and studio notes on architecture, interiors, project costs and the decisions behind a well-scoped project.",
+        "body": "The journal is where we collect useful references for people planning a home, renovation, workplace or commercial space. Our aim is to explain design scope and project decisions in plain language, not to offer one-size-fits-all prices or shortcuts.\n\nStart with these current planning guides:\n\n- [House construction cost in Karnataka](/house-construction-cost-karnataka/)\n- [Interior design cost in Karnataka](/interior-design-cost-karnataka/)\n- [Architect fees in Karnataka](/architect-fees-karnataka/)\n- [Architect, engineer and contractor responsibilities](/architect-engineer-contractor-roles/)\n\nEvery project depends on its site, brief, specifications and appointment. Treat cost ranges as early planning references and confirm the scope and current rates with the professionals appointed to your project."
       },
       "updates": {
-        "title": "",
-        "description": ""
+        "title": "Studio Updates",
+        "description": "Confirmed announcements and milestones from the Vanilla & Somethin' studio.",
+        "body": "This page is reserved for studio announcements, project milestones and service updates that are ready to share publicly. We do not publish placeholder news or treat client-confidential project activity as public updates.\n\nFor current work, browse the [selected project portfolio](/project-showcase/), read the [journal planning guides](/blog/), or [contact the studio](/contact/) with a project enquiry."
       }
     },
     "blog": [],
