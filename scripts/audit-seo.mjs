@@ -186,6 +186,14 @@ for (const file of allPages) {
   if (/data-framer-hydrate/.test(read(file)) && !read(file).includes('src="/seo-meta.js"')) errors.push(`${file}: Framer page without /seo-meta.js (rendered title will be generic)`);
 }
 
+// Template placeholder copy must never return (e.g. after a fresh Framer export).
+const { FORBIDDEN } = await import("./seo/framer-cms-copy.mjs");
+const activeCms = new Set(walk("js").filter((f) => f.endsWith(".mjs")).flatMap((f) => [...read(f).matchAll(/new URL\("js\/([^"]+\.framercms)"/g)].map((m) => `js/${m[1]}`)));
+for (const file of [...allPages, ...activeCms, ...walk("").filter((f) => /searchindex[^/]*\.json$/i.test(f))]) {
+  const text = fs.readFileSync(path.join(root, file), "latin1").toLowerCase();
+  for (const phrase of FORBIDDEN) if (text.includes(phrase)) errors.push(`${file}: template placeholder copy "${phrase}"; run node scripts/seo/patch-framer-cms.mjs`);
+}
+
 console.log(`SEO audit: ${errors.length} error(s), ${warnings.length} warning(s)`);
 for (const warning of warnings) console.warn(`WARN  ${warning}`);
 for (const error of errors) console.error(`ERROR ${error}`);

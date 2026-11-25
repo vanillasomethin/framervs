@@ -44,6 +44,8 @@ jobs:
         run: |
           node scripts/seo/apply-framer-seo.mjs
           git diff --exit-code -- public || (echo "::error::Run node scripts/seo/apply-framer-seo.mjs and commit the result" && exit 1)
+      - name: Framer CMS copy corrections are applied
+        run: node scripts/seo/patch-framer-cms.mjs --check
       - name: Audit static SEO metadata and sitemaps
         run: node scripts/audit-seo.mjs
       - name: Install headless Chromium
