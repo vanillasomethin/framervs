@@ -44,9 +44,9 @@ html = html.replace(/<img\b[^>]*>/g, (tag) => {
   if (srcsetMatch) {
     const entries = srcsetMatch[1].split(",").map((entry) => entry.trim()).filter(Boolean);
     const candidate = `/fr/images/${id}.jpg?width=${config.width}&amp;height=${config.height} ${config.width}w`;
-    if (!entries.some((entry) => new RegExp(`\\b${config.width}w$`).test(entry))) {
+    if (!entries.some((entry) => entry.endsWith(`${config.width}w`))) {
       entries.push(candidate);
-      entries.sort((a, b) => Number(a.match(/(\\d+)w$/)?.[1] || 0) - Number(b.match(/(\\d+)w$/)?.[1] || 0));
+      entries.sort((a, b) => Number(a.match(/([0-9]+)w$/)?.[1] || 0) - Number(b.match(/([0-9]+)w$/)?.[1] || 0));
       tag = tag.replace(srcsetMatch[0], `srcset="${entries.join(", ")}"`);
     }
   }
