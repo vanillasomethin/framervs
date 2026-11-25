@@ -470,7 +470,8 @@ export const renderBlogPost = (cms, post) => {
     cms,
     section: "blog",
     path: `/blog/${post.slug}/`,
-    title: post.title,
+    // Optional shorter <title> for search results; the on-page heading keeps post.title.
+    title: post.seoTitle || post.title,
     description,
     image: post.cover?.src,
     jsonLd: {

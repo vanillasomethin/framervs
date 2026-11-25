@@ -56,7 +56,7 @@ const TYPES = {
     livePath: (item) => `/blog/${item.slug}/`,
     indexPath: "/blog/",
     sortByDate: true,
-    create: () => ({ id: uid(), title: "", slug: "", status: "draft", date: today(), author: "", cover: { src: "", alt: "" }, excerpt: "", body: "", tags: [], seoDescription: "" }),
+    create: () => ({ id: uid(), title: "", slug: "", status: "draft", date: today(), author: "", cover: { src: "", alt: "" }, excerpt: "", body: "", tags: [], seoTitle: "", seoDescription: "" }),
     preview: (c, item) => renderBlogPost(c, item),
     fields: [
       { key: "title", type: "title", placeholder: "Story title" },
@@ -69,6 +69,7 @@ const TYPES = {
       { key: "excerpt", type: "textarea", label: "Short summary", hint: "1–2 sentences shown under the title and on cards.", rows: 3 },
       { key: "body", type: "markdown", label: "Story" },
       { key: "tags", type: "tags", label: "Tags", hint: "Separate with commas, e.g. Interiors, Sustainability" },
+      { key: "seoTitle", type: "text", label: "Google title (optional)", hint: "A shorter title for search results, about 40 characters. The page heading still uses the title above." },
       { key: "seoDescription", type: "textarea", label: "Google description (optional)", hint: "What shows under the link in Google. Uses the summary if left empty.", rows: 2 },
     ],
   },
