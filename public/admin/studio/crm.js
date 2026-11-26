@@ -151,12 +151,12 @@ const cardHTML = (l) => {
 const stars = (n) => `<span class="stars" aria-label="${n} of 5 stars" style="color:#b8860b;letter-spacing:1px">${"★".repeat(n)}<span style="opacity:.25">${"★".repeat(5 - n)}</span></span>`;
 const reviewsHTML = () => {
   const list = [...data.reviews].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
-  if (!list.length) return emptyState({ iconName: "sparkle", title: "No estimator reviews yet", text: "Visitors can rate the estimator under their result. 4 and 5 star raters are invited to post on Google." });
+  if (!list.length) return emptyState({ iconName: "sparkle", title: "No estimator reviews yet", text: "Visitors can rate the estimator under their result. Every rater is then invited to review the studio on Google." });
   const avg = list.reduce((n, r) => n + r.rating, 0) / list.length;
   const happy = list.filter((r) => r.rating >= 4).length;
   const counts = [5, 4, 3, 2, 1].map((n) => [n, list.filter((r) => r.rating === n).length]);
   return `<div class="kpis"><div class="kpi"><span class="k">Average rating</span><b>${avg.toFixed(1)} / 5</b><span class="small muted">${list.length} ratings</span></div>
-    <div class="kpi"><span class="k">Invited to Google</span><b>${happy}</b><span class="small muted">rated 4 or 5 stars</span></div>
+    <div class="kpi"><span class="k">Rated 4 or 5 stars</span><b>${happy}</b><span class="small muted">${Math.round((happy / list.length) * 100)}% of ratings</span></div>
     <div class="kpi"><span class="k">Spread</span><b style="font-size:14px;font-weight:500">${counts.map(([n, c]) => `${n}★ ${c}`).join(" · ")}</b></div></div>
     <table class="table"><thead><tr><th>When</th><th>Rating</th><th>Comment</th><th>Estimate</th></tr></thead><tbody>${list.map((r) => {
       const e = r.estimate || {};

@@ -3,11 +3,10 @@ import { Star, ExternalLink } from "lucide-react";
 import { ProjectEstimate } from "@/types/estimator";
 
 // "How useful was this estimate?" Ratings go to the studio's admin (CRM >
-// Estimator reviews). 4 and 5 star raters are invited to post the same words on
-// Google; everyone else still gets a quieter link, because Google's review policy
-// does not allow asking only happy customers for reviews.
-
-const GOOGLE_PROMPT_FROM = 4;
+// Estimator reviews). Every rater, whatever the stars, then gets the same neutral
+// invitation to review the studio on Google: Google's policy forbids asking only
+// happy customers (or asking them more prominently), and a Business Profile can be
+// restricted for it.
 
 const EstimatorReview = ({ estimate }: { estimate: ProjectEstimate }) => {
   const [rating, setRating] = useState(0);
@@ -73,36 +72,27 @@ const EstimatorReview = ({ estimate }: { estimate: ProjectEstimate }) => {
   };
 
   const shown = hover || rating;
-  const happy = rating >= GOOGLE_PROMPT_FROM;
 
   if (state === "sent") {
     return (
       <div className="bg-white border border-gray-200 rounded-xl p-5 text-center">
         <p className="font-semibold text-vs-dark">Thank you for rating the estimator.</p>
-        {happy && googleUrl ? (
+        <p className="text-sm text-gray-600 mt-2">Your feedback goes straight to our team, and we use it to make the estimate more accurate.</p>
+        {googleUrl ? (
           <>
-            <p className="text-sm text-gray-600 mt-2">
-              Would you share that on Google? It helps other families in your area find us.
+            <p className="text-sm text-gray-600 mt-3">
+              If you'd like, you can also share your experience on Google.
               {comment.trim() ? " We've copied your comment so you can paste it." : ""}
             </p>
             <button
               onClick={openGoogle}
-              className="mt-4 inline-flex items-center gap-2 px-6 py-3 bg-vs text-white font-semibold rounded-lg hover:bg-vs-dark transition-colors"
+              className="mt-3 inline-flex items-center gap-2 px-6 py-3 bg-vs text-white font-semibold rounded-lg hover:bg-vs-dark transition-colors"
             >
-              Post it on Google <ExternalLink size={16} />
+              Review us on Google <ExternalLink size={16} />
             </button>
             {copied ? <p className="text-xs text-gray-500 mt-2">Comment copied. Paste it into the review box.</p> : null}
           </>
-        ) : (
-          <>
-            <p className="text-sm text-gray-600 mt-2">Your feedback goes straight to our team, and we use it to make the estimate more accurate.</p>
-            {googleUrl ? (
-              <button onClick={openGoogle} className="mt-3 text-xs text-gray-500 underline underline-offset-2 hover:text-vs">
-                You can also leave a review on Google
-              </button>
-            ) : null}
-          </>
-        )}
+        ) : null}
       </div>
     );
   }
@@ -132,7 +122,7 @@ const EstimatorReview = ({ estimate }: { estimate: ProjectEstimate }) => {
             value={comment}
             onChange={(e) => setComment(e.target.value.slice(0, 1000))}
             rows={3}
-            placeholder={happy ? "What did you find most helpful? (optional)" : "What should we improve? (optional)"}
+            placeholder={rating >= 4 ? "What did you find most helpful? (optional)" : "What should we improve? (optional)"}
             className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:border-vs"
           />
           {/* Hidden from people; bots fill it in */}
