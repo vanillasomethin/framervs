@@ -6,9 +6,9 @@ import { Reveal } from "./primitives/Reveal";
 import { RollLink } from "./primitives/RollLink";
 import { ThemeToggle } from "./ThemeToggle";
 
-function Logo() {
+function Logo({ hashBase }: { hashBase: string }) {
   return (
-    <a href="#section-hero" className="flex flex-col items-start text-vs-fg" aria-label="Vanilla & Somethin' home">
+    <a href={`${hashBase}#section-hero`} className="flex flex-col items-start text-vs-fg" aria-label="Vanilla & Somethin' home">
       <span className="font-seasons text-[26px] leading-[0.9] tracking-[0.05em]">vanilla &amp;</span>
       <span className="font-halimun text-[18px] leading-[1.4] tracking-[0.01em]">somethin&apos;</span>
     </a>
@@ -22,8 +22,10 @@ function Logo() {
  * "MILO THERON" above the logo and centred ABOUT / WORKS / CONTACT links.
  * Enter: fade-up y20, spring .4s bounce .2, delay .4 (on mount).
  */
-export function SiteHeader() {
+export function SiteHeader({ hashBase = "" }: { hashBase?: string } = {}) {
   const [open, setOpen] = useState(false);
+  // Pages other than the homepage pass hashBase="/" so "#section-about" points at the homepage.
+  const resolve = (href: string) => (href.startsWith("#") ? `${hashBase}${href}` : href);
 
   return (
     <Reveal trigger="mount" className="vs-frame relative z-[6]">
@@ -31,7 +33,7 @@ export function SiteHeader() {
         {/* Desktop */}
         <nav className="hidden h-[69px] items-center min-[810px]:flex" aria-label="Main">
           <div className="flex flex-1 items-center">
-            <Logo />
+            <Logo hashBase={hashBase} />
           </div>
           <div className="absolute left-1/2 -translate-x-1/2">
             <ThemeToggle />
@@ -39,7 +41,7 @@ export function SiteHeader() {
           <ul className="flex flex-1 items-center justify-end gap-2">
             {NAV_LINKS.map((l) => (
               <li key={l.label}>
-                <RollLink href={l.href}>{l.label}</RollLink>
+                <RollLink href={resolve(l.href)}>{l.label}</RollLink>
               </li>
             ))}
           </ul>
@@ -59,7 +61,7 @@ export function SiteHeader() {
                   Milo Theron
                 </a>
               ) : null}
-              <Logo />
+              <Logo hashBase={hashBase} />
             </div>
             <ThemeToggle className="mt-[3px]" />
             <div className="flex flex-1 justify-end">
@@ -85,7 +87,7 @@ export function SiteHeader() {
             <ul className="mt-[77px] flex flex-col items-center gap-10">
               {NAV_LINKS.filter((l) => !("desktopOnly" in l)).map((l) => (
                 <li key={l.label}>
-                  <a href={l.href} onClick={() => setOpen(false)} className="vs-label text-vs-fg">
+                  <a href={resolve(l.href)} onClick={() => setOpen(false)} className="vs-label text-vs-fg">
                     {l.label}
                   </a>
                 </li>
