@@ -9,7 +9,7 @@ export const CONTACT_PAGE = {
       label: "[CONTACT]",
       separator: ",",
       links: [
-        { label: "+91 7411349833", href: "tel:+91 7411349833", external: false },
+        { label: "+91 7411 32 4448", href: "tel:+917411324448", external: false },
         { label: "HELLO@VANILLASOMETH.IN", href: "mailto:HELLO@VANILLASOMETH.IN", external: false },
       ],
     },

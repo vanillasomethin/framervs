@@ -18,7 +18,7 @@ Build qualified organic visibility for architecture and interior design enquirie
 ## Important SEO risks identified
 - CMS project records include real project-location fields (e.g. Nord Terra House in Kozhikode, Kerala; BNB House in Kadri, Karnataka). Project detail metadata currently contains generic titles and a mismatched generic ArchitecturalBusiness schema block copied across case-study pages. Fix project metadata from CMS records at build time in a follow-up or through a controlled source-export update; do not bulk-rewrite 370 KB Framer pages without exact field mapping.
 - Existing business structured data contains unverified address, postal code, coordinates, phone, opening hours, logo URL and a potentially misleading office/service-area representation. This branch deliberately omits those values pending owner verification.
-- The business contact details differ in the source: CMS contact phone is +91 7411 32 4448, while exported contact page shows +91 7411349833 and old SEO snippet uses +91 74113 49844. Confirm the public primary number before adding phone schema.
+- The public phone number is +91 7411 32 4448 (confirmed by the owner, November 2026), used on every page, in the estimator and in the CMS contact details. Add it to LocalBusiness schema only with the rest of the verified NAP.
 - The practice must verify service coverage in each target region. Avoid implying a staffed branch / office where there is none.
 - Ensure every location page is substantial, accurate and useful before indexing; do not create thin doorway pages for every town.
 

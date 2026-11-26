@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Sparkles, Check, ArrowRight } from "lucide-react";
 
-const WHATSAPP_NUMBER = "917411349844";
+const WHATSAPP_NUMBER = "917411324448";
 
 interface DiscoverySessionCardProps {
   // Optional context line appended to the WhatsApp message (e.g. the estimate).

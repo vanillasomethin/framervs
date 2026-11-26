@@ -197,7 +197,7 @@ export const FOOTER = {
     {
       label: "CONTACT",
       links: [
-        { label: "+91 7411 34 9844", href: "tel:+91 7411349844" },
+        { label: "+91 7411 32 4448", href: "tel:+917411324448" },
         { label: "hello@vanillasometh.in", href: "mailto:hello@vanillasometh.in" },
       ],
       separator: ",",

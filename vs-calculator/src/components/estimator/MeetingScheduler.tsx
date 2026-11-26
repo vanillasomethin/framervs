@@ -63,7 +63,7 @@ const MeetingScheduler = ({ autoExpand = false, estimate }: MeetingSchedulerProp
     });
   };
 
-  const whatsappNumber = "917411349844";
+  const whatsappNumber = "917411324448";
   const email = "hello@vanillasometh.in";
 
   // Two clear primary paths — a scheduled call or an instant chat — rather
