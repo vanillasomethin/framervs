@@ -762,7 +762,7 @@ const showcasePanel = () => {
   if (!cards.length) return "";
   const href = (u) => String(u || "").replace(/^\.\//, "/");
   return `<section class="showcase">
-    <div class="showcase-head"><span class="eyebrow">Framer showcase</span><p class="muted">These ${cards.length} projects are the designed pages on the homepage. They are edited in Framer (the site's design tool), so they show here for reference only. Projects you add above get their own page under <code>/projects</code>.</p></div>
+    <div class="showcase-head"><span class="eyebrow">Project showcase</span><p class="muted">These ${cards.length} projects are the designed pages under /project-showcase. Their text and photos live in the site code (<code>site/</code> in the repository), so they show here for reference only. Projects you add above get their own page under <code>/projects</code>.</p></div>
     <div class="showcase-grid">${cards
       .map((c) => `<a class="showcase-card" href="${escapeHTML(href(c.url))}" target="_blank" rel="noopener">
         <div class="showcase-img" style="background-image:url('${escapeHTML((c.image && c.image.src) || "")}')"></div>
@@ -1429,7 +1429,7 @@ const renderWebsiteSettings = (view) => {
     </div>
     <div class="panel">
       <h2>Other website pages</h2>
-      <p class="muted" style="margin:0">The home, showcase, team and contact pages are designed in Framer, so their text and layout are changed in Framer and re-exported. Everything in Journal, Projects and Updates is managed here.</p>
+      <p class="muted" style="margin:0">The home, showcase, team and contact pages are built from the site code (<code>site/</code> in the repository), so their text and layout change there. Everything in Journal, Projects and Updates is managed here.</p>
     </div>`;
 
   $$("[data-contact]", view).forEach((input) =>

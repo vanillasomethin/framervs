@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Rendered SEO audit. Static checks miss what Google actually indexes: the DOM
- * after JavaScript runs. The Framer runtime, for example, rewrites <title> on
- * hydration. This script serves public/ locally (Netlify-style URL handling),
+ * after JavaScript runs (a client-side script that rewrote <title> after
+ * hydration would only show up here). This script serves public/ locally (Netlify-style URL handling),
  * renders every sitemap URL in Chromium and checks the rendered head.
  *
  *   node scripts/seo/audit-rendered.mjs            # audit local public/

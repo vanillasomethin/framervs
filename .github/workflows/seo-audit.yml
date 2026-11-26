@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "public/**"
+      - "site/**"
+      - "scripts/build-site.mjs"
       - "scripts/audit-seo.mjs"
       - "scripts/seo/**"
       - "lighthouserc.json"
@@ -17,6 +19,8 @@ on:
     branches: [main]
     paths:
       - "public/**"
+      - "site/**"
+      - "scripts/build-site.mjs"
       - "scripts/audit-seo.mjs"
       - "scripts/build-cms.mjs"
       - "netlify/functions/cms.js"
@@ -29,7 +33,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Check CMS JavaScript syntax
         run: |
           node --check public/cms/render.mjs
@@ -38,12 +42,10 @@ jobs:
           node --input-type=module --check < public/admin/admin.js
       - name: Build estimator app
         run: cd vs-calculator && npm ci && npm run build
+      - name: Build site pages (home, showcase, team, contact)
+        run: node scripts/build-site.mjs
       - name: Generate CMS pages and sitemap
         run: node scripts/build-cms.mjs
-      - name: Framer metadata is in sync with scripts/seo/framer-pages.mjs
-        run: |
-          node scripts/seo/apply-framer-seo.mjs
-          git diff --exit-code -- public || (echo "::error::Run node scripts/seo/apply-framer-seo.mjs and commit the result" && exit 1)
       - name: Audit static SEO metadata and sitemaps
         run: node scripts/audit-seo.mjs
       - name: Install headless Chromium
