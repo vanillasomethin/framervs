@@ -32,16 +32,13 @@ export const CONTACT_PAGE = {
     },
   ],
   form: {
-    /** Netlify form name; the hidden detection form in the page uses the same name and fields. */
+    /** Netlify form name; the hidden detection form in the page lists every field below. */
     name: "contact",
-    fields: [
-      { name: "name", label: "Name", type: "text", placeholder: "" },
-      { name: "email", label: "Email", type: "email", placeholder: "" },
-      { name: "message", label: "Message", type: "textarea", placeholder: "Your message..." },
-    ],
-    submit: "SUBMIT",
+    /** Every field the guided form can send (Netlify drops fields its detection form lacks). */
+    fieldNames: ["intent", "location", "stage", "timeline", "budget", "message", "name", "email", "phone"],
+    submit: "SEND",
     sending: "SENDING...",
-    success: "Thank you. Your message has been sent, we will get back to you soon.",
+    success: "We have your details and will get back to you within a working day.",
     error: "Something went wrong and your message was not sent. Please try again, or email hello@vanillasometh.in.",
   },
 } as const;
