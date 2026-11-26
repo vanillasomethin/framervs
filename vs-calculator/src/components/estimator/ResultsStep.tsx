@@ -8,6 +8,7 @@ import CostTransparency from "./CostTransparency";
 import PhaseTimelineCost from "./PhaseTimelineCost";
 import MeetingScheduler from "./MeetingScheduler";
 import DiscoverySessionCard from "./DiscoverySessionCard";
+import EstimatorReview from "./EstimatorReview";
 import DetailedBreakdownSection from "./DetailedBreakdownSection";
 import FAQSection from "./FAQSection";
 import ContactCTAStrategy from "./ContactCTAStrategy";
@@ -606,6 +607,11 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
         >
           Start New Estimate
         </button>
+      </div>
+
+      {/* Rate the estimator; 4-5 star raters are invited to post on Google */}
+      <div className="mt-6">
+        <EstimatorReview estimate={estimate} />
       </div>
 
       {/* Request a detailed quote / callback — captured as a lead in the CRM */}
