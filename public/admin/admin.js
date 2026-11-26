@@ -1416,6 +1416,7 @@ const renderWebsiteSettings = (view) => {
         <div class="grid-2">
           <label class="field"><span>Phone</span><input type="text" data-contact="phone" value="${escapeHTML(c.contact.phone || "")}"></label>
           <label class="field"><span>Email</span><input type="email" data-contact="email" value="${escapeHTML(c.contact.email || "")}"></label>
+          <label class="field"><span>Google review link <span class="hint">— from Google Business Profile, "Ask for reviews"</span></span><input type="url" data-contact="googleReviewUrl" placeholder="https://g.page/r/.../review" value="${escapeHTML(c.contact.googleReviewUrl || "")}"></label>
         </div>
         <label class="field"><span>Studio locations <span class="hint">— one per line</span></span><textarea data-contact="locations" rows="3">${escapeHTML((c.contact.locations || []).join("\n"))}</textarea></label>
         <label class="field"><span>Social links <span class="hint">— one per line, as Name | link</span></span><textarea data-contact="social" rows="4" placeholder="Instagram | https://instagram.com/...">${escapeHTML((c.contact.social || []).map((s) => `${s.label} | ${s.url}`).join("\n"))}</textarea></label>
