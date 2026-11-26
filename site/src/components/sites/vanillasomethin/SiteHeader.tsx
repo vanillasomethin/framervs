@@ -56,11 +56,6 @@ export function SiteHeader({ hashBase = "" }: { hashBase?: string } = {}) {
         >
           <div className="flex items-start">
             <div className="flex w-[155px] shrink-0 flex-col">
-              {open ? (
-                <a href="./" className="vs-label uppercase text-vs-fg">
-                  Milo Theron
-                </a>
-              ) : null}
               <Logo hashBase={hashBase} />
             </div>
             <ThemeToggle className="mt-[3px]" />

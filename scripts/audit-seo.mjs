@@ -145,7 +145,7 @@ for (const file of allPages) {
   if (!canonical && !noindex) errors.push(`${file}: missing canonical`);
   if (canonical && !noindex && canonical !== urlFor(file)) errors.push(`${file}: canonical ${canonical} should be ${urlFor(file)} (the URL Netlify serves with 200)`);
   if (canonical && !noindex && !sitemapLocs.includes(canonical)) errors.push(`${file}: indexable page missing from sitemaps (${canonical})`);
-  const decode = (v) => v?.replace(/&amp;/g, "&").replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"');
+  const decode = (v) => v?.replace(/&amp;/g, "&").replace(/&#39;|&#x27;|&apos;/g, "'").replace(/&quot;/g, '"');
   const title = decode(html.match(/<title>(.*?)<\/title>/is)?.[1]?.trim());
   if (title) titles.set(title, [...(titles.get(title) || []), file]);
   if (title && title.length > 70) warnings.push(`${file}: title is ${title.length} chars`);

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+// Each page sets its own title and description from site/seo (src/lib/seo.ts).
 export const metadata: Metadata = {
-  title: "Vanilla & Somethin",
-  description:
-    "Vanilla & Somethin’ is an innovative architecture and design studio crafting timeless spaces that blend emotion, technology, and storytelling through architecture and furniture design.",
+  title: "Vanilla & Somethin'",
 };
 
 // Runs before paint so the stored/system theme never flashes (source: localStorage "theme").

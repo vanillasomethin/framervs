@@ -6,8 +6,8 @@
 //   node scripts/build-site.mjs --no-build # install an existing site/out
 //
 // Each page keeps its production SEO head (title, description, canonical, Open Graph,
-// JSON-LD, analytics), stored in site/seo/<page>.html: Next's own <title> and
-// description are replaced with it.
+// JSON-LD, analytics), stored in site/seo/<page>.html. Next renders the title and
+// description from that file (site/src/lib/seo.ts); this script adds the other tags.
 
 import { execSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
@@ -61,11 +61,16 @@ for (const file of walk(out)) {
   let html = readFileSync(file, "utf8");
   const seo = seoFor(rel);
   if (seo) {
-    html = html
-      .replace(/<title>[\s\S]*?<\/title>/, "")
-      .replace(/<meta name="description"[^>]*>/, "")
-      .replace(/<link rel="icon"[^>]*>/g, "")
-      .replace("</head>", `${seo}\n</head>`);
+    // The title and description already come from the same file through Next's
+    // metadata (site/src/lib/seo.ts), so add only the rest; check they agree.
+    const want = seo.match(/<title>([\s\S]*?)<\/title>/)?.[1];
+    const got = html.match(/<title>([\s\S]*?)<\/title>/)?.[1];
+    const norm = (t) => (t || "").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').trim();
+    if (norm(want) !== norm(got)) throw new Error(`${rel}: built title "${got}" does not match site/seo ("${want}")`);
+    const rest = seo
+      .replace(/<title>[\s\S]*?<\/title>\n?/, "")
+      .replace(/<meta name="description"[^>]*>\n?/, "");
+    html = html.replace(/<link rel="icon"[^>]*>/g, "").replace("</head>", `${rest}\n</head>`);
   } else {
     missingSeo.push(rel);
   }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMetadata } from "@/lib/seo";
 import { Cursor } from "@/components/sites/vanillasomethin/Cursor";
 import { ContactFormSection } from "@/components/sites/vanillasomethin/contact/ContactFormSection";
 import { NetlifyFormDetection } from "@/components/sites/vanillasomethin/contact/ContactForm";
@@ -9,11 +10,7 @@ import { SmoothScroll } from "@/components/sites/vanillasomethin/SmoothScroll";
 import { Contact } from "@/components/sites/vanillasomethin/sections/Contact";
 import { Faq } from "@/components/sites/vanillasomethin/sections/Faq";
 
-export const metadata: Metadata = {
-  title: "Contact Our Mangalore Architecture Studio | Vanilla & Somethin'",
-  description:
-    "Get in touch with Vanilla & Somethin', an architecture and interior design studio in Mangalore and Riyadh. Tell us about your idea, your vision, or just say hi.",
-};
+export const metadata: Metadata = seoMetadata("contact");
 
 export default function ContactPage() {
   return (

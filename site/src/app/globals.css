@@ -334,3 +334,21 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+
+/* Project showcase "OTHER PROJECT" ticker (two identical halves, loop at -50%). */
+@keyframes vs-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.vs-marquee {
+  animation: vs-marquee 40s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vs-marquee {
+    animation: none;
+  }
+}

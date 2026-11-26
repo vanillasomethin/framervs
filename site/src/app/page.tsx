@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { seoMetadata } from "@/lib/seo";
 import { Cursor } from "@/components/sites/vanillasomethin/Cursor";
 import { SiteFooter } from "@/components/sites/vanillasomethin/SiteFooter";
 import { SiteHeader } from "@/components/sites/vanillasomethin/SiteHeader";
@@ -13,6 +15,8 @@ import { Services } from "@/components/sites/vanillasomethin/sections/Services";
 import { Team } from "@/components/sites/vanillasomethin/sections/Team";
 import { VideoSection } from "@/components/sites/vanillasomethin/sections/VideoSection";
 import { Works } from "@/components/sites/vanillasomethin/sections/Works";
+
+export const metadata: Metadata = seoMetadata("index");
 
 export default function Home() {
   return (
