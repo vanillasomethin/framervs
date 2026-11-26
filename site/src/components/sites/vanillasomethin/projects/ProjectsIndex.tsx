@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PROJECTS } from "../data-projects";
+import type { Project } from "../data-projects";
 import { Reveal } from "../primitives/Reveal";
 import { PageTitle } from "./PageTitle";
 import { ProjectGridCard } from "./ProjectGridCard";
@@ -31,7 +31,7 @@ function ViewOption({ label, active, onClick }: { label: string; active: boolean
  * /project-showcase/: "WORKS" label + DIVE INTO OUR WORKS, then a GRID / LIST switch over the
  * 10 projects. Grid: 3 columns >=1200, 2 from 810, 1 below (40px gaps). List: centred rows.
  */
-export function ProjectsIndex() {
+export function ProjectsIndex({ projects }: { projects: Project[] }) {
   const [view, setView] = useState<View>("grid");
 
   return (
@@ -51,13 +51,13 @@ export function ProjectsIndex() {
 
         {view === "grid" ? (
           <div className="mt-20 grid grid-cols-1 gap-10 min-[810px]:grid-cols-2 min-[1200px]:grid-cols-3">
-            {PROJECTS.map((p, i) => (
+            {projects.map((p, i) => (
               <ProjectGridCard key={p.slug} project={p} priority={i < 3} />
             ))}
           </div>
         ) : (
           <div className="mt-10 flex flex-col gap-5">
-            {PROJECTS.map((p, i) => (
+            {projects.map((p, i) => (
               <ProjectListRow key={p.slug} project={p} index={i} />
             ))}
           </div>

@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Metadata } from "next";
 
@@ -8,6 +8,8 @@ import type { Metadata } from "next";
 // Graph, JSON-LD, analytics) to the built page.
 const decode = (s: string) =>
   s.replace(/&amp;/g, "&").replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+
+export const hasSeoFile = (page: string) => existsSync(join(process.cwd(), "seo", `${page}.html`));
 
 export function seoMetadata(page: string): Metadata {
   const html = readFileSync(join(process.cwd(), "seo", `${page}.html`), "utf8");

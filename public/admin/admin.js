@@ -5,7 +5,7 @@
 // GitHub. Changes are held locally until "Publish", so several edits go out as
 // one commit / one deploy. Previews use the same renderer as the live pages.
 
-import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, renderUpdates, renderShopProduct, renderShopList, AFFILIATE } from "/cms/render.mjs";
+import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, projectPath, renderUpdates, renderShopProduct, renderShopList, AFFILIATE } from "/cms/render.mjs";
 import { session, SESSION_KEY, app, $, $$, clone, uid, api, toast } from "./core.js";
 import { data as studio, loadAll, refresh, sync, onData, hasPendingChanges, meId, team, setMe, isoDate } from "./studio/data.js";
 import { icon, drawerIsOpen } from "./studio/ui.js";
@@ -76,10 +76,10 @@ const TYPES = {
     label: "Projects",
     singular: "project",
     blurb: "Built and ongoing work, each with its own page, photos and project facts.",
-    livePath: (item) => `/projects/${item.slug}/`,
+    livePath: (item) => projectPath(item),
     indexPath: "/projects/",
     manualOrder: true,
-    create: () => ({ id: uid(), title: "", slug: "", status: "draft", category: "", location: "", year: "", client: "", area: "", projectStatus: "Scope to confirm", summary: "", seoDescription: "", cover: { src: "", alt: "" }, body: "", tags: [], gallery: [] }),
+    create: () => ({ id: uid(), title: "", slug: "", status: "draft", layout: "Showcase", category: "", location: "", year: "", client: "", area: "", projectStatus: "Scope to confirm", summary: "", seoDescription: "", cover: { src: "", alt: "" }, body: "", tags: [], gallery: [] }),
     preview: (c, item) => renderProject(c, item),
     fields: [
       { key: "title", type: "title", placeholder: "Project name" },
@@ -93,6 +93,7 @@ const TYPES = {
         { key: "area", type: "text", label: "Area", placeholder: "e.g. 3,200 sq ft" },
         { key: "projectStatus", type: "select", label: "Stage", options: ["Scope to confirm", "Completed", "Under construction", "In design", "Concept"] },
       ] },
+      { key: "layout", type: "select", label: "Page design", options: ["Showcase", "Simple page"], hint: "Showcase: built with the same template as the case studies under /project-showcase/ and listed there (needs a main photo; the first gallery photo goes above the story, the rest into the gallery). Simple page: a plain page under /projects/." },
       { key: "client", type: "text", label: "Client (optional)" },
       { key: "summary", type: "textarea", label: "One-line summary", hint: "Shown on the project card and under the title.", rows: 2 },
       { key: "seoDescription", type: "textarea", label: "Search description (optional)", hint: "A factual 150 to 160 character description for search results.", rows: 2 },

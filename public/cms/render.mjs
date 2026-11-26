@@ -55,6 +55,10 @@ const byDateDesc = (a, b) => String(b.date || "").localeCompare(String(a.date ||
 
 export const publishedPosts = (cms) => (cms.blog || []).filter(isPublished).sort(byDateDesc);
 export const publishedProjects = (cms) => (cms.projects || []).filter(isPublished);
+// "Page design: Showcase" projects are built by site/ into /project-showcase/<slug>/
+// with the case-study template, so they get no /projects page of their own.
+export const isShowcaseProject = (project) => project.layout === "Showcase" && Boolean(project.cover && project.cover.src);
+export const projectPath = (project) => (isShowcaseProject(project) ? `/project-showcase/${project.slug}/` : `/projects/${project.slug}/`);
 export const publishedUpdates = (cms) => (cms.updates || []).filter(isPublished).sort(byDateDesc);
 
 const readingTime = (markdown) => {
@@ -438,7 +442,7 @@ const postCard = (post) => `<a class="card" href="/blog/${escapeHTML(post.slug)}
 <p>${escapeHTML(post.excerpt || plainText(post.body, 140))}</p>
 </div></a>`;
 
-const projectCard = (project) => `<a class="card" href="/projects/${escapeHTML(project.slug)}/">
+const projectCard = (project) => `<a class="card" href="${escapeHTML(projectPath(project))}">
 <div class="thumb">${img(project.cover)}</div>
 <div class="body">
 <div class="meta">${[project.category, project.location, project.year].filter(Boolean).map((v) => `<span>${escapeHTML(v)}</span>`).join("")}</div>
@@ -706,7 +710,7 @@ export const renderAllPages = (cms) => {
   for (const p of publishedProducts(cms)) pages.push([`shop/${p.slug}/index.html`, renderShopProduct(cms, p)]);
   for (const l of publishedLists(cms)) pages.push([`shop/lists/${l.slug}/index.html`, renderShopList(cms, l)]);
   for (const post of publishedPosts(cms)) pages.push([`blog/${post.slug}/index.html`, renderBlogPost(cms, post)]);
-  for (const project of publishedProjects(cms)) pages.push([`projects/${project.slug}/index.html`, renderProject(cms, project)]);
+  for (const project of publishedProjects(cms)) if (!isShowcaseProject(project)) pages.push([`projects/${project.slug}/index.html`, renderProject(cms, project)]);
   return pages;
 };
 
@@ -718,5 +722,5 @@ export const sitemapPaths = (cms) => [
   ...publishedProducts(cms).map((p) => `/shop/${p.slug}/`),
   ...publishedLists(cms).map((l) => `/shop/lists/${l.slug}/`),
   ...publishedPosts(cms).map((p) => `/blog/${p.slug}/`),
-  ...publishedProjects(cms).map((p) => `/projects/${p.slug}/`),
+  ...publishedProjects(cms).map(projectPath),
 ];

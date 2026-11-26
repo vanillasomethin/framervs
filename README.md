@@ -14,6 +14,7 @@ The home, project showcase, project pages, team and contact pages are a Next.js 
 * At deploy, `node scripts/build-site.mjs` builds `site/` and installs the pages into `public/` (`/`, `/contact/`, `/team.html`, `/project-showcase/`, `/project-showcase/<slug>/`) with `_next/` and `sites/` next to them. These outputs are gitignored, like the CMS pages and the estimator.
 * Each page keeps its production SEO head (title, description, canonical, Open Graph, JSON-LD, analytics) in `site/seo/<page>.html`; the install step puts it into the built page. Edit that file to change a page's metadata.
 * Text and photos: `site/src/components/sites/vanillasomethin/data*.ts` (the ten case studies are in `data-projects.ts`). Layout and animation: the components next to them.
+* **New projects in the same template:** add the project in the admin (Website > Projects), set **Page design** to *Showcase*, add a main photo and publish. It is built into `/project-showcase/<slug>/` with the case-study template and listed first on the showcase: the first gallery photo goes above the project story (`## Headings` become the section headings), the remaining photos form the gallery. *Simple page* projects keep their plain page under `/projects/`.
 * Work on the pages locally: `cd site && npm ci && npm run dev`. Check before pushing: `npm run check` in `site/`, then `node scripts/build-site.mjs && node scripts/build-cms.mjs && node scripts/audit-seo.mjs` from the repository root.
 
 ## Admin (`/admin`)

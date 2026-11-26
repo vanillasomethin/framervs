@@ -3,6 +3,7 @@ import "./globals.css";
 
 // Each page sets its own title and description from site/seo (src/lib/seo.ts).
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.vanillasometh.in"),
   title: "Vanilla & Somethin'",
 };
 

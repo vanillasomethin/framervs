@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getProject, type GalleryImage, type Project } from "../data-projects";
+import type { GalleryImage, Project } from "../data-projects";
 import { Reveal } from "../primitives/Reveal";
 import { Marquee } from "./Marquee";
 import { OtherProjectCard } from "./OtherProjectCard";
@@ -47,8 +47,7 @@ function GalleryTile({ image, alt, className }: { image: GalleryImage; alt: stri
  * wide image + [BEHIND THE DESIGN] rich text -> gallery (full, half, half, full, full) ->
  * OTHER PROJECT ticker with two project cards.
  */
-export function ProjectDetail({ project }: { project: Project }) {
-  const others = project.others.map(getProject).filter((p): p is Project => Boolean(p));
+export function ProjectDetail({ project, others }: { project: Project; others: Project[] }) {
   const [g1, g2, g3, ...rest] = project.gallery;
 
   return (

@@ -149,7 +149,8 @@
           "label": "LinkedIn",
           "url": "https://www.linkedin.com/company/vanilla-and-somethin"
         }
-      ]
+      ],
+      "googleReviewUrl": "https://g.page/r/CRCytf9WdvprEBE/review"
     },
     "projects": [
       {
@@ -179,7 +180,8 @@
           "Riyadh"
         ],
         "gallery": [],
-        "updatedAt": "2026-11-19T08:14:58.003Z"
+        "updatedAt": "2026-11-19T08:14:58.003Z",
+        "layout": "Simple page"
       },
       {
         "id": "aestra-clinic-riyadh",
@@ -205,7 +207,8 @@
           "Medical fit-out",
           "Riyadh"
         ],
-        "gallery": []
+        "gallery": [],
+        "layout": "Simple page"
       },
       {
         "id": "mezze-cafe-khobar",
@@ -231,7 +234,8 @@
           "Food and beverage",
           "Khobar"
         ],
-        "gallery": []
+        "gallery": [],
+        "layout": "Simple page"
       },
       {
         "id": "155c224a09",
@@ -253,7 +257,8 @@
         "body": "",
         "tags": [],
         "gallery": [],
-        "importedFrom": "/project-showcase/flutecase"
+        "importedFrom": "/project-showcase/flutecase",
+        "layout": "Simple page"
       },
       {
         "id": "e3af20a610",
@@ -275,7 +280,8 @@
         "body": "",
         "tags": [],
         "gallery": [],
-        "importedFrom": "/project-showcase/fair-fly"
+        "importedFrom": "/project-showcase/fair-fly",
+        "layout": "Simple page"
       },
       {
         "id": "e691bce382",
@@ -297,7 +303,8 @@
         "body": "",
         "tags": [],
         "gallery": [],
-        "importedFrom": "/project-showcase/nord-terra"
+        "importedFrom": "/project-showcase/nord-terra",
+        "layout": "Simple page"
       },
       {
         "id": "3716036cca",
@@ -319,7 +326,8 @@
         "body": "",
         "tags": [],
         "gallery": [],
-        "importedFrom": "/project-showcase/mak"
+        "importedFrom": "/project-showcase/mak",
+        "layout": "Simple page"
       },
       {
         "id": "a7c3850ccb",
@@ -341,7 +349,8 @@
         "body": "",
         "tags": [],
         "gallery": [],
-        "importedFrom": "/project-showcase/bnb"
+        "importedFrom": "/project-showcase/bnb",
+        "layout": "Simple page"
       },
       {
         "id": "558c6e5357",
@@ -363,7 +372,8 @@
         "body": "",
         "tags": [],
         "gallery": [],
-        "importedFrom": "/project-showcase/coco-meltdown"
+        "importedFrom": "/project-showcase/coco-meltdown",
+        "layout": "Simple page"
       },
       {
         "id": "dcccc6dad8",
@@ -385,7 +395,8 @@
         "body": "",
         "tags": [],
         "gallery": [],
-        "importedFrom": "/project-showcase/artwist-salon"
+        "importedFrom": "/project-showcase/artwist-salon",
+        "layout": "Simple page"
       },
       {
         "id": "de477e365b",
@@ -407,7 +418,8 @@
         "body": "",
         "tags": [],
         "gallery": [],
-        "importedFrom": "/project-showcase/koan"
+        "importedFrom": "/project-showcase/koan",
+        "layout": "Simple page"
       },
       {
         "id": "ef31ce90aa",
@@ -429,7 +441,8 @@
         "body": "",
         "tags": [],
         "gallery": [],
-        "importedFrom": "/project-showcase/pipe-nova"
+        "importedFrom": "/project-showcase/pipe-nova",
+        "layout": "Simple page"
       },
       {
         "id": "614a9879e6",
@@ -451,7 +464,8 @@
         "body": "",
         "tags": [],
         "gallery": [],
-        "importedFrom": "/project-showcase/seiko-hyper"
+        "importedFrom": "/project-showcase/seiko-hyper",
+        "layout": "Simple page"
       }
     ],
     "pagesIntro": {

@@ -39,6 +39,43 @@ const seoFor = (rel) => {
   return existsSync(file) ? readFileSync(file, "utf8").trim() : null;
 };
 
+// Analytics and Search Console verification, shared by every page (taken from the home page's head)
+const sharedHead = () => {
+  const home = readFileSync(join(site, "seo", "index.html"), "utf8");
+  return [...home.matchAll(/<script>[\s\S]*?<\/script>|<meta name="google-site-verification"[^>]*>|<link [^>]*rel="(?:icon|apple-touch-icon)"[^>]*>|<link rel="apple-touch-icon"[^>]*>/g)]
+    .map((m) => m[0])
+    .filter((t) => !/ld\+json/.test(t))
+    .join("\n");
+};
+const cmsProjectHead = (rel, html) => {
+  const SITE = "https://www.vanillasometh.in";
+  const url = `${SITE}/${rel.replace(/index\.html$/, "")}`;
+  const decode = (t) => (t || "").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+  const title = decode(html.match(/<title>([\s\S]*?)<\/title>/)?.[1]);
+  const description = decode(html.match(/<meta name="description" content="([^"]*)"/)?.[1]);
+  const name = title.split(/,| \| /)[0];
+  const ld = {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "CreativeWork", name, description, url, creator: { "@type": "Organization", "@id": `${SITE}/#organization`, name: "Vanilla & Somethin'" } },
+      { "@type": "BreadcrumbList", itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
+        { "@type": "ListItem", position: 2, name: "Projects", item: `${SITE}/project-showcase/` },
+        { "@type": "ListItem", position: 3, name, item: url },
+      ] },
+    ],
+  };
+  return [
+    sharedHead(),
+    `<link rel="canonical" href="${url}">`,
+    '<meta name="robots" content="index,follow,max-image-preview:large">',
+    `<meta property="og:url" content="${url}">`,
+    `<meta property="og:site_name" content="Vanilla &amp; Somethin'">`,
+    '<meta name="twitter:card" content="summary_large_image">',
+    `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>`,
+  ].join("\n");
+};
+
 const walk = (dir) => readdirSync(dir).flatMap((name) => {
   const p = join(dir, name);
   return statSync(p).isDirectory() ? walk(p) : [p];
@@ -71,6 +108,11 @@ for (const file of walk(out)) {
       .replace(/<title>[\s\S]*?<\/title>\n?/, "")
       .replace(/<meta name="description"[^>]*>\n?/, "");
     html = html.replace(/<link rel="icon"[^>]*>/g, "").replace("</head>", `${rest}\n</head>`);
+  } else if (rel.startsWith("project-showcase/")) {
+    // A project added in the admin ("Page design: Showcase"): Next rendered its title,
+    // description and image; add the canonical, analytics and structured data the
+    // designed case studies carry.
+    html = html.replace(/<link rel="icon"[^>]*>/g, "").replace("</head>", `${cmsProjectHead(rel, html)}\n</head>`);
   } else {
     missingSeo.push(rel);
   }
