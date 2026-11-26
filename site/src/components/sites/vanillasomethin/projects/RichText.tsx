@@ -1,4 +1,5 @@
 import type { RichNode } from "../data-projects";
+import { LazyVideo } from "./LazyVideo";
 
 /**
  * "Behind the design" rich text: h5 (white, 40px above all but the first), paragraphs
@@ -11,7 +12,7 @@ export function RichText({ nodes }: { nodes: RichNode[] }) {
       {nodes.map((n, i) => {
         if (n.type === "video") {
           return (
-            <video key={i} src={n.src} autoPlay loop muted playsInline preload="metadata" className="block h-auto w-full" />
+            <LazyVideo key={i} src={n.src} className="block h-auto w-full" />
           );
         }
         if (n.type === "h5") {
