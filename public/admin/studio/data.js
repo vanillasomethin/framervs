@@ -99,6 +99,7 @@ export const data = {
   activity: [],
   leads: [],
   docs: [],
+  proposals: [],
   expenses: [],
   leaves: [],
   holidays: [],
@@ -109,7 +110,7 @@ export const data = {
   loaded: false,
 };
 
-const COLLECTIONS = ["clients", "projects", "tasks", "logs", "snags", "milestones", "briefs", "activity", "leads", "docs", "expenses", "leaves", "holidays", "incidents"];
+const COLLECTIONS = ["clients", "projects", "tasks", "logs", "snags", "milestones", "briefs", "activity", "leads", "docs", "proposals", "expenses", "leaves", "holidays", "incidents"];
 
 const listeners = new Set();
 export const onData = (fn) => {

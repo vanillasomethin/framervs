@@ -20,6 +20,7 @@ const PAGES = [
   ["Clients & onboarding", "#/clients", "users"],
   ["Site management", "#/sites", "site"],
   ["CRM & leads", "#/crm", "pulse"],
+  ["Proposals: scope and fees", "#/proposals", "send"],
   ["Billing: quotes, invoices, expenses", "#/billing", "file"],
   ["Team & leave", "#/people", "calendar"],
   ["Incidents", "#/incidents", "shield"],

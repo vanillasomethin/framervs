@@ -111,6 +111,7 @@ const call = async (fn, body, token, method = "POST", qs) => { const r = await f
   r = await call(studio, { action: "save", ops: [
     { c: "leads", op: "set", item: { id: "ld_one1", company: "Coastal Builders", stage: "new" } },
     { c: "docs", op: "set", item: { id: "dc_one1", kind: "invoice", number: "VS/26-27/0001", totalPaise: 118000 } },
+    { c: "proposals", op: "set", item: { id: "pr_one1", title: "Home interiors proposal", status: "draft", leadId: "ld_one1", levels: [{ name: "Standard", stageIds: ["brief", "concept"], feeRupees: 450000 }], stages: Array.from({ length: 6 }, (_, i) => ({ id: `s${i}`, name: `Stage ${i}`, weight: 15, deliverables: "Deliverable line\n".repeat(40) })), terms: "Term line\n".repeat(60) } },
     { c: "expenses", op: "set", item: { id: "ex_one1", vendor: "Printer", amountPaise: 50000 } },
     { c: "leaves", op: "set", item: { id: "lv_one1", userId: "tm_a", type: "casual", start: "2027-02-01", end: "2027-02-01", days: 1, status: "pending" } },
     { c: "holidays", op: "set", item: { id: "hd_one1", date: "2027-01-26", name: "Republic Day", kind: "mandatory", year: 2027 } },
@@ -118,7 +119,7 @@ const call = async (fn, body, token, method = "POST", qs) => { const r = await f
   ] }, T);
   ok("new collections accept saves", r.status === 200, r);
   r = await call(studio, { action: "load" }, T);
-  ok("new collections load back", ["leads", "docs", "expenses", "leaves", "holidays", "incidents"].every((c) => r.body.collections[c].length === 1), Object.fromEntries(Object.entries(r.body.collections).map(([k, v]) => [k, v.length])));
+  ok("new collections load back", ["leads", "docs", "proposals", "expenses", "leaves", "holidays", "incidents"].every((c) => r.body.collections[c].length === 1), Object.fromEntries(Object.entries(r.body.collections).map(([k, v]) => [k, v.length])));
   r = await call(studio, { action: "save", ops: [{ c: "payroll", op: "set", item: { id: "xx_one1" } }] }, T); ok("unknown collections are refused", r.status === 400, r);
   console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);
 })();
