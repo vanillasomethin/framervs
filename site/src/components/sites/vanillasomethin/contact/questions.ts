@@ -8,7 +8,7 @@ export type Question = {
   id: string;
   title: string;
   hint?: string;
-  kind: "choice" | "text" | "textarea" | "contact";
+  kind: "choice" | "text" | "textarea" | "whatsapp";
   options?: string[];
   placeholder?: string;
   optional?: boolean;
@@ -63,7 +63,30 @@ export const QUESTIONS: Question[] = [
     optional: true,
   },
   { id: "name", title: "What should we call you?", kind: "text", placeholder: "Your name" },
-  { id: "contact", title: "How can we reach you?", hint: "An email or a phone number, whichever you prefer.", kind: "contact" },
+  { id: "send", title: "Send this across to the studio", hint: "It opens WhatsApp with your answers filled in. Just press send.", kind: "whatsapp" },
 ];
 
 export const activeQuestions = (a: Answers) => QUESTIONS.filter((q) => !q.when || q.when(a));
+
+export const STUDIO_WHATSAPP = "917411324448";
+
+const LABELS: Record<string, string> = {
+  intent: "Looking for",
+  location: "Where",
+  stage: "Stage",
+  timeline: "Start",
+  budget: "Budget",
+  message: "Notes",
+};
+
+/** The WhatsApp message: a greeting with the visitor's name, then each answer on its own line. */
+export const whatsappText = (a: Answers) => {
+  const lines = [`Hi Vanilla & Somethin', I'm ${(a.name || "").trim() || "getting in touch"}.`];
+  for (const [k, label] of Object.entries(LABELS)) {
+    const v = (a[k] || "").trim();
+    if (v) lines.push(`${label}: ${v}`);
+  }
+  return lines.join("\n");
+};
+
+export const whatsappUrl = (a: Answers) => `https://wa.me/${STUDIO_WHATSAPP}?text=${encodeURIComponent(whatsappText(a))}`;

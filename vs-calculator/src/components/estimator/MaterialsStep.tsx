@@ -121,7 +121,7 @@ const MaterialsStep = ({ selectedMaterials, onMaterialsChange }: MaterialsStepPr
               <p className="text-white/80 text-sm mb-auto">{material.description}</p>
               
               {material.sustainable && (
-                <div className="mt-4 inline-block px-3 py-1 rounded-full text-xs bg-green-500/20 text-green-400 border border-green-500/30">
+                <div className="mt-4 inline-block px-3 py-1 rounded-full text-xs bg-vs/20 text-vs border border-vs/30">
                   Sustainable
                 </div>
               )}

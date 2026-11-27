@@ -9,7 +9,7 @@ import Pricing from "./pages/Pricing";
 import ArchitectFee from "./pages/ArchitectFee";
 import EstimatorConstants from "./pages/EstimatorConstants";
 import NotFound from "./pages/NotFound";
-import CursorAnimation from "./components/CursorAnimation";
+import SiteHeader from "./components/SiteHeader";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +19,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <CursorAnimation />
+        <SiteHeader />
         <BrowserRouter basename="/estimator">
           <Routes>
             <Route path="/" element={<Pricing />} />

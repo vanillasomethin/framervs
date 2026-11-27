@@ -321,15 +321,15 @@ const AreaStep = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="mt-6 p-5 bg-green-50 border border-green-200 rounded-xl"
+          className="mt-6 p-5 bg-vs/5 border border-vs/15 rounded-xl"
         >
           <div className="flex items-start gap-3 mb-4">
-            <Building2 className="size-6 text-green-600 mt-0.5 flex-shrink-0" />
+            <Building2 className="size-6 text-vs mt-0.5 flex-shrink-0" />
             <div className="flex-1">
-              <h4 className="font-semibold text-green-900 mb-1">
+              <h4 className="font-semibold text-vs-dark mb-1">
                 {floorCount === 1 ? "G+0 Format Calculation" : `G+${floorCount - 1} Format Calculation`}
               </h4>
-              <p className="text-sm text-green-800">
+              <p className="text-sm text-vs-dark">
                 {floorCount === 1
                   ? "Single floor structure (Ground floor only)"
                   : `Total built-up area for your ${floorCount}-floor structure`}
@@ -355,7 +355,7 @@ const AreaStep = ({
               return (
                 <div key={floor} className="flex items-center justify-between p-3 bg-white/60 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className={`size-3 rounded-sm ${index === floorCount - 1 ? 'bg-green-600' : 'bg-teal-500'}`}></div>
+                    <div className={`size-3 rounded-sm ${index === floorCount - 1 ? 'bg-vs' : 'bg-vs'}`}></div>
                     <span className="text-sm font-medium text-gray-700">
                       {floor === 1 ? "Ground Floor (Plinth)" : `${floor - 1}${getOrdinalSuffix(floor - 1)} Floor`}
                     </span>
@@ -369,7 +369,7 @@ const AreaStep = ({
           </div>
 
           {/* Total calculation */}
-          <div className="p-4 bg-green-600 rounded-lg text-white">
+          <div className="p-4 bg-vs rounded-lg text-white">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm opacity-90 mb-1">Total Built-up Area</p>
@@ -385,7 +385,7 @@ const AreaStep = ({
             </div>
           </div>
 
-          <p className="text-xs text-green-700 mt-3 text-center">
+          <p className="text-xs text-vs-dark mt-3 text-center">
             Pricing will be calculated based on total built-up area of {(area * floorCount).toLocaleString()} {areaUnit}
           </p>
         </motion.div>
@@ -400,12 +400,12 @@ const AreaStep = ({
           className="mt-8 space-y-4"
         >
           {/* FSI Info Card */}
-          <div className="p-5 bg-blue-50 border border-blue-200 rounded-xl">
+          <div className="p-5 bg-vs/5 border border-vs/15 rounded-xl">
             <div className="flex items-start gap-3 mb-4">
-              <Info className="size-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <Info className="size-5 text-vs mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <h4 className="font-semibold text-blue-900 mb-1">FSI Calculation</h4>
-                <p className="text-sm text-blue-800">
+                <h4 className="font-semibold text-vs-dark mb-1">FSI Calculation</h4>
+                <p className="text-sm text-vs-dark">
                   Based on {city}'s FSI regulations and your {floorCount}-floor design
                 </p>
               </div>
@@ -413,22 +413,22 @@ const AreaStep = ({
 
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="bg-white/60 p-3 rounded-lg">
-                <p className="text-blue-700 font-medium mb-1">Plot Area</p>
-                <p className="text-lg font-bold text-blue-900">
+                <p className="text-vs-dark font-medium mb-1">Plot Area</p>
+                <p className="text-lg font-bold text-vs-dark">
                   {area.toLocaleString()} {areaUnit}
                 </p>
               </div>
 
               <div className="bg-white/60 p-3 rounded-lg">
-                <p className="text-blue-700 font-medium mb-1">Max FSI Allowed</p>
-                <p className="text-lg font-bold text-blue-900">
+                <p className="text-vs-dark font-medium mb-1">Max FSI Allowed</p>
+                <p className="text-lg font-bold text-vs-dark">
                   {fsiValidation.fsiMax}
                 </p>
               </div>
 
               <div className="bg-white/60 p-3 rounded-lg">
-                <p className="text-blue-700 font-medium mb-1">Estimated Built-up Area</p>
-                <p className="text-lg font-bold text-blue-900">
+                <p className="text-vs-dark font-medium mb-1">Estimated Built-up Area</p>
+                <p className="text-lg font-bold text-vs-dark">
                   {calculatedBuiltUpArea
                     ? `${Math.round(areaUnit === "sqft" ? calculatedBuiltUpArea / 0.092903 : calculatedBuiltUpArea).toLocaleString()} ${areaUnit}`
                     : "N/A"}
@@ -436,8 +436,8 @@ const AreaStep = ({
               </div>
 
               <div className="bg-white/60 p-3 rounded-lg">
-                <p className="text-blue-700 font-medium mb-1">FSI Used</p>
-                <p className="text-lg font-bold text-blue-900">
+                <p className="text-vs-dark font-medium mb-1">FSI Used</p>
+                <p className="text-lg font-bold text-vs-dark">
                   {fsiValidation.fsiUsed.toFixed(2)}
                 </p>
               </div>
@@ -449,12 +449,12 @@ const AreaStep = ({
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3"
+              className="p-4 bg-vs/5 border border-vs/15 rounded-xl flex items-start gap-3"
             >
-              <CheckCircle2 className="size-5 text-green-600 mt-0.5 flex-shrink-0" />
+              <CheckCircle2 className="size-5 text-vs mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <h4 className="font-semibold text-green-900 mb-1">FSI Compliant ✓</h4>
-                <p className="text-sm text-green-800">
+                <h4 className="font-semibold text-vs-dark mb-1">FSI Compliant ✓</h4>
+                <p className="text-sm text-vs-dark">
                   Your {floorCount}-floor design complies with {city}'s FSI regulations.
                   You're using {fsiValidation.fsiUsed.toFixed(2)} out of {fsiValidation.fsiMax} maximum FSI.
                 </p>
@@ -464,29 +464,29 @@ const AreaStep = ({
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="p-4 bg-red-50 border-2 border-red-300 rounded-xl flex items-start gap-3"
+              className="p-4 bg-vs/5 border-2 border-vs/15 rounded-xl flex items-start gap-3"
             >
-              <AlertTriangle className="size-5 text-red-600 mt-0.5 flex-shrink-0" />
+              <AlertTriangle className="size-5 text-vs mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <h4 className="font-semibold text-red-900 mb-1">FSI Violation ⚠</h4>
-                <p className="text-sm text-red-800 mb-3">
+                <h4 className="font-semibold text-vs-dark mb-1">FSI Violation ⚠</h4>
+                <p className="text-sm text-vs-dark mb-3">
                   The proposed built-up area exceeds the maximum FSI of {fsiValidation.fsiMax} for {city}.
                   Maximum allowed built-up area is{" "}
                   {Math.round(areaUnit === "sqft" ? fsiValidation.maxAllowed / 0.092903 : fsiValidation.maxAllowed).toLocaleString()}{" "}
                   {areaUnit}.
                 </p>
                 <div className="bg-white/60 p-3 rounded-lg">
-                  <p className="text-xs text-red-700 font-medium mb-1">Recommendation:</p>
-                  <p className="text-sm text-red-900 mb-3">
+                  <p className="text-xs text-vs-dark font-medium mb-1">Recommendation:</p>
+                  <p className="text-sm text-vs-dark mb-3">
                     With your plot size, you can build up to {fsiMaxFloors} floor{fsiMaxFloors > 1 ? 's' : ''} to comply with FSI regulations.
                     Alternatively, increase the plot area or reduce the number of floors.
                   </p>
                   {onFloorCountChange && fsiMaxFloors >= 1 && (
                     <button
                       onClick={() => onFloorCountChange(fsiMaxFloors)}
-                      className="text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors rounded-lg px-4 py-2"
+                      className="text-sm font-semibold text-white bg-vs hover:bg-vs transition-colors rounded-lg px-4 py-2"
                     >
-                      Fix it — set to G+{fsiMaxFloors - 1}
+                      Fix it: set to G+{fsiMaxFloors - 1}
                     </button>
                   )}
                 </div>

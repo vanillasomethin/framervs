@@ -1,5 +1,5 @@
 import { ProjectEstimate, ComponentOption } from "@/types/estimator";
-import { ChevronDown, ChevronUp, Info, IndianRupee } from "lucide-react";
+import { ChevronDown, ChevronUp, Info } from "lucide-react";
 import { useState } from "react";
 
 interface DetailedBreakdownSectionProps {
@@ -8,11 +8,11 @@ interface DetailedBreakdownSectionProps {
 
 // Category colours match the donut in ImprovedCostVisualization for consistency.
 const CATEGORY_COLOR: Record<string, string> = {
-  construction: "#8B0000",
-  core: "#B22222",
-  finishes: "#CD5C5C",
-  interiors: "#F08080",
-  fees: "#C9A9A9",
+  construction: "#380100",
+  core: "#5C1A1B",
+  finishes: "#7A1E1F",
+  interiors: "#A8605C",
+  fees: "#D8BFBC",
 };
 
 const formatCurrency = (amount: number) =>
@@ -106,7 +106,7 @@ const DetailedBreakdownSection = ({ estimate }: DetailedBreakdownSectionProps) =
       <div className="flex items-start gap-2 mb-6">
         <Info className="size-5 text-vs mt-0.5 flex-shrink-0" />
         <div>
-          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">Detailed Cost Breakdown</h3>
+          <h3 className="text-lg sm:text-xl font-medium text-vs-dark mb-1">Detailed cost breakdown</h3>
           <p className="text-sm text-gray-600">
             How your estimate is distributed across major work categories.
           </p>
@@ -126,13 +126,13 @@ const DetailedBreakdownSection = ({ estimate }: DetailedBreakdownSectionProps) =
                 onClick={() => toggleSection(section.key)}
                 className="w-full flex items-center justify-between gap-2 p-3 sm:p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
               >
-                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
                   <span
                     className="size-3 rounded-sm flex-shrink-0"
                     style={{ backgroundColor: CATEGORY_COLOR[section.key] }}
                   />
-                  <div className="flex flex-col items-start min-w-0">
-                    <span className="font-semibold text-gray-900 text-sm sm:text-base truncate max-w-[40vw] sm:max-w-none">
+                  <div className="flex min-w-0 flex-col items-start">
+                    <span className="text-left font-medium text-vs-dark text-sm sm:text-base">
                       {section.category}
                     </span>
                     <span className="text-xs text-gray-500">{section.percentage}% of total</span>
@@ -180,7 +180,6 @@ const DetailedBreakdownSection = ({ estimate }: DetailedBreakdownSectionProps) =
             <p className="text-xs text-gray-500 hidden sm:block">Tap a category above to see what it covers</p>
           </div>
           <div className="flex items-center gap-1 flex-shrink-0">
-            <IndianRupee className="size-4 sm:size-5 text-vs" />
             <span className="text-xl sm:text-2xl font-bold text-vs whitespace-nowrap">{formatCurrency(estimate.totalCost)}</span>
           </div>
         </div>
