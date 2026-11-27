@@ -40,6 +40,9 @@ for (const slug of costGuideSlugs) {
   if (!html.includes('"@type":"BreadcrumbList"')) errors.push(`${file}: BreadcrumbList schema missing`);
   if (!html.includes('G-88SHPS1HB3')) errors.push(`${file}: Google Analytics tag missing`);
   if (!html.includes('class="brand"')) errors.push(`${file}: studio branded header missing`);
+  if (!html.includes('The Seasons Bold') || !html.includes('Halimun Regular')) errors.push(`${file}: homepage wordmark fonts missing`);
+  if (!html.includes('/icons/favicon-light.png') || !html.includes('/icons/apple-touch-icon.jpg')) errors.push(`${file}: site favicon assets missing`);
+  if (!html.includes('/icons/og-image.jpg')) errors.push(`${file}: branded social preview image missing`);
 }
 
 const sitemapFiles = ["sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml", "sitemap-cms.xml"];
