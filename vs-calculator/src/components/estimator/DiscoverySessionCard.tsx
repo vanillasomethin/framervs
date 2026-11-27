@@ -24,7 +24,7 @@ const DiscoverySessionCard = ({ contextNote }: DiscoverySessionCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative overflow-hidden rounded-xl border border-vs/20 bg-gradient-to-br from-vs/5 to-transparent p-6"
+      className="relative overflow-hidden rounded-xl border border-vs/20 bg-white p-6"
     >
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex items-center gap-2">
@@ -64,7 +64,7 @@ const DiscoverySessionCard = ({ contextNote }: DiscoverySessionCardProps) => {
         <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
       </a>
       <p className="text-[11px] text-muted-foreground mt-3">
-        Prefer to talk first? The intro call above is always free — the discovery session is for
+        Prefer to talk first? The intro call above is always free, the discovery session is for
         when you're ready to put pen to paper.
       </p>
     </motion.div>

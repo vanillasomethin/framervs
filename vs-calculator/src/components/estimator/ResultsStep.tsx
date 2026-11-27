@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ProjectEstimate, ComponentOption } from "@/types/estimator";
-import { Share, CheckCircle2, Download, IndianRupee, Camera, Percent } from "lucide-react";
+import { Share, CheckCircle2, Download, IndianRupee } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ImprovedCostVisualization from "./ImprovedCostVisualization";
 import CostTransparency from "./CostTransparency";
@@ -15,13 +15,6 @@ import ContactCTAStrategy from "./ContactCTAStrategy";
 import UserInfoForm from "./UserInfoForm";
 import { generateEstimatePDF } from "@/utils/pdfExport";
 import { submitLeadWithPdf } from "@/utils/leads";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 
 interface ResultsStepProps {
   estimate: ProjectEstimate;
@@ -153,7 +146,6 @@ const AMENITY_LABELS: Record<string, string> = {
 
 const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
   const { toast } = useToast();
-  const [showConsultationPrompt, setShowConsultationPrompt] = useState(false);
   const [showLeadForm, setShowLeadForm] = useState(false);
 
   const formatCurrency = (amount: number) => {
@@ -242,25 +234,6 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
       });
     }
   };
-
-  // Scroll detection for consultation prompt — the results now flow with the
-  // page, so we watch the window scroll (not an inner box) and trigger once.
-  useEffect(() => {
-    let hasTriggered = false;
-
-    const handleScroll = () => {
-      if (hasTriggered) return;
-      const scrolled = window.scrollY + window.innerHeight;
-      const total = document.documentElement.scrollHeight;
-      if (total > 0 && scrolled / total >= 0.7) {
-        hasTriggered = true;
-        setShowConsultationPrompt(true);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Helper to check if component is included
   const isIncluded = (value: string | undefined): boolean => {
@@ -503,7 +476,7 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="flex items-start gap-2 flex-1">
-                    <CheckCircle2 size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 size={16} className="text-vs flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <div className="flex items-start justify-between gap-2">
                         <p className="text-sm font-medium text-gray-800">{item.name}</p>
@@ -559,7 +532,7 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
                   key={a}
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-vs bg-vs/10 px-3 py-1.5 rounded-full"
                 >
-                  <CheckCircle2 size={14} className="text-green-600" />
+                  <CheckCircle2 size={14} className="text-vs" />
                   {AMENITY_LABELS[a] || a}
                 </span>
               ))}
@@ -574,13 +547,13 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
         <DetailedBreakdownSection estimate={estimate} />
 
         {/* Disclaimer */}
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 text-xs text-gray-700">
-          <p className="font-medium text-orange-800 mb-1">Important Disclaimer:</p>
+        <div className="bg-vs/5 border border-vs/15 rounded-lg p-3 text-xs text-gray-700">
+          <p className="font-medium text-vs-dark mb-1">Important Disclaimer:</p>
           <ul className="list-disc list-inside space-y-1 text-gray-700">
             <li>The total is inclusive of professional fees, contingency and GST</li>
             <li>Actual costs may vary ±10% based on site conditions and material price fluctuations</li>
             <li>Detailed BOQ will be provided after site visit and requirement analysis</li>
-            <li>This is <strong>indicative pricing only</strong> — a formal quote will be shared after a discovery call with our team</li>
+            <li>This is <strong>indicative pricing only</strong>, a formal quote will be shared after a discovery call with our team</li>
           </ul>
         </div>
       </motion.div>
@@ -589,7 +562,7 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
       <div className="flex flex-wrap gap-3 justify-center">
         <button
           onClick={handleDownloadPDF}
-          className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
+          className="flex items-center gap-2 px-6 py-3 bg-vs hover:bg-vs text-white font-semibold rounded-lg transition-colors"
         >
           <Download size={18} /> Download PDF
         </button>
@@ -622,6 +595,9 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
       {/* Bottom Booking Section */}
       <div className="mt-6">
         <MeetingScheduler autoExpand={false} estimate={estimate} />
+        <p className="mt-3 text-center text-sm text-vs-dark/70">
+          Book a call before you decide and we take 5% off the design fee, and photograph your finished project for free.
+        </p>
       </div>
 
       {/* Paid-but-credited discovery session — shown only to warm leads here */}
@@ -636,54 +612,6 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
         <FAQSection />
       </div>
 
-      {/* Modal Dialog for Meeting Scheduler */}
-      <Dialog open={showConsultationPrompt} onOpenChange={setShowConsultationPrompt}>
-        <DialogContent className="w-[calc(100vw-2rem)] max-w-4xl">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-vs-dark">
-              Ready to Get Started?
-            </DialogTitle>
-            <DialogDescription className="text-base">
-              Schedule a consultation with our team to discuss your project in detail
-            </DialogDescription>
-          </DialogHeader>
-
-          {/* One-time offer — shown only on this exit-intent prompt, never repeated */}
-          <div className="bg-vs/5 border border-vs/20 rounded-xl p-4 mt-2">
-            <p className="text-sm text-vs-dark mb-3">
-              Before you go — we'd genuinely love to be part of how this turns out. So here's our
-              way of saying thanks for walking through your estimate with us:
-            </p>
-            <div className="space-y-2.5">
-              <div className="flex items-start gap-2.5">
-                <div className="flex items-center justify-center size-7 rounded-full bg-vs/10 text-vs flex-shrink-0">
-                  <Camera className="size-3.5" />
-                </div>
-                <p className="text-sm text-gray-700">
-                  A <span className="font-semibold text-vs-dark">complimentary professional photoshoot</span> of
-                  your finished project — on us, once it's done.
-                </p>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <div className="flex items-center justify-center size-7 rounded-full bg-vs/10 text-vs flex-shrink-0">
-                  <Percent className="size-3.5" />
-                </div>
-                <p className="text-sm text-gray-700">
-                  <span className="font-semibold text-vs-dark">5% off your total design fee</span>, if you book a
-                  call with us before you decide.
-                </p>
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 mt-3">
-              No pressure, no countdown timers — just an open invitation while it's on your mind.
-            </p>
-          </div>
-
-          <div className="mt-4">
-            <MeetingScheduler autoExpand={true} estimate={estimate} />
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Info form gating the PDF download — every download becomes a lead */}
       <UserInfoForm

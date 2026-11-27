@@ -23,8 +23,8 @@ const CurrentEstimateDisplay = () => {
         <span className="text-[#4f090c]">Current Estimate:</span>
         <span className="text-vs font-semibold">{formattedCost}</span>
       </div>
-      <div className="text-xs text-vs-dark/70 flex items-center gap-1 bg-orange-50/50 px-3 py-1 rounded-full">
-        <AlertTriangle size={12} className="text-orange-500" />
+      <div className="text-xs text-vs-dark/70 flex items-center gap-1 bg-vs/5/50 px-3 py-1 rounded-full">
+        <AlertTriangle size={12} className="text-vs" />
         <span>Indicative cost only. Contact us for a detailed quote.</span>
       </div>
     </div>

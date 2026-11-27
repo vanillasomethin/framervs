@@ -312,9 +312,9 @@ const BudgetMatchingStep = ({
 
   const getQualityBadgeColor = (option: ComponentOption) => {
     switch (option) {
-      case "luxury": return "bg-purple-100 text-purple-800 border-purple-300";
-      case "premium": return "bg-blue-100 text-blue-800 border-blue-300";
-      case "standard": return "bg-green-100 text-green-800 border-green-300";
+      case "luxury": return "bg-vs/5 text-vs-dark border-vs/15";
+      case "premium": return "bg-vs/5 text-vs-dark border-vs/15";
+      case "standard": return "bg-vs/5 text-vs-dark border-vs/15";
       case "none": return "bg-gray-100 text-gray-800 border-gray-300";
     }
   };
@@ -375,9 +375,9 @@ const BudgetMatchingStep = ({
 
       {/* Budget Status Messages */}
       {budgetStatus === "low" && (
-        <Alert className="border-orange-200 bg-orange-50">
-          <AlertCircle className="size-4 text-orange-600" />
-          <AlertDescription className="text-orange-900">
+        <Alert className="border-vs/15 bg-vs/5">
+          <AlertCircle className="size-4 text-vs" />
+          <AlertDescription className="text-vs-dark">
             <strong>Hey there!</strong> We appreciate your enthusiasm, but your budget might be a bit tight for what you have in mind.
             The minimum we'd recommend for a quality project of this size is around <strong>{formatCurrency(minimumBudget)}</strong>.
             <br /><br />
@@ -388,9 +388,9 @@ const BudgetMatchingStep = ({
       )}
 
       {budgetStatus === "moderate" && (
-        <Alert className="border-blue-200 bg-blue-50">
-          <TrendingUp className="size-4 text-blue-600" />
-          <AlertDescription className="text-blue-900">
+        <Alert className="border-vs/15 bg-vs/5">
+          <TrendingUp className="size-4 text-vs" />
+          <AlertDescription className="text-vs-dark">
             <strong>Good start!</strong> Your budget gives us room to work with the essentials and add some nice touches.
             We'll make every rupee count by focusing on quality where it matters most. Let's create something you'll love!
           </AlertDescription>
@@ -398,9 +398,9 @@ const BudgetMatchingStep = ({
       )}
 
       {budgetStatus === "good" && (
-        <Alert className="border-green-200 bg-green-50">
-          <CheckCircle2 className="size-4 text-green-600" />
-          <AlertDescription className="text-green-900">
+        <Alert className="border-vs/15 bg-vs/5">
+          <CheckCircle2 className="size-4 text-vs" />
+          <AlertDescription className="text-vs-dark">
             <strong>Excellent!</strong> Your budget allows us to deliver a well-rounded project with quality materials and finishes.
             We can incorporate some premium elements while maintaining great value. This is a sweet spot for creating something special!
           </AlertDescription>
@@ -408,9 +408,9 @@ const BudgetMatchingStep = ({
       )}
 
       {budgetStatus === "excellent" && (
-        <Alert className="border-purple-200 bg-purple-50">
-          <Sparkles className="size-4 text-purple-600" />
-          <AlertDescription className="text-purple-900">
+        <Alert className="border-vs/15 bg-vs/5">
+          <Sparkles className="size-4 text-vs" />
+          <AlertDescription className="text-vs-dark">
             <strong>Wonderful!</strong> With this budget, we can truly bring your vision to life with premium materials,
             luxury finishes, and all the bells and whistles. Let's create something extraordinary together!
           </AlertDescription>
@@ -498,7 +498,7 @@ const BudgetMatchingStep = ({
             Perfect if you have specific preferences or want full control.
           </p>
           <p className="text-xs text-vs font-medium">
-            💡 Tip: You can proceed without entering a budget
+            Tip: you can proceed without entering a budget
           </p>
         </CardContent>
       </Card>

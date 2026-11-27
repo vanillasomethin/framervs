@@ -162,11 +162,11 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
         
         <div className="grid grid-cols-3 gap-2 mb-4">
           <div className="bg-white p-2 rounded-lg text-center">
-            <CheckCircle2 className="w-5 h-5 text-green-600 mx-auto mb-1" />
+            <CheckCircle2 className="w-5 h-5 text-vs mx-auto mb-1" />
             <p className="text-[10px] text-gray-700 font-medium">Accurate Pricing</p>
           </div>
           <div className="bg-white p-2 rounded-lg text-center">
-            <Clock className="w-5 h-5 text-blue-600 mx-auto mb-1" />
+            <Clock className="w-5 h-5 text-vs mx-auto mb-1" />
             <p className="text-[10px] text-gray-700 font-medium">24hr Response</p>
           </div>
           <div className="bg-white p-2 rounded-lg text-center">
@@ -215,7 +215,7 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Name <span className="text-red-500">*</span>
+                    Name <span className="text-vs">*</span>
                   </label>
                   <input
                     type="text"
@@ -230,7 +230,7 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
                 
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Phone <span className="text-red-500">*</span>
+                    Phone <span className="text-vs">*</span>
                   </label>
                   <input
                     type="tel"
@@ -246,7 +246,7 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
               
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Email <span className="text-red-500">*</span>
+                  Email <span className="text-vs">*</span>
                 </label>
                 <input
                   type="email"
@@ -355,17 +355,17 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
           href="https://wa.me/917411324448"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors group"
+          className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-vs hover:bg-vs/5 transition-colors group"
         >
-          <MessageSquare className="w-5 h-5 text-green-600 mb-1 group-hover:scale-110 transition-transform" />
+          <MessageSquare className="w-5 h-5 text-vs mb-1 group-hover:scale-110 transition-transform" />
           <span className="text-[10px] font-medium text-gray-700">WhatsApp</span>
         </a>
         
         <a
           href="mailto:hello@vanillasometh.in"
-          className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors group"
+          className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-vs hover:bg-vs/5 transition-colors group"
         >
-          <Mail className="w-5 h-5 text-blue-600 mb-1 group-hover:scale-110 transition-transform" />
+          <Mail className="w-5 h-5 text-vs mb-1 group-hover:scale-110 transition-transform" />
           <span className="text-[10px] font-medium text-gray-700">Email</span>
         </a>
       </div>

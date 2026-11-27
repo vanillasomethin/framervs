@@ -25,7 +25,7 @@ export function Collaboration() {
         <div className="flex flex-wrap items-center gap-[22px]">
           <div className="flex items-center justify-center rounded bg-white px-3.5 py-2.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`${IMG}/marian-projects-logo.jpg`} alt="Marian Projects logo" loading="lazy" width={108} height={118} className="block h-[118px] w-[108px] object-contain" />
+            <img src={`${IMG}/marian-projects-logo.webp`} alt="Marian Projects logo" loading="lazy" width={108} height={118} className="block h-[118px] w-[108px] object-contain" />
           </div>
           <div className="max-w-[220px] text-[13px] leading-[1.6] text-[#c9c4ba]">
             Collaboration with

@@ -8,11 +8,11 @@ interface DetailedBreakdownSectionProps {
 
 // Category colours match the donut in ImprovedCostVisualization for consistency.
 const CATEGORY_COLOR: Record<string, string> = {
-  construction: "#8B0000",
-  core: "#B22222",
-  finishes: "#CD5C5C",
-  interiors: "#F08080",
-  fees: "#C9A9A9",
+  construction: "#380100",
+  core: "#5C1A1B",
+  finishes: "#7A1E1F",
+  interiors: "#A8605C",
+  fees: "#D8BFBC",
 };
 
 const formatCurrency = (amount: number) =>

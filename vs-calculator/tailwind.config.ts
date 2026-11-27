@@ -20,6 +20,9 @@ const config = {
     extend: {
       fontFamily: {
         'space-grotesk': ['Space Grotesk', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        seasons: ['"The Seasons Bold"', 'serif'],
+        halimun: ['"Halimun Regular"', 'cursive'],
         poppins: ['Poppins', 'sans-serif'],
         heebo: ['Heebo', 'sans-serif'],
         lobster: ['Lobster Two', 'cursive'],
