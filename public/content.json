@@ -163,7 +163,7 @@
         "year": "2026",
         "client": "ARSA Contracting Company",
         "area": "",
-        "projectStatus": "Scope to confirm",
+        "projectStatus": "Under construction",
         "summary": "Landscape and outdoor recreation project, including MUGA and football court design coordination.",
         "seoDescription": "Landscape and outdoor recreation design coordination at King Abdullah Park, Riyadh, including sports court documentation.",
         "cover": {
@@ -180,7 +180,7 @@
           "Riyadh"
         ],
         "gallery": [],
-        "updatedAt": "2026-11-19T08:14:58.003Z",
+        "updatedAt": "2026-11-27T10:03:39.398Z",
         "layout": "Simple page"
       },
       {
@@ -480,6 +480,10 @@
       "updates": {
         "title": "",
         "description": ""
+      },
+      "shop": {
+        "title": "",
+        "description": ""
       }
     },
     "blog": [
@@ -506,6 +510,14 @@
         "seoDescription": "Understand architect fees in India in 2026, including per sq. ft. rates, percentage fees, fixed packages, COA references and hidden costs in Karnataka and Kerala."
       }
     ],
-    "updates": []
+    "updates": [],
+    "products": [],
+    "shopLists": [],
+    "shop": {
+      "shippingFlat": "",
+      "freeShippingOver": "",
+      "codEnabled": "Yes",
+      "deliveryNote": ""
+    }
   }
 }
