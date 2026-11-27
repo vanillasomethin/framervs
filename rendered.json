@@ -1,0 +1,737 @@
+{
+  "generatedAt": "2026-11-27T10:01:46.925Z",
+  "target": "https://www.vanillasometh.in",
+  "pages": 36,
+  "errors": [],
+  "warnings": [],
+  "results": [
+    {
+      "url": "https://www.vanillasometh.in/",
+      "status": 200,
+      "redirected": false,
+      "title": "Vanilla & Somethin' | Architects & Interior Designers, Mangalore",
+      "descriptions": [
+        "Architecture and interior design studio in Mangalore designing homes, offices, cafes and retail spaces across coastal Karnataka, Kerala and the Gulf."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "PURE. PLAYFUL. PURPOSEFUL"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/home-project-clarity/",
+      "status": 200,
+      "redirected": false,
+      "title": "Home Project Clarity | Vanilla & Somethin' Mangalore",
+      "descriptions": [
+        "Plan your home, renovation or interiors with clarity. Get structured guidance on scope, budget, design decisions and project oversight from Vanilla & Somethin'."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/home-project-clarity/"
+      ],
+      "robots": "index,follow",
+      "h1": [
+        "Your home project, with more clarity and fewer surprises."
+      ],
+      "jsonld": [],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/seo/",
+      "status": 200,
+      "redirected": false,
+      "title": "Architecture & Interior Design Studio Mangalore | Vanilla & Somethin'",
+      "descriptions": [
+        "Vanilla & Somethin' is an architecture and interior design studio based in Mangalore, creating thoughtful homes, workplaces and retail spaces across coastal Karnataka and Kerala."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/seo/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Spaces shaped by place, purpose and people."
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/commercial-design/",
+      "status": 200,
+      "redirected": false,
+      "title": "Commercial Architects & Interior Designers | Vanilla & Somethin'",
+      "descriptions": [
+        "Architecture and commercial interior design for cafes, restaurants, kiosks, showrooms, retail stores and offices in Mangalore, coastal Karnataka and Kerala."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/commercial-design/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Commercial spaces designed around people, brand and business."
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/landscape-design/",
+      "status": 200,
+      "redirected": false,
+      "title": "Landscape Design & Garden Design in Mangalore | Vanilla & Somethin'",
+      "descriptions": [
+        "Landscape design for gardens, courtyards, terraces, rooftop spaces and outdoor environments in Mangalore, coastal Karnataka and Kerala."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/landscape-design/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Outdoor spaces shaped by place, climate and everyday life."
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-management/",
+      "status": 200,
+      "redirected": false,
+      "title": "AI-Assisted Project Management & Dashboards | Vanilla & Somethin'",
+      "descriptions": [
+        "AI-integrated design workflows and in-house project dashboards for tracking milestones, progress updates, approvals and project budgets."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-management/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Better project visibility, built into the way we work."
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/contact/",
+      "status": 200,
+      "redirected": false,
+      "title": "Contact Our Mangalore Architecture Studio | Vanilla & Somethin'",
+      "descriptions": [
+        "Start a home, interior or commercial design project with Vanilla & Somethin'. Share your brief and we will reply with next steps and a consultation slot."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/contact/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "GET IN TOUCH"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/team.html",
+      "status": 200,
+      "redirected": false,
+      "title": "Our Architects & Designers | Vanilla & Somethin' Team",
+      "descriptions": [
+        "Meet Ar. Hisham Khalid, Ar. Zeba Ali Khan and the Vanilla & Somethin' team designing homes, workplaces and commercial interiors from Mangalore."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/team.html"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "TEAM"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/",
+      "status": 200,
+      "redirected": false,
+      "title": "Architecture & Interior Design Projects | Vanilla & Somethin'",
+      "descriptions": [
+        "Selected homes, apartments, offices, cafes, salons and retail interiors by Vanilla & Somethin' in Mangalore, Kerala and Saudi Arabia."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Dive into our works"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/estimator/",
+      "status": 200,
+      "redirected": false,
+      "title": "Project Cost Estimator & Architect Fees | Vanilla & Somethin'",
+      "descriptions": [
+        "Explore an indicative construction and interiors budget for residential, commercial and mixed-use projects in India. Calculate project costs and architect fees with Vanilla & Somethin'."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/estimator/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Pricing"
+      ],
+      "jsonld": [],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/nri-home-design/",
+      "status": 200,
+      "redirected": false,
+      "title": "NRI Home Design in Mangalore & Kerala | Vanilla & Somethin'",
+      "descriptions": [
+        "Design your home in Mangalore, Kasaragod or Kerala while living abroad. Vanilla & Somethin' offers architecture and interior design consultations for NRI families."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/nri-home-design/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Your home in India. Designed with you, wherever you live."
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/renovation-and-short-stay-design/",
+      "status": 200,
+      "redirected": false,
+      "title": "Home Renovation, Airbnb & Homestay Design | Vanilla & Somethin'",
+      "descriptions": [
+        "Home renovation, Airbnb and short-stay rental design, homestays and serviced villas in Mangalore, coastal Karnataka and Kerala."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/renovation-and-short-stay-design/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Reimagine the home. Create a better stay."
+      ],
+      "jsonld": [],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/permits-and-licensing-support/",
+      "status": 200,
+      "redirected": false,
+      "title": "Building Permit Drawings & K-SMART Support | Vanilla & Somethin'",
+      "descriptions": [
+        "Architectural drawings and design coordination for building permits, K-SMART, commercial fit-outs and licensing requirements in Kerala, Karnataka and Saudi Arabia."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/permits-and-licensing-support/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Design documentation that is ready for the next step."
+      ],
+      "jsonld": [],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/house-construction-cost-karnataka/",
+      "status": 200,
+      "redirected": false,
+      "title": "House Construction Cost in Karnataka (2026) | Mangalore Cost per Sq Ft",
+      "descriptions": [
+        "Explore house construction cost in Karnataka, Mangalore per-square-foot rates, sample budgets, inclusions, exclusions and planning advice for 2026."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/house-construction-cost-karnataka/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "House construction cost in Karnataka: a practical 2026 guide"
+      ],
+      "jsonld": [
+        true,
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/interior-design-cost-karnataka/",
+      "status": 200,
+      "redirected": false,
+      "title": "Interior Design Cost in Karnataka (2026) | Mangalore Rates",
+      "descriptions": [
+        "Understand interior design cost in Karnataka, Mangalore full-home interiors, 2BHK and 3BHK budgets, modular kitchen and wardrobe rates."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/interior-design-cost-karnataka/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Interior design cost in Karnataka: rooms, materials and realistic budgets"
+      ],
+      "jsonld": [
+        true,
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/home-project-clarity-consultation/",
+      "status": 200,
+      "redirected": false,
+      "title": "Home Project Clarity Consultation | Mangalore Architects",
+      "descriptions": [
+        "A paid first-step consultation to clarify scope, budget drivers and next steps before you commit to a full home project in Mangalore, Karnataka."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/home-project-clarity-consultation/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Home Project Clarity Consultation"
+      ],
+      "jsonld": [
+        true,
+        true,
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/architect-engineer-contractor-roles/",
+      "status": 200,
+      "redirected": false,
+      "title": "Architect vs Engineer vs Contractor: Who Does What",
+      "descriptions": [
+        "Who does what on a home build: architect, structural engineer, MEP consultant, contractor and project manager roles, and questions to ask."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/architect-engineer-contractor-roles/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Architect, engineer, contractor or designer: who does what on your home?"
+      ],
+      "jsonld": [
+        true,
+        true,
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/compare-construction-quotations/",
+      "status": 200,
+      "redirected": false,
+      "title": "How to Compare Construction Quotations (Free Tool)",
+      "descriptions": [
+        "Compare construction quotations fairly with a free side-by-side worksheet. Check scope, measurement basis, exclusions and red flags before you decide."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/compare-construction-quotations/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "How to compare construction quotations without being overcharged"
+      ],
+      "jsonld": [
+        true,
+        true,
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/home-budget-allocation/",
+      "status": 200,
+      "redirected": false,
+      "title": "How to Split a Home Budget: Construction vs Interiors",
+      "descriptions": [
+        "Split a home budget between construction and interiors with three illustrative ₹1 crore scenarios, a planning sequence and FAQs for Mangalore homeowners."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/home-budget-allocation/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "How to allocate a home budget between construction and interiors"
+      ],
+      "jsonld": [
+        true,
+        true,
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/home-renovation-planning-checklist/",
+      "status": 200,
+      "redirected": false,
+      "title": "Home Renovation Planning Checklist | Mangalore Guide",
+      "descriptions": [
+        "A practical checklist for renovating an existing house in coastal Karnataka. Assess the building, define scope in writing, plan budget and sequence."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/home-renovation-planning-checklist/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Home renovation planning checklist"
+      ],
+      "jsonld": [
+        true,
+        true,
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/architect-fees-karnataka/",
+      "status": 200,
+      "redirected": false,
+      "title": "Architect Fees in Karnataka: Scope and Deliverables",
+      "descriptions": [
+        "Understand architect fee structures in Karnataka, the deliverables at each design stage, common exclusions and the questions to ask when comparing proposals."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/architect-fees-karnataka/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Architect fees: what you are paying for and how to compare them"
+      ],
+      "jsonld": [
+        true,
+        true,
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/duplex-rental-home-design/",
+      "status": 200,
+      "redirected": false,
+      "title": "Designing a Home with Rental Units | Duplex Guide",
+      "descriptions": [
+        "Plan a home with rental units in Karnataka: feasibility, duplex layouts, rental-friendly design, lifecycle costs, budgeting and approvals for owners."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/duplex-rental-home-design/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Designing a duplex or home with rental units"
+      ],
+      "jsonld": [
+        true,
+        true,
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/locations/mangalore/",
+      "status": 200,
+      "redirected": false,
+      "title": "Architects & Interior Designers in Mangalore | Vanilla & Somethin'",
+      "descriptions": [
+        "Mangalore-based architecture and interior design studio for considered homes, workplaces and retail spaces across Mangaluru and Dakshina Kannada."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/locations/mangalore/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Architecture and interior design rooted in Mangalore."
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/locations/kasaragod/",
+      "status": 200,
+      "redirected": false,
+      "title": "Architects & Interior Designers in Kasaragod | Vanilla & Somethin'",
+      "descriptions": [
+        "Planning a home or interior in Kasaragod? Speak with Vanilla & Somethin', an architecture and interior design studio based in nearby Mangalore."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/locations/kasaragod/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Design conversations for homes and spaces in Kasaragod."
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/locations/coastal-karnataka/",
+      "status": 200,
+      "redirected": false,
+      "title": "Coastal Karnataka Architects & Interior Design | Vanilla & Somethin'",
+      "descriptions": [
+        "Vanilla & Somethin' is a Mangalore-based architecture and interior design practice welcoming suitable residential and commercial projects across coastal Karnataka."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/locations/coastal-karnataka/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Architecture that responds to the coastal setting."
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/locations/kerala/",
+      "status": 200,
+      "redirected": false,
+      "title": "Architects & Interior Design in Kerala | Vanilla & Somethin'",
+      "descriptions": [
+        "Vanilla & Somethin' is an architecture and interior design studio based in Mangalore, with a portfolio that includes residential design work in Kerala."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/locations/kerala/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "A Mangalore studio with experience in Kerala project contexts."
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/nord-terra/",
+      "status": 200,
+      "redirected": false,
+      "title": "Nord Terra House, Kozhikode Residence | Vanilla & Somethin'",
+      "descriptions": [
+        "Nord Terra House, Kozhikode, Kerala (2024): a calm residence of stone, wood and lime-washed surfaces, shaped by sculpted natural light and quiet geometry."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/nord-terra/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Nord Terra House"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/bnb/",
+      "status": 200,
+      "redirected": false,
+      "title": "BNB House Interiors, Kadri Mangalore | Vanilla & Somethin'",
+      "descriptions": [
+        "BNB House: a 2025 residential interior design project in Kadri, Mangalore by Vanilla & Somethin'. Project overview, design approach and photographs."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/bnb/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "BNB House"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/koan/",
+      "status": 200,
+      "redirected": false,
+      "title": "Koan House, Mangalore | Minimal Home Interiors | Vanilla & Somethin'",
+      "descriptions": [
+        "Koan House in Kadri, Mangalore (2025): a minimal residential interior using natural and indirect light, balanced proportions and calm, essential forms."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/koan/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Koan House"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/mak/",
+      "status": 200,
+      "redirected": false,
+      "title": "MAK Park Square Apartment Interiors, Mangalore | Vanilla & Somethin'",
+      "descriptions": [
+        "MAK Park Square, Mangalore (2025): compact apartment interiors with multifunctional furniture, hidden storage and a calm, neutral, textured palette."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/mak/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "MAK Park Square"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/seiko-hyper/",
+      "status": 200,
+      "redirected": false,
+      "title": "Seiko Hypermarket, Dammam | Supermarket Design | Vanilla & Somethin'",
+      "descriptions": [
+        "Seiko Hypermarket, Dammam, Saudi Arabia (2025): a supermarket layout with intuitive circulation, clear signage and lighting that lifts product visibility."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/seiko-hyper/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Seiko Hypermarket"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/flutecase/",
+      "status": 200,
+      "redirected": false,
+      "title": "Flute-Case Office Interiors, Mangalore | Vanilla & Somethin'",
+      "descriptions": [
+        "Flute-Case, Mangalore (2025): an office interior for Rapid Solution Pvt. Ltd. with fluted textures, a calm minimal palette and zoned planning for focus."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/flutecase/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Flute-Case"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/fair-fly/",
+      "status": 200,
+      "redirected": false,
+      "title": "Fair-Fly Popsicle Pop-Up Kiosk, Mangalore | Vanilla & Somethin'",
+      "descriptions": [
+        "Fair-Fly for Sorbete, Mangalore (2025): a modular outdoor popsicle pop-up kiosk with a bright brand palette, lightweight parts and quick installation."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/fair-fly/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Fair-Fly"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/coco-meltdown/",
+      "status": 200,
+      "redirected": false,
+      "title": "Coco Meltdown Cafe Interior, Al Khobar | Vanilla & Somethin'",
+      "descriptions": [
+        "Coco Meltdown for Dip'N'Melt, Al Khobar (2024): a chocolate cafe interior with fluid curves, a rich brown and gold palette and glossy, warm lighting."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/coco-meltdown/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Coco Meltdown"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/pipe-nova/",
+      "status": 200,
+      "redirected": false,
+      "title": "Pipe Nova Retail Interior, Falnir Mangalore | Vanilla & Somethin'",
+      "descriptions": [
+        "Pipe Nova for Sorbete, Falnir, Mangalore (2025): an industrial retail interior where exposed pipes, metal frames and focused light form the brand identity."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/pipe-nova/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Pipe Nova"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/artwist-salon/",
+      "status": 200,
+      "redirected": false,
+      "title": "Artwist Salon Interior Design, Kochi | Vanilla & Somethin'",
+      "descriptions": [
+        "Artwist Salon in Kochi, Kerala (2025): a salon interior with soft curves, warm flattering light and an efficient flow from styling stations to the wash area."
+      ],
+      "canonicals": [
+        "https://www.vanillasometh.in/project-showcase/artwist-salon/"
+      ],
+      "robots": "index,follow,max-image-preview:large",
+      "h1": [
+        "Artwist Salon"
+      ],
+      "jsonld": [
+        true
+      ],
+      "imgsNoAlt": 0
+    }
+  ]
+}

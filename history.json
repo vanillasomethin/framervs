@@ -1,0 +1,29 @@
+[
+  {
+    "date": "2026-11-20",
+    "renderedErrors": 0,
+    "renderedWarnings": 0,
+    "mobilePerformance": 87,
+    "mobileSeo": 97,
+    "desktopPerformance": 97,
+    "accessibility": 98
+  },
+  {
+    "date": "2026-11-23",
+    "renderedErrors": 0,
+    "renderedWarnings": 0,
+    "mobilePerformance": 86,
+    "mobileSeo": 97,
+    "desktopPerformance": 98,
+    "accessibility": 98
+  },
+  {
+    "date": "2026-11-27",
+    "renderedErrors": 0,
+    "renderedWarnings": 0,
+    "mobilePerformance": 96,
+    "mobileSeo": 100,
+    "desktopPerformance": 100,
+    "accessibility": 95
+  }
+]

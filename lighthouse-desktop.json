@@ -1,0 +1,285 @@
+{
+  "generatedAt": "2026-11-27T10:03:35.188Z",
+  "formFactor": "desktop",
+  "lighthouse": "12.8.2",
+  "pages": [
+    {
+      "url": "https://www.vanillasometh.in/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 91,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 723.155,
+        "cls": 0.015614787038554186,
+        "tbtMs": 0,
+        "fcpMs": 423.155,
+        "speedIndexMs": 423.155,
+        "bytes": 854366
+      },
+      "failing": [
+        {
+          "id": "aria-prohibited-attr",
+          "title": "Elements use prohibited ARIA attributes",
+          "display": ""
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "display": ""
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 86 KiB"
+        },
+        {
+          "id": "uses-responsive-images",
+          "title": "Properly size images",
+          "display": "Est savings of 396 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "dom-size",
+          "title": "Avoid an excessive DOM size",
+          "display": "1,459 elements"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "display": "Est savings of 214 KiB"
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "display": ""
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render blocking requests",
+          "display": ""
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/locations/mangalore/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 232.6294,
+        "cls": 0,
+        "tbtMs": 0,
+        "fcpMs": 232.6294,
+        "speedIndexMs": 232.6294,
+        "bytes": 4527
+      },
+      "failing": [
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "display": ""
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 98,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 732.6667,
+        "cls": 0.02119783930139919,
+        "tbtMs": 0,
+        "fcpMs": 372.6667,
+        "speedIndexMs": 372.6667,
+        "bytes": 1308557
+      },
+      "failing": [
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 86 KiB"
+        },
+        {
+          "id": "uses-responsive-images",
+          "title": "Properly size images",
+          "display": "Est savings of 851 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "display": "Est savings of 752 KiB"
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "display": ""
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render blocking requests",
+          "display": ""
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/nord-terra/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 98,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 583.0628,
+        "cls": 0.021547253119830186,
+        "tbtMs": 0,
+        "fcpMs": 363.06280000000004,
+        "speedIndexMs": 363.06280000000004,
+        "bytes": 712065
+      },
+      "failing": [
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 84 KiB"
+        },
+        {
+          "id": "uses-responsive-images",
+          "title": "Properly size images",
+          "display": "Est savings of 152 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "display": "Est savings of 123 KiB"
+        },
+        {
+          "id": "lcp-discovery-insight",
+          "title": "LCP request discovery",
+          "display": ""
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "display": ""
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render blocking requests",
+          "display": ""
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/house-construction-cost-karnataka/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 235.8305,
+        "cls": 0,
+        "tbtMs": 0,
+        "fcpMs": 235.8305,
+        "speedIndexMs": 235.8305,
+        "bytes": 5424
+      },
+      "failing": []
+    },
+    {
+      "url": "https://www.vanillasometh.in/contact/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 98,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 523.8079,
+        "cls": 0.008913688490928296,
+        "tbtMs": 0,
+        "fcpMs": 363.8079,
+        "speedIndexMs": 363.8079,
+        "bytes": 347209
+      },
+      "failing": [
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 85 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "display": ""
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render blocking requests",
+          "display": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,380 @@
+{
+  "generatedAt": "2026-11-27T10:02:40.759Z",
+  "formFactor": "mobile",
+  "lighthouse": "12.8.2",
+  "pages": [
+    {
+      "url": "https://www.vanillasometh.in/",
+      "scores": {
+        "performance": 93,
+        "accessibility": 90,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 3229.1445,
+        "cls": 0.007215836241517886,
+        "tbtMs": 29.5,
+        "fcpMs": 1504.1444999999999,
+        "speedIndexMs": 1504.1444999999999,
+        "bytes": 854207
+      },
+      "failing": [
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "display": "3.2 s"
+        },
+        {
+          "id": "largest-contentful-paint-element",
+          "title": "Largest Contentful Paint element",
+          "display": "3,230 ms"
+        },
+        {
+          "id": "aria-prohibited-attr",
+          "title": "Elements use prohibited ARIA attributes",
+          "display": ""
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "display": ""
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "offscreen-images",
+          "title": "Defer offscreen images",
+          "display": "Est savings of 97 KiB"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 86 KiB"
+        },
+        {
+          "id": "uses-responsive-images",
+          "title": "Properly size images",
+          "display": "Est savings of 237 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "dom-size",
+          "title": "Avoid an excessive DOM size",
+          "display": "1,459 elements"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "display": "Est savings of 244 KiB"
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "display": ""
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render blocking requests",
+          "display": ""
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/locations/mangalore/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 785.3865,
+        "cls": 0,
+        "tbtMs": 0,
+        "fcpMs": 785.3865,
+        "speedIndexMs": 785.3865,
+        "bytes": 4550
+      },
+      "failing": [
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "display": ""
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "display": "4.4 s"
+        },
+        {
+          "id": "bootup-time",
+          "title": "Reduce JavaScript execution time",
+          "display": "3.9 s"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 76 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": ""
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/",
+      "scores": {
+        "performance": 91,
+        "accessibility": 94,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 3379.2875,
+        "cls": 0.00432303430807535,
+        "tbtMs": 20.5,
+        "fcpMs": 1654.2875,
+        "speedIndexMs": 1654.2875,
+        "bytes": 661684
+      },
+      "failing": [
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "display": "3.4 s"
+        },
+        {
+          "id": "largest-contentful-paint-element",
+          "title": "Largest Contentful Paint element",
+          "display": "3,380 ms"
+        },
+        {
+          "id": "aria-prohibited-attr",
+          "title": "Elements use prohibited ARIA attributes",
+          "display": ""
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 86 KiB"
+        },
+        {
+          "id": "uses-responsive-images",
+          "title": "Properly size images",
+          "display": "Est savings of 212 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "display": "Est savings of 222 KiB"
+        },
+        {
+          "id": "lcp-discovery-insight",
+          "title": "LCP request discovery",
+          "display": ""
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "display": ""
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render blocking requests",
+          "display": ""
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/project-showcase/nord-terra/",
+      "scores": {
+        "performance": 94,
+        "accessibility": 94,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 3003.9265,
+        "cls": 0.004211000872114936,
+        "tbtMs": 27,
+        "fcpMs": 1653.9265,
+        "speedIndexMs": 1653.9265,
+        "bytes": 711925
+      },
+      "failing": [
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "display": "3.0 s"
+        },
+        {
+          "id": "largest-contentful-paint-element",
+          "title": "Largest Contentful Paint element",
+          "display": "3,000 ms"
+        },
+        {
+          "id": "aria-prohibited-attr",
+          "title": "Elements use prohibited ARIA attributes",
+          "display": ""
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "render-blocking-resources",
+          "title": "Eliminate render-blocking resources",
+          "display": "Est savings of 0 ms"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 86 KiB"
+        },
+        {
+          "id": "uses-responsive-images",
+          "title": "Properly size images",
+          "display": "Est savings of 221 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "display": "Est savings of 290 KiB"
+        },
+        {
+          "id": "lcp-discovery-insight",
+          "title": "LCP request discovery",
+          "display": ""
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "display": ""
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render blocking requests",
+          "display": "Est savings of 850 ms"
+        }
+      ]
+    },
+    {
+      "url": "https://www.vanillasometh.in/house-construction-cost-karnataka/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 807.9426,
+        "cls": 0,
+        "tbtMs": 0,
+        "fcpMs": 807.9426,
+        "speedIndexMs": 807.9426,
+        "bytes": 5439
+      },
+      "failing": []
+    },
+    {
+      "url": "https://www.vanillasometh.in/contact/",
+      "scores": {
+        "performance": 97,
+        "accessibility": 93,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "lcpMs": 2553.3215,
+        "cls": 0.0036731606922118286,
+        "tbtMs": 62,
+        "fcpMs": 1503.3215,
+        "speedIndexMs": 1503.3215,
+        "bytes": 347145
+      },
+      "failing": [
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "display": "2.6 s"
+        },
+        {
+          "id": "largest-contentful-paint-element",
+          "title": "Largest Contentful Paint element",
+          "display": "2,550 ms"
+        },
+        {
+          "id": "aria-prohibited-attr",
+          "title": "Elements use prohibited ARIA attributes",
+          "display": ""
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "display": ""
+        },
+        {
+          "id": "render-blocking-resources",
+          "title": "Eliminate render-blocking resources",
+          "display": "Est savings of 0 ms"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "display": "Est savings of 85 KiB"
+        },
+        {
+          "id": "legacy-javascript",
+          "title": "Avoid serving legacy JavaScript to modern browsers",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "display": "Est savings of 13 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "display": ""
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render blocking requests",
+          "display": "Est savings of 700 ms"
+        }
+      ]
+    }
+  ]
+}

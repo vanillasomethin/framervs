@@ -1,0 +1,967 @@
+{
+  "generatedAt": "2026-11-27T10:03:37.803Z",
+  "commit": "5b7161be0b3bda5e55ef58f6dce4b8476e25c3f9",
+  "runUrl": "https://github.com/vanillasomethin/framervs/actions/runs/45978265574",
+  "rendered": {
+    "pages": 36,
+    "errors": [],
+    "warnings": [],
+    "results": [
+      {
+        "url": "https://www.vanillasometh.in/",
+        "status": 200,
+        "title": "Vanilla & Somethin' | Architects & Interior Designers, Mangalore",
+        "description": "Architecture and interior design studio in Mangalore designing homes, offices, cafes and retail spaces across coastal Karnataka, Kerala and the Gulf.",
+        "canonical": "https://www.vanillasometh.in/",
+        "h1": "PURE. PLAYFUL. PURPOSEFUL"
+      },
+      {
+        "url": "https://www.vanillasometh.in/home-project-clarity/",
+        "status": 200,
+        "title": "Home Project Clarity | Vanilla & Somethin' Mangalore",
+        "description": "Plan your home, renovation or interiors with clarity. Get structured guidance on scope, budget, design decisions and project oversight from Vanilla & Somethin'.",
+        "canonical": "https://www.vanillasometh.in/home-project-clarity/",
+        "h1": "Your home project, with more clarity and fewer surprises."
+      },
+      {
+        "url": "https://www.vanillasometh.in/seo/",
+        "status": 200,
+        "title": "Architecture & Interior Design Studio Mangalore | Vanilla & Somethin'",
+        "description": "Vanilla & Somethin' is an architecture and interior design studio based in Mangalore, creating thoughtful homes, workplaces and retail spaces across coastal Karnataka and Kerala.",
+        "canonical": "https://www.vanillasometh.in/seo/",
+        "h1": "Spaces shaped by place, purpose and people."
+      },
+      {
+        "url": "https://www.vanillasometh.in/commercial-design/",
+        "status": 200,
+        "title": "Commercial Architects & Interior Designers | Vanilla & Somethin'",
+        "description": "Architecture and commercial interior design for cafes, restaurants, kiosks, showrooms, retail stores and offices in Mangalore, coastal Karnataka and Kerala.",
+        "canonical": "https://www.vanillasometh.in/commercial-design/",
+        "h1": "Commercial spaces designed around people, brand and business."
+      },
+      {
+        "url": "https://www.vanillasometh.in/landscape-design/",
+        "status": 200,
+        "title": "Landscape Design & Garden Design in Mangalore | Vanilla & Somethin'",
+        "description": "Landscape design for gardens, courtyards, terraces, rooftop spaces and outdoor environments in Mangalore, coastal Karnataka and Kerala.",
+        "canonical": "https://www.vanillasometh.in/landscape-design/",
+        "h1": "Outdoor spaces shaped by place, climate and everyday life."
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-management/",
+        "status": 200,
+        "title": "AI-Assisted Project Management & Dashboards | Vanilla & Somethin'",
+        "description": "AI-integrated design workflows and in-house project dashboards for tracking milestones, progress updates, approvals and project budgets.",
+        "canonical": "https://www.vanillasometh.in/project-management/",
+        "h1": "Better project visibility, built into the way we work."
+      },
+      {
+        "url": "https://www.vanillasometh.in/contact/",
+        "status": 200,
+        "title": "Contact Our Mangalore Architecture Studio | Vanilla & Somethin'",
+        "description": "Start a home, interior or commercial design project with Vanilla & Somethin'. Share your brief and we will reply with next steps and a consultation slot.",
+        "canonical": "https://www.vanillasometh.in/contact/",
+        "h1": "GET IN TOUCH"
+      },
+      {
+        "url": "https://www.vanillasometh.in/team.html",
+        "status": 200,
+        "title": "Our Architects & Designers | Vanilla & Somethin' Team",
+        "description": "Meet Ar. Hisham Khalid, Ar. Zeba Ali Khan and the Vanilla & Somethin' team designing homes, workplaces and commercial interiors from Mangalore.",
+        "canonical": "https://www.vanillasometh.in/team.html",
+        "h1": "TEAM"
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/",
+        "status": 200,
+        "title": "Architecture & Interior Design Projects | Vanilla & Somethin'",
+        "description": "Selected homes, apartments, offices, cafes, salons and retail interiors by Vanilla & Somethin' in Mangalore, Kerala and Saudi Arabia.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/",
+        "h1": "Dive into our works"
+      },
+      {
+        "url": "https://www.vanillasometh.in/estimator/",
+        "status": 200,
+        "title": "Project Cost Estimator & Architect Fees | Vanilla & Somethin'",
+        "description": "Explore an indicative construction and interiors budget for residential, commercial and mixed-use projects in India. Calculate project costs and architect fees with Vanilla & Somethin'.",
+        "canonical": "https://www.vanillasometh.in/estimator/",
+        "h1": "Pricing"
+      },
+      {
+        "url": "https://www.vanillasometh.in/nri-home-design/",
+        "status": 200,
+        "title": "NRI Home Design in Mangalore & Kerala | Vanilla & Somethin'",
+        "description": "Design your home in Mangalore, Kasaragod or Kerala while living abroad. Vanilla & Somethin' offers architecture and interior design consultations for NRI families.",
+        "canonical": "https://www.vanillasometh.in/nri-home-design/",
+        "h1": "Your home in India. Designed with you, wherever you live."
+      },
+      {
+        "url": "https://www.vanillasometh.in/renovation-and-short-stay-design/",
+        "status": 200,
+        "title": "Home Renovation, Airbnb & Homestay Design | Vanilla & Somethin'",
+        "description": "Home renovation, Airbnb and short-stay rental design, homestays and serviced villas in Mangalore, coastal Karnataka and Kerala.",
+        "canonical": "https://www.vanillasometh.in/renovation-and-short-stay-design/",
+        "h1": "Reimagine the home. Create a better stay."
+      },
+      {
+        "url": "https://www.vanillasometh.in/permits-and-licensing-support/",
+        "status": 200,
+        "title": "Building Permit Drawings & K-SMART Support | Vanilla & Somethin'",
+        "description": "Architectural drawings and design coordination for building permits, K-SMART, commercial fit-outs and licensing requirements in Kerala, Karnataka and Saudi Arabia.",
+        "canonical": "https://www.vanillasometh.in/permits-and-licensing-support/",
+        "h1": "Design documentation that is ready for the next step."
+      },
+      {
+        "url": "https://www.vanillasometh.in/house-construction-cost-karnataka/",
+        "status": 200,
+        "title": "House Construction Cost in Karnataka (2026) | Mangalore Cost per Sq Ft",
+        "description": "Explore house construction cost in Karnataka, Mangalore per-square-foot rates, sample budgets, inclusions, exclusions and planning advice for 2026.",
+        "canonical": "https://www.vanillasometh.in/house-construction-cost-karnataka/",
+        "h1": "House construction cost in Karnataka: a practical 2026 guide"
+      },
+      {
+        "url": "https://www.vanillasometh.in/interior-design-cost-karnataka/",
+        "status": 200,
+        "title": "Interior Design Cost in Karnataka (2026) | Mangalore Rates",
+        "description": "Understand interior design cost in Karnataka, Mangalore full-home interiors, 2BHK and 3BHK budgets, modular kitchen and wardrobe rates.",
+        "canonical": "https://www.vanillasometh.in/interior-design-cost-karnataka/",
+        "h1": "Interior design cost in Karnataka: rooms, materials and realistic budgets"
+      },
+      {
+        "url": "https://www.vanillasometh.in/home-project-clarity-consultation/",
+        "status": 200,
+        "title": "Home Project Clarity Consultation | Mangalore Architects",
+        "description": "A paid first-step consultation to clarify scope, budget drivers and next steps before you commit to a full home project in Mangalore, Karnataka.",
+        "canonical": "https://www.vanillasometh.in/home-project-clarity-consultation/",
+        "h1": "Home Project Clarity Consultation"
+      },
+      {
+        "url": "https://www.vanillasometh.in/architect-engineer-contractor-roles/",
+        "status": 200,
+        "title": "Architect vs Engineer vs Contractor: Who Does What",
+        "description": "Who does what on a home build: architect, structural engineer, MEP consultant, contractor and project manager roles, and questions to ask.",
+        "canonical": "https://www.vanillasometh.in/architect-engineer-contractor-roles/",
+        "h1": "Architect, engineer, contractor or designer: who does what on your home?"
+      },
+      {
+        "url": "https://www.vanillasometh.in/compare-construction-quotations/",
+        "status": 200,
+        "title": "How to Compare Construction Quotations (Free Tool)",
+        "description": "Compare construction quotations fairly with a free side-by-side worksheet. Check scope, measurement basis, exclusions and red flags before you decide.",
+        "canonical": "https://www.vanillasometh.in/compare-construction-quotations/",
+        "h1": "How to compare construction quotations without being overcharged"
+      },
+      {
+        "url": "https://www.vanillasometh.in/home-budget-allocation/",
+        "status": 200,
+        "title": "How to Split a Home Budget: Construction vs Interiors",
+        "description": "Split a home budget between construction and interiors with three illustrative ₹1 crore scenarios, a planning sequence and FAQs for Mangalore homeowners.",
+        "canonical": "https://www.vanillasometh.in/home-budget-allocation/",
+        "h1": "How to allocate a home budget between construction and interiors"
+      },
+      {
+        "url": "https://www.vanillasometh.in/home-renovation-planning-checklist/",
+        "status": 200,
+        "title": "Home Renovation Planning Checklist | Mangalore Guide",
+        "description": "A practical checklist for renovating an existing house in coastal Karnataka. Assess the building, define scope in writing, plan budget and sequence.",
+        "canonical": "https://www.vanillasometh.in/home-renovation-planning-checklist/",
+        "h1": "Home renovation planning checklist"
+      },
+      {
+        "url": "https://www.vanillasometh.in/architect-fees-karnataka/",
+        "status": 200,
+        "title": "Architect Fees in Karnataka: Scope and Deliverables",
+        "description": "Understand architect fee structures in Karnataka, the deliverables at each design stage, common exclusions and the questions to ask when comparing proposals.",
+        "canonical": "https://www.vanillasometh.in/architect-fees-karnataka/",
+        "h1": "Architect fees: what you are paying for and how to compare them"
+      },
+      {
+        "url": "https://www.vanillasometh.in/duplex-rental-home-design/",
+        "status": 200,
+        "title": "Designing a Home with Rental Units | Duplex Guide",
+        "description": "Plan a home with rental units in Karnataka: feasibility, duplex layouts, rental-friendly design, lifecycle costs, budgeting and approvals for owners.",
+        "canonical": "https://www.vanillasometh.in/duplex-rental-home-design/",
+        "h1": "Designing a duplex or home with rental units"
+      },
+      {
+        "url": "https://www.vanillasometh.in/locations/mangalore/",
+        "status": 200,
+        "title": "Architects & Interior Designers in Mangalore | Vanilla & Somethin'",
+        "description": "Mangalore-based architecture and interior design studio for considered homes, workplaces and retail spaces across Mangaluru and Dakshina Kannada.",
+        "canonical": "https://www.vanillasometh.in/locations/mangalore/",
+        "h1": "Architecture and interior design rooted in Mangalore."
+      },
+      {
+        "url": "https://www.vanillasometh.in/locations/kasaragod/",
+        "status": 200,
+        "title": "Architects & Interior Designers in Kasaragod | Vanilla & Somethin'",
+        "description": "Planning a home or interior in Kasaragod? Speak with Vanilla & Somethin', an architecture and interior design studio based in nearby Mangalore.",
+        "canonical": "https://www.vanillasometh.in/locations/kasaragod/",
+        "h1": "Design conversations for homes and spaces in Kasaragod."
+      },
+      {
+        "url": "https://www.vanillasometh.in/locations/coastal-karnataka/",
+        "status": 200,
+        "title": "Coastal Karnataka Architects & Interior Design | Vanilla & Somethin'",
+        "description": "Vanilla & Somethin' is a Mangalore-based architecture and interior design practice welcoming suitable residential and commercial projects across coastal Karnataka.",
+        "canonical": "https://www.vanillasometh.in/locations/coastal-karnataka/",
+        "h1": "Architecture that responds to the coastal setting."
+      },
+      {
+        "url": "https://www.vanillasometh.in/locations/kerala/",
+        "status": 200,
+        "title": "Architects & Interior Design in Kerala | Vanilla & Somethin'",
+        "description": "Vanilla & Somethin' is an architecture and interior design studio based in Mangalore, with a portfolio that includes residential design work in Kerala.",
+        "canonical": "https://www.vanillasometh.in/locations/kerala/",
+        "h1": "A Mangalore studio with experience in Kerala project contexts."
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/nord-terra/",
+        "status": 200,
+        "title": "Nord Terra House, Kozhikode Residence | Vanilla & Somethin'",
+        "description": "Nord Terra House, Kozhikode, Kerala (2024): a calm residence of stone, wood and lime-washed surfaces, shaped by sculpted natural light and quiet geometry.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/nord-terra/",
+        "h1": "Nord Terra House"
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/bnb/",
+        "status": 200,
+        "title": "BNB House Interiors, Kadri Mangalore | Vanilla & Somethin'",
+        "description": "BNB House: a 2025 residential interior design project in Kadri, Mangalore by Vanilla & Somethin'. Project overview, design approach and photographs.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/bnb/",
+        "h1": "BNB House"
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/koan/",
+        "status": 200,
+        "title": "Koan House, Mangalore | Minimal Home Interiors | Vanilla & Somethin'",
+        "description": "Koan House in Kadri, Mangalore (2025): a minimal residential interior using natural and indirect light, balanced proportions and calm, essential forms.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/koan/",
+        "h1": "Koan House"
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/mak/",
+        "status": 200,
+        "title": "MAK Park Square Apartment Interiors, Mangalore | Vanilla & Somethin'",
+        "description": "MAK Park Square, Mangalore (2025): compact apartment interiors with multifunctional furniture, hidden storage and a calm, neutral, textured palette.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/mak/",
+        "h1": "MAK Park Square"
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/seiko-hyper/",
+        "status": 200,
+        "title": "Seiko Hypermarket, Dammam | Supermarket Design | Vanilla & Somethin'",
+        "description": "Seiko Hypermarket, Dammam, Saudi Arabia (2025): a supermarket layout with intuitive circulation, clear signage and lighting that lifts product visibility.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/seiko-hyper/",
+        "h1": "Seiko Hypermarket"
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/flutecase/",
+        "status": 200,
+        "title": "Flute-Case Office Interiors, Mangalore | Vanilla & Somethin'",
+        "description": "Flute-Case, Mangalore (2025): an office interior for Rapid Solution Pvt. Ltd. with fluted textures, a calm minimal palette and zoned planning for focus.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/flutecase/",
+        "h1": "Flute-Case"
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/fair-fly/",
+        "status": 200,
+        "title": "Fair-Fly Popsicle Pop-Up Kiosk, Mangalore | Vanilla & Somethin'",
+        "description": "Fair-Fly for Sorbete, Mangalore (2025): a modular outdoor popsicle pop-up kiosk with a bright brand palette, lightweight parts and quick installation.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/fair-fly/",
+        "h1": "Fair-Fly"
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/coco-meltdown/",
+        "status": 200,
+        "title": "Coco Meltdown Cafe Interior, Al Khobar | Vanilla & Somethin'",
+        "description": "Coco Meltdown for Dip'N'Melt, Al Khobar (2024): a chocolate cafe interior with fluid curves, a rich brown and gold palette and glossy, warm lighting.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/coco-meltdown/",
+        "h1": "Coco Meltdown"
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/pipe-nova/",
+        "status": 200,
+        "title": "Pipe Nova Retail Interior, Falnir Mangalore | Vanilla & Somethin'",
+        "description": "Pipe Nova for Sorbete, Falnir, Mangalore (2025): an industrial retail interior where exposed pipes, metal frames and focused light form the brand identity.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/pipe-nova/",
+        "h1": "Pipe Nova"
+      },
+      {
+        "url": "https://www.vanillasometh.in/project-showcase/artwist-salon/",
+        "status": 200,
+        "title": "Artwist Salon Interior Design, Kochi | Vanilla & Somethin'",
+        "description": "Artwist Salon in Kochi, Kerala (2025): a salon interior with soft curves, warm flattering light and an efficient flow from styling stations to the wash area.",
+        "canonical": "https://www.vanillasometh.in/project-showcase/artwist-salon/",
+        "h1": "Artwist Salon"
+      }
+    ]
+  },
+  "lighthouse": {
+    "mobile": {
+      "generatedAt": "2026-11-27T10:02:40.759Z",
+      "formFactor": "mobile",
+      "lighthouse": "12.8.2",
+      "pages": [
+        {
+          "url": "https://www.vanillasometh.in/",
+          "scores": {
+            "performance": 93,
+            "accessibility": 90,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 3229.1445,
+            "cls": 0.007215836241517886,
+            "tbtMs": 29.5,
+            "fcpMs": 1504.1444999999999,
+            "speedIndexMs": 1504.1444999999999,
+            "bytes": 854207
+          },
+          "failing": [
+            {
+              "id": "largest-contentful-paint",
+              "title": "Largest Contentful Paint",
+              "display": "3.2 s"
+            },
+            {
+              "id": "largest-contentful-paint-element",
+              "title": "Largest Contentful Paint element",
+              "display": "3,230 ms"
+            },
+            {
+              "id": "aria-prohibited-attr",
+              "title": "Elements use prohibited ARIA attributes",
+              "display": ""
+            },
+            {
+              "id": "color-contrast",
+              "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+              "display": ""
+            },
+            {
+              "id": "heading-order",
+              "title": "Heading elements are not in a sequentially-descending order",
+              "display": ""
+            },
+            {
+              "id": "offscreen-images",
+              "title": "Defer offscreen images",
+              "display": "Est savings of 97 KiB"
+            },
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "display": "Est savings of 86 KiB"
+            },
+            {
+              "id": "uses-responsive-images",
+              "title": "Properly size images",
+              "display": "Est savings of 237 KiB"
+            },
+            {
+              "id": "legacy-javascript",
+              "title": "Avoid serving legacy JavaScript to modern browsers",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "dom-size",
+              "title": "Avoid an excessive DOM size",
+              "display": "1,459 elements"
+            },
+            {
+              "id": "image-delivery-insight",
+              "title": "Improve image delivery",
+              "display": "Est savings of 244 KiB"
+            },
+            {
+              "id": "legacy-javascript-insight",
+              "title": "Legacy JavaScript",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "title": "Network dependency tree",
+              "display": ""
+            },
+            {
+              "id": "render-blocking-insight",
+              "title": "Render blocking requests",
+              "display": ""
+            }
+          ]
+        },
+        {
+          "url": "https://www.vanillasometh.in/locations/mangalore/",
+          "scores": {
+            "performance": 100,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 785.3865,
+            "cls": 0,
+            "tbtMs": 0,
+            "fcpMs": 785.3865,
+            "speedIndexMs": 785.3865,
+            "bytes": 4550
+          },
+          "failing": [
+            {
+              "id": "errors-in-console",
+              "title": "Browser errors were logged to the console",
+              "display": ""
+            },
+            {
+              "id": "mainthread-work-breakdown",
+              "title": "Minimize main-thread work",
+              "display": "4.4 s"
+            },
+            {
+              "id": "bootup-time",
+              "title": "Reduce JavaScript execution time",
+              "display": "3.9 s"
+            },
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "display": "Est savings of 76 KiB"
+            },
+            {
+              "id": "legacy-javascript",
+              "title": "Avoid serving legacy JavaScript to modern browsers",
+              "display": ""
+            }
+          ]
+        },
+        {
+          "url": "https://www.vanillasometh.in/project-showcase/",
+          "scores": {
+            "performance": 91,
+            "accessibility": 94,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 3379.2875,
+            "cls": 0.00432303430807535,
+            "tbtMs": 20.5,
+            "fcpMs": 1654.2875,
+            "speedIndexMs": 1654.2875,
+            "bytes": 661684
+          },
+          "failing": [
+            {
+              "id": "largest-contentful-paint",
+              "title": "Largest Contentful Paint",
+              "display": "3.4 s"
+            },
+            {
+              "id": "largest-contentful-paint-element",
+              "title": "Largest Contentful Paint element",
+              "display": "3,380 ms"
+            },
+            {
+              "id": "aria-prohibited-attr",
+              "title": "Elements use prohibited ARIA attributes",
+              "display": ""
+            },
+            {
+              "id": "heading-order",
+              "title": "Heading elements are not in a sequentially-descending order",
+              "display": ""
+            },
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "display": "Est savings of 86 KiB"
+            },
+            {
+              "id": "uses-responsive-images",
+              "title": "Properly size images",
+              "display": "Est savings of 212 KiB"
+            },
+            {
+              "id": "legacy-javascript",
+              "title": "Avoid serving legacy JavaScript to modern browsers",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "image-delivery-insight",
+              "title": "Improve image delivery",
+              "display": "Est savings of 222 KiB"
+            },
+            {
+              "id": "lcp-discovery-insight",
+              "title": "LCP request discovery",
+              "display": ""
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "title": "Network dependency tree",
+              "display": ""
+            },
+            {
+              "id": "render-blocking-insight",
+              "title": "Render blocking requests",
+              "display": ""
+            }
+          ]
+        },
+        {
+          "url": "https://www.vanillasometh.in/project-showcase/nord-terra/",
+          "scores": {
+            "performance": 94,
+            "accessibility": 94,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 3003.9265,
+            "cls": 0.004211000872114936,
+            "tbtMs": 27,
+            "fcpMs": 1653.9265,
+            "speedIndexMs": 1653.9265,
+            "bytes": 711925
+          },
+          "failing": [
+            {
+              "id": "largest-contentful-paint",
+              "title": "Largest Contentful Paint",
+              "display": "3.0 s"
+            },
+            {
+              "id": "largest-contentful-paint-element",
+              "title": "Largest Contentful Paint element",
+              "display": "3,000 ms"
+            },
+            {
+              "id": "aria-prohibited-attr",
+              "title": "Elements use prohibited ARIA attributes",
+              "display": ""
+            },
+            {
+              "id": "heading-order",
+              "title": "Heading elements are not in a sequentially-descending order",
+              "display": ""
+            },
+            {
+              "id": "render-blocking-resources",
+              "title": "Eliminate render-blocking resources",
+              "display": "Est savings of 0 ms"
+            },
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "display": "Est savings of 86 KiB"
+            },
+            {
+              "id": "uses-responsive-images",
+              "title": "Properly size images",
+              "display": "Est savings of 221 KiB"
+            },
+            {
+              "id": "legacy-javascript",
+              "title": "Avoid serving legacy JavaScript to modern browsers",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "image-delivery-insight",
+              "title": "Improve image delivery",
+              "display": "Est savings of 290 KiB"
+            },
+            {
+              "id": "lcp-discovery-insight",
+              "title": "LCP request discovery",
+              "display": ""
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "title": "Network dependency tree",
+              "display": ""
+            },
+            {
+              "id": "render-blocking-insight",
+              "title": "Render blocking requests",
+              "display": "Est savings of 850 ms"
+            }
+          ]
+        },
+        {
+          "url": "https://www.vanillasometh.in/house-construction-cost-karnataka/",
+          "scores": {
+            "performance": 100,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 807.9426,
+            "cls": 0,
+            "tbtMs": 0,
+            "fcpMs": 807.9426,
+            "speedIndexMs": 807.9426,
+            "bytes": 5439
+          },
+          "failing": []
+        },
+        {
+          "url": "https://www.vanillasometh.in/contact/",
+          "scores": {
+            "performance": 97,
+            "accessibility": 93,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 2553.3215,
+            "cls": 0.0036731606922118286,
+            "tbtMs": 62,
+            "fcpMs": 1503.3215,
+            "speedIndexMs": 1503.3215,
+            "bytes": 347145
+          },
+          "failing": [
+            {
+              "id": "largest-contentful-paint",
+              "title": "Largest Contentful Paint",
+              "display": "2.6 s"
+            },
+            {
+              "id": "largest-contentful-paint-element",
+              "title": "Largest Contentful Paint element",
+              "display": "2,550 ms"
+            },
+            {
+              "id": "aria-prohibited-attr",
+              "title": "Elements use prohibited ARIA attributes",
+              "display": ""
+            },
+            {
+              "id": "heading-order",
+              "title": "Heading elements are not in a sequentially-descending order",
+              "display": ""
+            },
+            {
+              "id": "render-blocking-resources",
+              "title": "Eliminate render-blocking resources",
+              "display": "Est savings of 0 ms"
+            },
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "display": "Est savings of 85 KiB"
+            },
+            {
+              "id": "legacy-javascript",
+              "title": "Avoid serving legacy JavaScript to modern browsers",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "legacy-javascript-insight",
+              "title": "Legacy JavaScript",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "title": "Network dependency tree",
+              "display": ""
+            },
+            {
+              "id": "render-blocking-insight",
+              "title": "Render blocking requests",
+              "display": "Est savings of 700 ms"
+            }
+          ]
+        }
+      ]
+    },
+    "desktop": {
+      "generatedAt": "2026-11-27T10:03:35.188Z",
+      "formFactor": "desktop",
+      "lighthouse": "12.8.2",
+      "pages": [
+        {
+          "url": "https://www.vanillasometh.in/",
+          "scores": {
+            "performance": 100,
+            "accessibility": 91,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 723.155,
+            "cls": 0.015614787038554186,
+            "tbtMs": 0,
+            "fcpMs": 423.155,
+            "speedIndexMs": 423.155,
+            "bytes": 854366
+          },
+          "failing": [
+            {
+              "id": "aria-prohibited-attr",
+              "title": "Elements use prohibited ARIA attributes",
+              "display": ""
+            },
+            {
+              "id": "color-contrast",
+              "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+              "display": ""
+            },
+            {
+              "id": "heading-order",
+              "title": "Heading elements are not in a sequentially-descending order",
+              "display": ""
+            },
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "display": "Est savings of 86 KiB"
+            },
+            {
+              "id": "uses-responsive-images",
+              "title": "Properly size images",
+              "display": "Est savings of 396 KiB"
+            },
+            {
+              "id": "legacy-javascript",
+              "title": "Avoid serving legacy JavaScript to modern browsers",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "dom-size",
+              "title": "Avoid an excessive DOM size",
+              "display": "1,459 elements"
+            },
+            {
+              "id": "image-delivery-insight",
+              "title": "Improve image delivery",
+              "display": "Est savings of 214 KiB"
+            },
+            {
+              "id": "legacy-javascript-insight",
+              "title": "Legacy JavaScript",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "title": "Network dependency tree",
+              "display": ""
+            },
+            {
+              "id": "render-blocking-insight",
+              "title": "Render blocking requests",
+              "display": ""
+            }
+          ]
+        },
+        {
+          "url": "https://www.vanillasometh.in/locations/mangalore/",
+          "scores": {
+            "performance": 100,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 232.6294,
+            "cls": 0,
+            "tbtMs": 0,
+            "fcpMs": 232.6294,
+            "speedIndexMs": 232.6294,
+            "bytes": 4527
+          },
+          "failing": [
+            {
+              "id": "errors-in-console",
+              "title": "Browser errors were logged to the console",
+              "display": ""
+            }
+          ]
+        },
+        {
+          "url": "https://www.vanillasometh.in/project-showcase/",
+          "scores": {
+            "performance": 100,
+            "accessibility": 98,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 732.6667,
+            "cls": 0.02119783930139919,
+            "tbtMs": 0,
+            "fcpMs": 372.6667,
+            "speedIndexMs": 372.6667,
+            "bytes": 1308557
+          },
+          "failing": [
+            {
+              "id": "heading-order",
+              "title": "Heading elements are not in a sequentially-descending order",
+              "display": ""
+            },
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "display": "Est savings of 86 KiB"
+            },
+            {
+              "id": "uses-responsive-images",
+              "title": "Properly size images",
+              "display": "Est savings of 851 KiB"
+            },
+            {
+              "id": "legacy-javascript",
+              "title": "Avoid serving legacy JavaScript to modern browsers",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "image-delivery-insight",
+              "title": "Improve image delivery",
+              "display": "Est savings of 752 KiB"
+            },
+            {
+              "id": "legacy-javascript-insight",
+              "title": "Legacy JavaScript",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "title": "Network dependency tree",
+              "display": ""
+            },
+            {
+              "id": "render-blocking-insight",
+              "title": "Render blocking requests",
+              "display": ""
+            }
+          ]
+        },
+        {
+          "url": "https://www.vanillasometh.in/project-showcase/nord-terra/",
+          "scores": {
+            "performance": 100,
+            "accessibility": 98,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 583.0628,
+            "cls": 0.021547253119830186,
+            "tbtMs": 0,
+            "fcpMs": 363.06280000000004,
+            "speedIndexMs": 363.06280000000004,
+            "bytes": 712065
+          },
+          "failing": [
+            {
+              "id": "heading-order",
+              "title": "Heading elements are not in a sequentially-descending order",
+              "display": ""
+            },
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "display": "Est savings of 84 KiB"
+            },
+            {
+              "id": "uses-responsive-images",
+              "title": "Properly size images",
+              "display": "Est savings of 152 KiB"
+            },
+            {
+              "id": "legacy-javascript",
+              "title": "Avoid serving legacy JavaScript to modern browsers",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "image-delivery-insight",
+              "title": "Improve image delivery",
+              "display": "Est savings of 123 KiB"
+            },
+            {
+              "id": "lcp-discovery-insight",
+              "title": "LCP request discovery",
+              "display": ""
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "title": "Network dependency tree",
+              "display": ""
+            },
+            {
+              "id": "render-blocking-insight",
+              "title": "Render blocking requests",
+              "display": ""
+            }
+          ]
+        },
+        {
+          "url": "https://www.vanillasometh.in/house-construction-cost-karnataka/",
+          "scores": {
+            "performance": 100,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 235.8305,
+            "cls": 0,
+            "tbtMs": 0,
+            "fcpMs": 235.8305,
+            "speedIndexMs": 235.8305,
+            "bytes": 5424
+          },
+          "failing": []
+        },
+        {
+          "url": "https://www.vanillasometh.in/contact/",
+          "scores": {
+            "performance": 100,
+            "accessibility": 98,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcpMs": 523.8079,
+            "cls": 0.008913688490928296,
+            "tbtMs": 0,
+            "fcpMs": 363.8079,
+            "speedIndexMs": 363.8079,
+            "bytes": 347209
+          },
+          "failing": [
+            {
+              "id": "heading-order",
+              "title": "Heading elements are not in a sequentially-descending order",
+              "display": ""
+            },
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "display": "Est savings of 85 KiB"
+            },
+            {
+              "id": "legacy-javascript",
+              "title": "Avoid serving legacy JavaScript to modern browsers",
+              "display": "Est savings of 13 KiB"
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "title": "Network dependency tree",
+              "display": ""
+            },
+            {
+              "id": "render-blocking-insight",
+              "title": "Render blocking requests",
+              "display": ""
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
