@@ -6,7 +6,7 @@
 #  - vs-calculator/ the /estimator app (React/Vite)
 [build]
   publish = "public"
-  command = "node scripts/build-site.mjs && node scripts/build-cms.mjs && cd vs-calculator && npm ci && npm run build && rm -rf ../public/estimator && cp -r dist ../public/estimator"
+  command = "node scripts/build-site.mjs && node scripts/build-cms.mjs && node scripts/seo/build-cost-guides.mjs && cd vs-calculator && npm ci && npm run build && rm -rf ../public/estimator && cp -r dist ../public/estimator"
 
 [build.environment]
   NODE_VERSION = "22"
