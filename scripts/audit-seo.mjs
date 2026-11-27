@@ -14,11 +14,32 @@ const required = [
   "index.html", "team.html", "seo/index.html", "commercial-design/index.html", "landscape-design/index.html", "project-management/index.html", "renovation-and-short-stay-design/index.html", "permits-and-licensing-support/index.html", "nri-home-design/index.html",
   "locations/mangalore/index.html", "locations/kasaragod/index.html",
   "locations/coastal-karnataka/index.html", "locations/kerala/index.html",
+  "interior-design-cost-karnataka/index.html", "2bhk-interior-design-cost/index.html",
+  "3bhk-interior-design-cost/index.html", "modular-kitchen-cost-karnataka/index.html",
+  "wardrobe-cost-karnataka/index.html", "30x40-house-construction-cost/index.html",
+  "40x60-house-construction-cost/index.html",
   "sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml", "sitemap-cms.xml"
 ];
 
 for (const file of required) {
   if (!fs.existsSync(path.join(root, file))) errors.push(`Missing required file: public/${file}`);
+}
+
+const costGuideSlugs = [
+  "interior-design-cost-karnataka", "2bhk-interior-design-cost", "3bhk-interior-design-cost",
+  "modular-kitchen-cost-karnataka", "wardrobe-cost-karnataka",
+  "30x40-house-construction-cost", "40x60-house-construction-cost"
+];
+for (const slug of costGuideSlugs) {
+  const file = slug + "/index.html";
+  if (!fs.existsSync(path.join(root, file))) continue;
+  const html = read(file);
+  if (!html.includes('class="infographic"')) errors.push(`${file}: missing branded infographic content`);
+  if (!html.includes('href="/estimator/"')) errors.push(`${file}: missing estimator CTA`);
+  if (!html.includes('"@type":"Article"')) errors.push(`${file}: Article schema missing`);
+  if (!html.includes('"@type":"BreadcrumbList"')) errors.push(`${file}: BreadcrumbList schema missing`);
+  if (!html.includes('G-88SHPS1HB3')) errors.push(`${file}: Google Analytics tag missing`);
+  if (!html.includes('class="brand"')) errors.push(`${file}: studio branded header missing`);
 }
 
 const sitemapFiles = ["sitemap.xml", "sitemap-pages.xml", "sitemap-locations.xml", "sitemap-projects.xml", "sitemap-cms.xml"];
