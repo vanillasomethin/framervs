@@ -157,24 +157,9 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
   return (
     <div className="space-y-4">
       {/* Value proposition cards */}
-      <div className="bg-vs/5 p-4 rounded-xl border border-vs/20">
-        <h3 className="text-base font-bold text-vs-dark mb-3">Get Your Detailed Quote</h3>
+      <div className="bg-white p-5 rounded-xl border border-vs-dark/10">
+        <h3 className="text-lg font-medium text-vs-dark mb-3">Get a detailed quote</h3>
         
-        <div className="grid grid-cols-3 gap-2 mb-4">
-          <div className="bg-white p-2 rounded-lg text-center">
-            <CheckCircle2 className="w-5 h-5 text-vs mx-auto mb-1" />
-            <p className="text-[10px] text-gray-700 font-medium">Accurate Pricing</p>
-          </div>
-          <div className="bg-white p-2 rounded-lg text-center">
-            <Clock className="w-5 h-5 text-vs mx-auto mb-1" />
-            <p className="text-[10px] text-gray-700 font-medium">24hr Response</p>
-          </div>
-          <div className="bg-white p-2 rounded-lg text-center">
-            <Users className="w-5 h-5 text-vs mx-auto mb-1" />
-            <p className="text-[10px] text-gray-700 font-medium">Expert Advice</p>
-          </div>
-        </div>
-
         <div className="bg-white p-3 rounded-lg border border-gray-200 mb-3">
           <div className="mb-2">
             <p className="text-xs text-gray-700 mb-1">
@@ -341,53 +326,6 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
         )}
       </AnimatePresence>
 
-      {/* Quick contact options */}
-      <div className="grid grid-cols-3 gap-2">
-        <a
-          href="tel:+917411324448"
-          className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-vs hover:bg-vs/5 transition-colors group"
-        >
-          <Phone className="w-5 h-5 text-vs mb-1 group-hover:scale-110 transition-transform" />
-          <span className="text-[10px] font-medium text-gray-700">Call Us</span>
-        </a>
-
-        <a
-          href="https://wa.me/917411324448"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-vs hover:bg-vs/5 transition-colors group"
-        >
-          <MessageSquare className="w-5 h-5 text-vs mb-1 group-hover:scale-110 transition-transform" />
-          <span className="text-[10px] font-medium text-gray-700">WhatsApp</span>
-        </a>
-        
-        <a
-          href="mailto:hello@vanillasometh.in"
-          className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-vs hover:bg-vs/5 transition-colors group"
-        >
-          <Mail className="w-5 h-5 text-vs mb-1 group-hover:scale-110 transition-transform" />
-          <span className="text-[10px] font-medium text-gray-700">Email</span>
-        </a>
-      </div>
-
-      {/* Download option */}
-      <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Download className="w-4 h-4 text-gray-600" />
-            <div>
-              <p className="text-xs font-medium text-gray-800">Download Summary</p>
-              <p className="text-[10px] text-gray-600">Get PDF estimate</p>
-            </div>
-          </div>
-          <button 
-            onClick={handleDownloadPDF}
-            className="px-3 py-1 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
-          >
-            Download
-          </button>
-        </div>
-      </div>
     </div>
   );
 };

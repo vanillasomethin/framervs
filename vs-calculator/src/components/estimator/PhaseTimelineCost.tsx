@@ -131,7 +131,7 @@ const PhaseTimelineCost = ({ estimate }: PhaseTimelineCostProps) => {
       { name: "Structural Work (RCC)", timePercent: 0.30, costPercent: 0.35, color: "#C99592" },
       { name: "Roof Slab & Walls", timePercent: 0.15, costPercent: 0.20, color: "#B77C78" },
       { name: "Plastering & Masonry", timePercent: 0.12, costPercent: 0.08, color: "#A8605C" },
-      { name: "Doors & Windows (Main Door, Windows & Glazing Systems)", timePercent: 0.10, costPercent: 0.05, color: "#E97777" },
+      { name: "Doors & Windows (Main Door, Windows & Glazing Systems)", timePercent: 0.10, costPercent: 0.05, color: "#A8605C" },
       { name: "MEP Rough-in", timePercent: 0.08, costPercent: 0.04, color: "#7A1E1F" }
     ];
 
@@ -165,7 +165,7 @@ const PhaseTimelineCost = ({ estimate }: PhaseTimelineCostProps) => {
 
   // Define interiors sub-phases with their percentages
   const interiorsPhaseData = [
-    { name: "Flooring & Tiling", timePercent: 0.25, costPercent: 0.20, color: "#E9967A" },
+    { name: "Flooring & Tiling", timePercent: 0.25, costPercent: 0.20, color: "#C99592" },
     { name: "MEP Installation", timePercent: 0.25, costPercent: 0.25, color: "#7A1E1F" },
     { name: "Carpentry & Fixtures", timePercent: 0.20, costPercent: 0.22, color: "#7A1E1F" },
     { name: "Doors & Windows", timePercent: 0.15, costPercent: 0.15, color: "#5C1A1B" },

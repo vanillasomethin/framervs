@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ProjectEstimate, ComponentOption } from "@/types/estimator";
-import { Share, CheckCircle2, Download, IndianRupee } from "lucide-react";
+import { Share, CheckCircle2, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ImprovedCostVisualization from "./ImprovedCostVisualization";
 import CostTransparency from "./CostTransparency";
@@ -515,7 +515,6 @@ const ResultsStep = ({ estimate, onReset, onSave }: ResultsStepProps) => {
             <div className="flex items-center justify-between text-lg font-bold">
               <span className="text-vs-dark">Total Project Cost</span>
               <div className="flex items-center gap-1 text-vs">
-                <IndianRupee className="size-5" />
                 <span>{formatCurrency(estimate.totalCost)}</span>
               </div>
             </div>
