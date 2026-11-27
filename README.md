@@ -7,14 +7,15 @@ Preferred domain: `https://www.vanillasometh.in`.
 * **Redirects:** Netlify-style redirects live in `public/_redirects` and force all `http` and non-`www` requests to the preferred domain with 301s.
 * **Canonical tags:** Static HTML pages in `public/` contain `<link rel="canonical">` tags that point to the preferred domain plus the current path.
 
-## Running without Framer's servers
+## Site pages (`site/`)
 
-The Framer pages (home, showcase, contact, team) are an export of the Framer site that now runs entirely from this repository: the Framer runtime and page modules live in `public/js/`, and every image, font and video lives in `public/fr/`. Nothing loads from `framerusercontent.com`, so every animation and scroll effect behaves as before and the site keeps working if the Framer project is changed or removed. Only Google Fonts and Google Analytics are still loaded from Google.
+The home, project showcase, project pages, team and contact pages are a Next.js app in `site/` (App Router, Tailwind, static export). There is no Framer runtime, Framer CMS or Framer-hosted file anywhere: every image, font and video is in `site/public/sites/vanillasomethin/`, and only Google Analytics loads from outside.
 
-* `scripts/selfhost-framer.mjs <export-folder>` produced this from a Framer export (copy the runtime, download the assets, rewrite the pages, drop the editor bridge and Framer analytics). It is safe to run again on a fresh export.
-* To change the design of those pages you still need Framer (or edit the exported HTML/modules by hand). The CMS-driven pages (`/blog`, `/projects`, `/updates`, `/shop`) are generated from the admin and do not use Framer at all.
-* `public/js/vs-framercms-range.js` lets Framer's CMS files (project showcase) be read from a normal static host.
-* The two `*.mp4` files and the larger images are the biggest assets; large photos were resized to 2400px wide.
+* At deploy, `node scripts/build-site.mjs` builds `site/` and installs the pages into `public/` (`/`, `/contact/`, `/team.html`, `/project-showcase/`, `/project-showcase/<slug>/`) with `_next/` and `sites/` next to them. These outputs are gitignored, like the CMS pages and the estimator.
+* Each page keeps its production SEO head (title, description, canonical, Open Graph, JSON-LD, analytics) in `site/seo/<page>.html`; the install step puts it into the built page. Edit that file to change a page's metadata.
+* Text and photos: `site/src/components/sites/vanillasomethin/data*.ts` (the ten case studies are in `data-projects.ts`). Layout and animation: the components next to them.
+* **New projects in the same template:** add the project in the admin (Website > Projects), set **Page design** to *Showcase*, add a main photo and publish. It is built into `/project-showcase/<slug>/` with the case-study template and listed first on the showcase: the first gallery photo goes above the project story (`## Headings` become the section headings), the remaining photos form the gallery. *Simple page* projects keep their plain page under `/projects/`.
+* Work on the pages locally: `cd site && npm ci && npm run dev`. Check before pushing: `npm run check` in `site/`, then `node scripts/build-site.mjs && node scripts/build-cms.mjs && node scripts/audit-seo.mjs` from the repository root.
 
 ## Admin (`/admin`)
 
@@ -39,7 +40,7 @@ Studio data (clients, fees, site photos…) is stored in **Netlify Blobs**, neve
 
 * Photos are resized in the browser and stored under `public/uploads/`.
 * The shared renderer `public/cms/render.mjs` is used by both the build and the admin's live preview.
-* The Framer pages (home, showcase, team, contact) are not edited here.
+* The home, showcase, team and contact pages are edited in `site/`, not here.
 
 ### Setup — Netlify → Site configuration → Environment variables
 

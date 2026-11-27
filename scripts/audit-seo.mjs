@@ -145,14 +145,14 @@ for (const file of allPages) {
   if (!canonical && !noindex) errors.push(`${file}: missing canonical`);
   if (canonical && !noindex && canonical !== urlFor(file)) errors.push(`${file}: canonical ${canonical} should be ${urlFor(file)} (the URL Netlify serves with 200)`);
   if (canonical && !noindex && !sitemapLocs.includes(canonical)) errors.push(`${file}: indexable page missing from sitemaps (${canonical})`);
-  const decode = (v) => v?.replace(/&amp;/g, "&").replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"');
+  const decode = (v) => v?.replace(/&amp;/g, "&").replace(/&#39;|&#x27;|&apos;/g, "'").replace(/&quot;/g, '"');
   const title = decode(html.match(/<title>(.*?)<\/title>/is)?.[1]?.trim());
   if (title) titles.set(title, [...(titles.get(title) || []), file]);
   if (title && title.length > 70) warnings.push(`${file}: title is ${title.length} chars`);
   const desc = decode(html.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i)?.[1]);
   if (desc && desc.length > 165) warnings.push(`${file}: description is ${desc.length} chars`);
   if (!html.includes("G-88SHPS1HB3")) errors.push(`${file}: Google Analytics tag missing`);
-  if (/<!-- Snippet: nnXbnDc1w -->/.test(html)) errors.push(`${file}: legacy Framer SEO snippet present; run node scripts/seo/apply-framer-seo.mjs`);
+  if (/data-framer|framerusercontent\.com|framer\.com\/m\/|["'(]\/(?:fr|js)\//.test(html)) errors.push(`${file}: still references the retired Framer runtime or its files`);
   if (/"telephone"\s*:/.test(html)) warnings.push(`${file}: telephone in structured data; confirm it matches the verified public number`);
 
   // Internal links must resolve to a file in public/ (or a known app/redirect route).
@@ -179,12 +179,6 @@ const robots = read("robots.txt");
 if (!/^Sitemap:\s*https:\/\/www\.vanillasometh\.in\/sitemap\.xml\s*$/m.test(robots)) errors.push("robots.txt: Sitemap line missing or wrong");
 if (/^Disallow:\s*\/\s*$/m.test(robots)) errors.push("robots.txt: site-wide Disallow");
 for (const p of ["/admin/", "/onboard/"]) if (!robots.includes(`Disallow: ${p}`)) errors.push(`robots.txt: should disallow ${p}`);
-
-const seoMeta = fs.existsSync(path.join(root, "seo-meta.js")) ? read("seo-meta.js") : "";
-if (!seoMeta.includes("MutationObserver")) errors.push("public/seo-meta.js missing; run node scripts/seo/apply-framer-seo.mjs");
-for (const file of allPages) {
-  if (/data-framer-hydrate/.test(read(file)) && !read(file).includes('src="/seo-meta.js"')) errors.push(`${file}: Framer page without /seo-meta.js (rendered title will be generic)`);
-}
 
 console.log(`SEO audit: ${errors.length} error(s), ${warnings.length} warning(s)`);
 for (const warning of warnings) console.warn(`WARN  ${warning}`);

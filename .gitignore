@@ -23,3 +23,16 @@ public/updates/
 !erp/.env.example
 public/shop/
 public/sitemap-cms.xml
+
+# Site pages: built from site/ by scripts/build-site.mjs at deploy time
+site/out/
+public/index.html
+public/index.txt
+public/__next.*
+public/contact/
+public/team.html
+public/team/
+public/project-showcase/
+public/_next/
+public/sites/
+public/icons/

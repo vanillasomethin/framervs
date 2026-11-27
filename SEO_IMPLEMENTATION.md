@@ -18,7 +18,7 @@ Build qualified organic visibility for architecture and interior design enquirie
 ## Important SEO risks identified
 - CMS project records include real project-location fields (e.g. Nord Terra House in Kozhikode, Kerala; BNB House in Kadri, Karnataka). Project detail metadata currently contains generic titles and a mismatched generic ArchitecturalBusiness schema block copied across case-study pages. Fix project metadata from CMS records at build time in a follow-up or through a controlled source-export update; do not bulk-rewrite 370 KB Framer pages without exact field mapping.
 - Existing business structured data contains unverified address, postal code, coordinates, phone, opening hours, logo URL and a potentially misleading office/service-area representation. This branch deliberately omits those values pending owner verification.
-- The business contact details differ in the source: CMS contact phone is +91 7411 32 4448, while exported contact page shows +91 7411349833 and old SEO snippet uses +91 74113 49844. Confirm the public primary number before adding phone schema.
+- The public phone number is +91 7411 32 4448 (confirmed by the owner, November 2026), used on every page, in the estimator and in the CMS contact details. Add it to LocalBusiness schema only with the rest of the verified NAP.
 - The practice must verify service coverage in each target region. Avoid implying a staffed branch / office where there is none.
 - Ensure every location page is substantial, accurate and useful before indexing; do not create thin doorway pages for every town.
 
@@ -93,11 +93,8 @@ Publicly visible signals reviewed in November 2026:
 ## Free SEO automation system (November 2026)
 No paid SEO subscriptions. Everything runs on GitHub Actions, Netlify Functions, Google Search Console and Lighthouse.
 
-### Critical fix: rendered titles
-The Framer runtime rewrites `<title>` and the description after hydration with values from its JS bundle, which were the generic "Vanilla & Somethin" on **every** Framer page (home, contact, team, showcase and all case studies). Google indexes the rendered DOM, so static `<head>` edits alone were invisible to it.
-- `scripts/seo/framer-pages.mjs` is the single source of truth for Framer page titles, descriptions, canonicals and project facts.
-- `node scripts/seo/apply-framer-seo.mjs` writes those values into the static HTML and generates `public/seo-meta.js`, which re-applies them after hydration and on Framer client-side navigation. **Re-run it after every new Framer export.** CI fails if the output is out of sync.
-- Long-term fix: set each page's SEO title and description inside Framer's page settings and re-export, so the bundle and the guard agree.
+### Page metadata (no Framer since November 2026)
+The home, showcase, case-study, team and contact pages are built from `site/` (Next.js, static HTML). Their title, description, canonical, Open Graph, JSON-LD and analytics are in `site/seo/<page>.html` and are written into each built page by `scripts/build-site.mjs`. There is no client-side runtime rewriting titles any more, so the static `<head>` is what Google renders. (Before, the Framer runtime replaced titles after hydration and `public/seo-meta.js` had to put them back.)
 
 ### Checks
 | Check | Where | When |
@@ -121,6 +118,6 @@ The weekly workflow (`.github/workflows/seo-monitor.yml`, Mondays 07:47 IST, or 
 - `/canonical-url` (copy of Google's docs, off-topic) removed and 301'd to home.
 - Google Analytics added to the 14 SEO landing pages that had none; gtag now loads after first interaction or 3.5 s after page load to reduce main-thread blocking.
 
-### Known content issues to fix in Framer (visible copy comes from the Framer bundle)
+### Known content issues (visible copy is in `site/src/components/sites/vanillasomethin/`)
 - Case-study body copy still contains photography-template placeholder text: BNB House intro and "Behind the design" (volcanic rock, glaciers, golden hour), Coco Meltdown / Koan / MAK / Pipe Nova intros, Fair-Fly "Bold streetwear" item.
-- Mobile LCP on the showcase (9.6 s) and case studies (about 7 s) is caused by 2048 px images served to phones and a 4 MB autoplay hero video on the home page. Lower image sizes in Framer and compress the hero video to under 1.5 MB (or use a poster on mobile).
+- Mobile LCP on the showcase (9.6 s) and case studies (about 7 s) is caused by 2048 px images served to phones and a 4 MB autoplay hero video on the home page. Lower image sizes and compress the hero video to under 1.5 MB (or use a poster on mobile).
