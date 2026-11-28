@@ -181,7 +181,8 @@
         ],
         "gallery": [],
         "updatedAt": "2026-11-27T10:03:39.398Z",
-        "layout": "Simple page"
+        "layout": "Simple page",
+        "noindex": true
       },
       {
         "id": "aestra-clinic-riyadh",
@@ -510,7 +511,8 @@
           "Kerala",
           "Homeowner Guide"
         ],
-        "seoDescription": "Understand architect fees in India in 2026, including per sq. ft. rates, percentage fees, fixed packages, COA references and hidden costs in Karnataka and Kerala."
+        "seoDescription": "2026 guide to architect fees in India: per-sq-ft, percentage and fixed fees, COA references, and costs to clarify in Karnataka and Kerala.",
+        "seoTitle": "Architect Fees in India 2026"
       }
     ],
     "updates": [],
