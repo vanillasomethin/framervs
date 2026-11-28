@@ -121,5 +121,14 @@ const call = async (fn, body, token, method = "POST", qs) => { const r = await f
   r = await call(studio, { action: "load" }, T);
   ok("new collections load back", ["leads", "docs", "proposals", "expenses", "leaves", "holidays", "incidents"].every((c) => r.body.collections[c].length === 1), Object.fromEntries(Object.entries(r.body.collections).map(([k, v]) => [k, v.length])));
   r = await call(studio, { action: "save", ops: [{ c: "payroll", op: "set", item: { id: "xx_one1" } }] }, T); ok("unknown collections are refused", r.status === 400, r);
+
+  // Estimator ratings: public form in, admin-only out, never writable through the studio API
+  const review = require("../netlify/functions/estimator-review.js").handler;
+  r = await call(review, { rating: 6 }); ok("estimator rating outside 1 to 5 is refused", r.status === 400, r);
+  r = await call(review, { rating: 5, comment: "Spot on", estimate: { city: "Mangalore", area: 1800, areaUnit: "sqft", totalCost: 4200000 } }); ok("estimator rating is accepted", r.status === 200, r);
+  r = await call(review, { rating: 1, website: "spam.example" }); ok("bot ratings are silently dropped", r.status === 200, r);
+  r = await call(studio, { action: "load" }, T);
+  ok("ratings reach the admin", r.body.collections.reviews.length === 1 && r.body.collections.reviews[0].rating === 5 && r.body.collections.reviews[0].estimate.city === "Mangalore", r.body.collections.reviews);
+  r = await call(studio, { action: "save", ops: [{ c: "reviews", op: "set", item: { id: "rv_fake1", rating: 5 } }] }, T); ok("ratings cannot be written through the studio API", r.status === 400, r);
   console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);
 })();

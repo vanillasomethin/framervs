@@ -1,0 +1,26 @@
+import type { Metadata } from "next";
+import "./globals.css";
+
+// Each page sets its own title and description from site/seo (src/lib/seo.ts).
+export const metadata: Metadata = {
+  metadataBase: new URL("https://www.vanillasometh.in"),
+  title: "Vanilla & Somethin'",
+};
+
+// Runs before paint so the stored/system theme never flashes (source: localStorage "theme").
+const themeInit = `(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();`;
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning className="antialiased">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+      </head>
+      <body className="min-h-full bg-vs-bg text-vs-fg">{children}</body>
+    </html>
+  );
+}

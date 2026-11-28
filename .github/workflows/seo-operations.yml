@@ -7,6 +7,8 @@ on:
   pull_request:
     paths:
       - "public/**"
+      - "site/**"
+      - "scripts/build-site.mjs"
       - "scripts/seo/**"
       - ".github/workflows/seo-operations.yml"
 
@@ -21,7 +23,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+      - name: Build site pages (home, showcase, team, contact)
+        run: node scripts/build-site.mjs
       - name: Build CMS pages
         run: node scripts/build-cms.mjs
       - name: Run existing static SEO audit

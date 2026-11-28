@@ -148,6 +148,24 @@ const cardHTML = (l) => {
     <div class="lead-foot">${o ? avatar(o.name, 22) : ""}<button class="icon-btn" data-lead-menu="${l.id}" aria-label="More">${icon("more", 15)}</button></div></article>`;
 };
 
+// Ratings visitors give the cost estimator (written by estimator-review.js). Read-only here.
+const stars = (n) => `<span class="stars" aria-label="${n} of 5 stars" style="color:#b8860b;letter-spacing:1px">${"★".repeat(n)}<span style="opacity:.25">${"★".repeat(5 - n)}</span></span>`;
+const reviewsHTML = () => {
+  const list = [...data.reviews].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+  if (!list.length) return emptyState({ iconName: "sparkle", title: "No estimator reviews yet", text: "Visitors can rate the estimator under their result. Every rater is then invited to review the studio on Google." });
+  const avg = list.reduce((n, r) => n + r.rating, 0) / list.length;
+  const happy = list.filter((r) => r.rating >= 4).length;
+  const counts = [5, 4, 3, 2, 1].map((n) => [n, list.filter((r) => r.rating === n).length]);
+  return `<div class="kpis"><div class="kpi"><span class="k">Average rating</span><b>${avg.toFixed(1)} / 5</b><span class="small muted">${list.length} ratings</span></div>
+    <div class="kpi"><span class="k">Rated 4 or 5 stars</span><b>${happy}</b><span class="small muted">${Math.round((happy / list.length) * 100)}% of ratings</span></div>
+    <div class="kpi"><span class="k">Spread</span><b style="font-size:14px;font-weight:500">${counts.map(([n, c]) => `${n}★ ${c}`).join(" · ")}</b></div></div>
+    <table class="table"><thead><tr><th>When</th><th>Rating</th><th>Comment</th><th>Estimate</th></tr></thead><tbody>${list.map((r) => {
+      const e = r.estimate || {};
+      const est = [e.projectType, e.area ? `${e.area} ${e.areaUnit || ""}`.trim() : "", e.city, e.totalCost ? inr(Math.round(e.totalCost) * 100) : ""].filter(Boolean).join(" · ");
+      return `<tr><td class="nowrap">${fmtDate((r.createdAt || "").slice(0, 10))}</td><td>${stars(r.rating)}</td><td>${esc(r.comment || "")}${r.name ? `<div class="muted small">${esc(r.name)}</div>` : ""}</td><td class="muted small">${esc(est)}</td></tr>`;
+    }).join("")}</tbody></table>`;
+};
+
 export const renderCrm = (view) => {
   const visible = () => {
     const q = ui.q.trim().toLowerCase();
@@ -174,7 +192,7 @@ export const renderCrm = (view) => {
       <div class="kpi"><span class="k">Discovery calls held</span><b>${callsHeld}</b><span class="small muted">Recorded in lead qualification</span></div>
       <div class="kpi"><span class="k">Held call → appointment</span><b>${callToAppointment}</b><span class="small muted">${appointedAfterCall} of ${heldLeads.length} held calls</span></div>
     </div>
-    <div class="toolbar"><div class="seg">${[["board", "Board"], ["today", "Follow-ups"], ["table", "All leads"]].map(([id, l]) => `<button type="button" data-view="${id}" class="${ui.view === id ? "on" : ""}">${l}</button>`).join("")}</div>
+    <div class="toolbar"><div class="seg">${[["board", "Board"], ["today", "Follow-ups"], ["table", "All leads"], ["reviews", `Estimator reviews${data.reviews.length ? ` (${data.reviews.length})` : ""}`]].map(([id, l]) => `<button type="button" data-view="${id}" class="${ui.view === id ? "on" : ""}">${l}</button>`).join("")}</div>
       <label class="search">${icon("search", 15)}<input type="search" data-q placeholder="Search leads" value="${esc(ui.q)}"></label>
       <select data-owner aria-label="Owner">${optionsHTML(team().map((m) => ({ id: m.id, label: m.name })), ui.owner, { blank: "Anyone" })}</select></div>
     <div data-body></div>`);
@@ -182,6 +200,10 @@ export const renderCrm = (view) => {
 
   const draw = () => {
     const list = visible();
+    if (ui.view === "reviews") {
+      body.innerHTML = reviewsHTML();
+      return;
+    }
     if (!data.leads.length) {
       body.innerHTML = emptyState({ iconName: "users", title: "No leads yet", text: "Add builders, developers, past clients and referrals you want to win work from." });
     } else if (ui.view === "board") {

@@ -12,9 +12,10 @@ const crypto = require("crypto");
 const { json, isAuthorized, parseBody } = require("./lib/auth");
 const { getStudioStore, readDoc, mutate } = require("./lib/store");
 
-// briefs are written only by the public onboarding form (onboard.js)
+// briefs are written only by the public onboarding form (onboard.js),
+// reviews only by the estimator rating form (estimator-review.js)
 const WRITABLE = ["clients", "projects", "tasks", "logs", "snags", "milestones", "activity", "leads", "docs", "proposals", "expenses", "leaves", "holidays", "incidents"];
-const COLLECTIONS = [...WRITABLE, "briefs"];
+const COLLECTIONS = [...WRITABLE, "briefs", "reviews"];
 const MAX_ITEMS = 5000;
 const MAX_ITEM_BYTES = 24 * 1024;
 const MAX_PHOTO_CHARS = 1_400_000; // base64 of roughly 1 MB

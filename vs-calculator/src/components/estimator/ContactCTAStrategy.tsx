@@ -344,7 +344,7 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
       {/* Quick contact options */}
       <div className="grid grid-cols-3 gap-2">
         <a
-          href="tel:+917411349844"
+          href="tel:+917411324448"
           className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-vs hover:bg-vs/5 transition-colors group"
         >
           <Phone className="w-5 h-5 text-vs mb-1 group-hover:scale-110 transition-transform" />
@@ -352,7 +352,7 @@ const ContactCTAStrategy = ({ estimate }: ContactCTAStrategyProps) => {
         </a>
 
         <a
-          href="https://wa.me/917411349844"
+          href="https://wa.me/917411324448"
           target="_blank"
           rel="noopener noreferrer"
           className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors group"

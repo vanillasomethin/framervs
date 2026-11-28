@@ -145,14 +145,14 @@ for (const file of allPages) {
   if (!canonical && !noindex) errors.push(`${file}: missing canonical`);
   if (canonical && !noindex && canonical !== urlFor(file)) errors.push(`${file}: canonical ${canonical} should be ${urlFor(file)} (the URL Netlify serves with 200)`);
   if (canonical && !noindex && !sitemapLocs.includes(canonical)) errors.push(`${file}: indexable page missing from sitemaps (${canonical})`);
-  const decode = (v) => v?.replace(/&amp;/g, "&").replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"');
+  const decode = (v) => v?.replace(/&amp;/g, "&").replace(/&#39;|&#x27;|&apos;/g, "'").replace(/&quot;/g, '"');
   const title = decode(html.match(/<title>(.*?)<\/title>/is)?.[1]?.trim());
   if (title) titles.set(title, [...(titles.get(title) || []), file]);
   if (title && title.length > 70) warnings.push(`${file}: title is ${title.length} chars`);
   const desc = decode(html.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i)?.[1]);
   if (desc && desc.length > 165) warnings.push(`${file}: description is ${desc.length} chars`);
   if (!html.includes("G-88SHPS1HB3")) errors.push(`${file}: Google Analytics tag missing`);
-  if (/<!-- Snippet: nnXbnDc1w -->/.test(html)) errors.push(`${file}: legacy Framer SEO snippet present; run node scripts/seo/apply-framer-seo.mjs`);
+  if (/data-framer|framerusercontent\.com|framer\.com\/m\/|["'(]\/(?:fr|js)\//.test(html)) errors.push(`${file}: still references the retired Framer runtime or its files`);
   if (/"telephone"\s*:/.test(html)) warnings.push(`${file}: telephone in structured data; confirm it matches the verified public number`);
 
   // Internal links must resolve to a file in public/ (or a known app/redirect route).
@@ -180,25 +180,14 @@ if (!/^Sitemap:\s*https:\/\/www\.vanillasometh\.in\/sitemap\.xml\s*$/m.test(robo
 if (/^Disallow:\s*\/\s*$/m.test(robots)) errors.push("robots.txt: site-wide Disallow");
 for (const p of ["/admin/", "/onboard/"]) if (!robots.includes(`Disallow: ${p}`)) errors.push(`robots.txt: should disallow ${p}`);
 
-const seoMeta = fs.existsSync(path.join(root, "seo-meta.js")) ? read("seo-meta.js") : "";
-if (!seoMeta.includes("MutationObserver")) errors.push("public/seo-meta.js missing; run node scripts/seo/apply-framer-seo.mjs");
-for (const file of allPages) {
-  if (/data-framer-hydrate/.test(read(file)) && !read(file).includes('src="/seo-meta.js"')) errors.push(`${file}: Framer page without /seo-meta.js (rendered title will be generic)`);
-}
-
-// Template placeholder copy must never return (e.g. after a fresh Framer export).
-const { FORBIDDEN } = await import("./seo/framer-cms-copy.mjs");
-// walk() returns HTML only; the CMS data and search indexes need every file type.
-const walkFiles = (dir) => fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap((d) => {
-  const rel = dir ? `${dir}/${d.name}` : d.name;
-  return d.isDirectory() ? walkFiles(rel) : [rel];
-});
-const activeCms = new Set(walkFiles("js").filter((f) => f.endsWith(".mjs")).flatMap((f) => [...read(f).matchAll(/new URL\("js\/([^"]+\.framercms)"/g)].map((m) => `js/${m[1]}`)));
-const searchIndexes = [...walkFiles("js"), ...walkFiles("fr")].filter((f) => /searchindex[^/]*\.json$/i.test(f));
-if (!activeCms.size) errors.push("placeholder audit found no Framer CMS data files; check the js/ module scan");
-for (const file of [...allPages, ...activeCms, ...searchIndexes]) {
-  const text = fs.readFileSync(path.join(root, file), "latin1").toLowerCase();
-  for (const phrase of FORBIDDEN) if (text.includes(phrase)) errors.push(`${file}: template placeholder copy "${phrase}"; run node scripts/seo/patch-framer-cms.mjs`);
+// Template placeholder copy must never return: check the built pages and the
+// site source (site/src holds the project data the pages are generated from).
+const { FORBIDDEN } = await import("./seo/copy-guards.mjs");
+const siteSrc = path.resolve(process.cwd(), "site/src");
+const walkSrc = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => (d.isDirectory() ? walkSrc(path.join(dir, d.name)) : /\.(tsx?|jsx?|json|mdx?)$/.test(d.name) ? [path.join(dir, d.name)] : [])) : []);
+for (const file of [...allPages.map((f) => path.join(root, f)), ...walkSrc(siteSrc)]) {
+  const text = fs.readFileSync(file, "utf8").toLowerCase();
+  for (const phrase of FORBIDDEN) if (text.includes(phrase)) errors.push(`${path.relative(process.cwd(), file)}: template placeholder copy "${phrase}"`);
 }
 
 // The Home Project Clarity Consultation is free (owner decision, November 2026).

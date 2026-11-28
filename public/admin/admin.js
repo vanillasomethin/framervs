@@ -5,7 +5,7 @@
 // GitHub. Changes are held locally until "Publish", so several edits go out as
 // one commit / one deploy. Previews use the same renderer as the live pages.
 
-import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, renderUpdates, renderShopProduct, renderShopList, AFFILIATE } from "/cms/render.mjs";
+import { escapeHTML, slugify, formatDate, renderBlogPost, renderProject, projectPath, renderUpdates, renderShopProduct, renderShopList, AFFILIATE } from "/cms/render.mjs";
 import { session, SESSION_KEY, app, $, $$, clone, uid, api, toast } from "./core.js";
 import { data as studio, loadAll, refresh, sync, onData, hasPendingChanges, meId, team, setMe, isoDate } from "./studio/data.js";
 import { icon, drawerIsOpen } from "./studio/ui.js";
@@ -77,10 +77,10 @@ const TYPES = {
     label: "Projects",
     singular: "project",
     blurb: "Built and ongoing work, each with its own page, photos and project facts.",
-    livePath: (item) => `/projects/${item.slug}/`,
+    livePath: (item) => projectPath(item),
     indexPath: "/projects/",
     manualOrder: true,
-    create: () => ({ id: uid(), title: "", slug: "", status: "draft", category: "", location: "", year: "", client: "", area: "", projectStatus: "Scope to confirm", summary: "", seoDescription: "", cover: { src: "", alt: "" }, body: "", tags: [], gallery: [] }),
+    create: () => ({ id: uid(), title: "", slug: "", status: "draft", layout: "Showcase", category: "", location: "", year: "", client: "", area: "", projectStatus: "Scope to confirm", summary: "", seoDescription: "", cover: { src: "", alt: "" }, body: "", tags: [], gallery: [] }),
     preview: (c, item) => renderProject(c, item),
     fields: [
       { key: "title", type: "title", placeholder: "Project name" },
@@ -94,6 +94,7 @@ const TYPES = {
         { key: "area", type: "text", label: "Area", placeholder: "e.g. 3,200 sq ft" },
         { key: "projectStatus", type: "select", label: "Stage", options: ["Scope to confirm", "Completed", "Under construction", "In design", "Concept"] },
       ] },
+      { key: "layout", type: "select", label: "Page design", options: ["Showcase", "Simple page"], hint: "Showcase: built with the same template as the case studies under /project-showcase/ and listed there (needs a main photo; the first gallery photo goes above the story, the rest into the gallery). Simple page: a plain page under /projects/." },
       { key: "client", type: "text", label: "Client (optional)" },
       { key: "summary", type: "textarea", label: "One-line summary", hint: "Shown on the project card and under the title.", rows: 2 },
       { key: "seoDescription", type: "textarea", label: "Search description (optional)", hint: "A factual 150 to 160 character description for search results.", rows: 2 },
@@ -764,7 +765,7 @@ const showcasePanel = () => {
   if (!cards.length) return "";
   const href = (u) => String(u || "").replace(/^\.\//, "/");
   return `<section class="showcase">
-    <div class="showcase-head"><span class="eyebrow">Framer showcase</span><p class="muted">These ${cards.length} projects are the designed pages on the homepage. They are edited in Framer (the site's design tool), so they show here for reference only. Projects you add above get their own page under <code>/projects</code>.</p></div>
+    <div class="showcase-head"><span class="eyebrow">Project showcase</span><p class="muted">These ${cards.length} projects are the designed pages under /project-showcase. Their text and photos live in the site code (<code>site/</code> in the repository), so they show here for reference only. Projects you add above get their own page under <code>/projects</code>.</p></div>
     <div class="showcase-grid">${cards
       .map((c) => `<a class="showcase-card" href="${escapeHTML(href(c.url))}" target="_blank" rel="noopener">
         <div class="showcase-img" style="background-image:url('${escapeHTML((c.image && c.image.src) || "")}')"></div>
@@ -1418,6 +1419,7 @@ const renderWebsiteSettings = (view) => {
         <div class="grid-2">
           <label class="field"><span>Phone</span><input type="text" data-contact="phone" value="${escapeHTML(c.contact.phone || "")}"></label>
           <label class="field"><span>Email</span><input type="email" data-contact="email" value="${escapeHTML(c.contact.email || "")}"></label>
+          <label class="field"><span>Google review link <span class="hint">— from Google Business Profile, "Ask for reviews"</span></span><input type="url" data-contact="googleReviewUrl" placeholder="https://g.page/r/.../review" value="${escapeHTML(c.contact.googleReviewUrl || "")}"></label>
         </div>
         <label class="field"><span>Studio locations <span class="hint">— one per line</span></span><textarea data-contact="locations" rows="3">${escapeHTML((c.contact.locations || []).join("\n"))}</textarea></label>
         <label class="field"><span>Social links <span class="hint">— one per line, as Name | link</span></span><textarea data-contact="social" rows="4" placeholder="Instagram | https://instagram.com/...">${escapeHTML((c.contact.social || []).map((s) => `${s.label} | ${s.url}`).join("\n"))}</textarea></label>
@@ -1430,7 +1432,7 @@ const renderWebsiteSettings = (view) => {
     </div>
     <div class="panel">
       <h2>Other website pages</h2>
-      <p class="muted" style="margin:0">The home, showcase, team and contact pages are designed in Framer, so their text and layout are changed in Framer and re-exported. Everything in Journal, Projects and Updates is managed here.</p>
+      <p class="muted" style="margin:0">The home, showcase, team and contact pages are built from the site code (<code>site/</code> in the repository), so their text and layout change there. Everything in Journal, Projects and Updates is managed here.</p>
     </div>`;
 
   $$("[data-contact]", view).forEach((input) =>
