@@ -23,6 +23,7 @@ on:
       - "scripts/build-site.mjs"
       - "scripts/audit-seo.mjs"
       - "scripts/build-cms.mjs"
+      - "scripts/seo/**"
       - "netlify/functions/cms.js"
       - "vs-calculator/**"
 
@@ -46,6 +47,8 @@ jobs:
         run: node scripts/build-site.mjs
       - name: Generate CMS pages and sitemap
         run: node scripts/build-cms.mjs
+      - name: Generate visual cost guide cluster
+        run: node scripts/seo/build-cost-guides.mjs
       - name: Audit static SEO metadata and sitemaps
         run: node scripts/audit-seo.mjs
       - name: Install headless Chromium
