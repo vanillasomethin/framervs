@@ -475,7 +475,7 @@ export const renderBlogPost = (cms, post) => {
     cms,
     section: "blog",
     path: `/blog/${post.slug}/`,
-    title: post.title,
+    title: post.seoTitle || post.title,
     description,
     image: post.cover?.src,
     jsonLd: {
@@ -555,6 +555,7 @@ export const renderProject = (cms, project) => {
     section: "projects",
     path: `/projects/${project.slug}/`,
     title: project.title,
+    noindex: project.noindex === true,
     description,
     image: project.cover?.src,
     jsonLd: {
@@ -587,6 +588,7 @@ export const renderUpdates = (cms) => {
     section: "updates",
     path: "/updates/",
     title: intro.title || "Studio Updates",
+    noindex: updates.length === 0,
     description: intro.description || "News, milestones and announcements from the Vanilla & Somethin studio.",
     body: `<p class="eyebrow">[Updates]</p>
 <h1>${escapeHTML(intro.title || "Studio Updates")}</h1>
@@ -640,7 +642,7 @@ export const renderShop = (cms) => {
   const title = intro.title || "Shop";
   const description = intro.description || "Furniture, furnishings and accessories chosen by the Vanilla & Somethin design studio.";
   return layout({
-    cms, shop: true, section: "shop", path: "/shop/", title, description, image: products[0]?.gallery?.[0]?.src,
+    cms, shop: true, noindex: products.length === 0 && lists.length === 0, section: "shop", path: "/shop/", title, description, image: products[0]?.gallery?.[0]?.src,
     body: `<p class="eyebrow">[Shop]</p><h1>${escapeHTML(title)}</h1><p class="lede">${escapeHTML(description)}</p>
 ${lists.length ? `<div class="lists">${lists.map((l) => `<a class="list-tile" href="/shop/lists/${safeSlug(l.slug)}/">${img(l.cover)}<span>${escapeHTML(l.title)}</span></a>`).join("")}</div>` : ""}
 ${cats.length ? `<div class="shop-bar" data-filter><button aria-pressed="true" data-cat="">All</button>${cats.map((c) => `<button aria-pressed="false" data-cat="${escapeHTML(c)}">${escapeHTML(c)}</button>`).join("")}</div>` : ""}
@@ -720,10 +722,10 @@ export const renderAllPages = (cms) => {
 export const sitemapPaths = (cms) => [
   "/blog/",
   "/projects/",
-  "/updates/",
-  "/shop/",
+  ...(publishedUpdates(cms).length ? ["/updates/"] : []),
+  ...(publishedProducts(cms).length || publishedLists(cms).length ? ["/shop/"] : []),
   ...publishedProducts(cms).map((p) => `/shop/${p.slug}/`),
   ...publishedLists(cms).map((l) => `/shop/lists/${l.slug}/`),
   ...publishedPosts(cms).map((p) => `/blog/${p.slug}/`),
-  ...publishedProjects(cms).map(projectPath),
+  ...publishedProjects(cms).filter((p) => p.noindex !== true).map(projectPath),
 ];
