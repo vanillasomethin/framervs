@@ -40,6 +40,105 @@
   status = 301
   force = true
 
+
+# Legacy malformed paths reported by Google Search Console (Nov 2026).
+# Exact 301s consolidate old nested Framer links into their current page URLs.
+[[redirects]]
+  from = "/contact/contact"
+  to = "/contact/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/contact/estimator"
+  to = "/estimator/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/contact/project-showcase"
+  to = "/project-showcase/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/contact"
+  to = "/contact/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/artwist-salon/koan"
+  to = "/project-showcase/koan/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/artwist-salon/pipe-nova"
+  to = "/project-showcase/pipe-nova/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/flutecase/koan"
+  to = "/project-showcase/koan/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/flutecase/pipe-nova"
+  to = "/project-showcase/pipe-nova/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/project-showcase/artwist-salon"
+  to = "/project-showcase/artwist-salon/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/project-showcase/coco-meltdown"
+  to = "/project-showcase/coco-meltdown/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/project-showcase/fair-fly"
+  to = "/project-showcase/fair-fly/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/project-showcase/flutecase"
+  to = "/project-showcase/flutecase/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/project-showcase/koan"
+  to = "/project-showcase/koan/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/project-showcase/mak"
+  to = "/project-showcase/mak/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/project-showcase/nord-terra"
+  to = "/project-showcase/nord-terra/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/project-showcase/project-showcase/pipe-nova"
+  to = "/project-showcase/pipe-nova/"
+  status = 301
+  force = true
+
 # Client-side routing fallback for the estimator SPA. Real files (assets,
 # images, fonts) are served directly; unknown sub-paths fall back to the app
 # shell so deep links like /estimator/architect-fee work on refresh.
