@@ -2,15 +2,14 @@ import { Fragment } from "react";
 import { CONTACT_PAGE } from "../data-contact";
 import { RollLink } from "../primitives/RollLink";
 
-/** Left column of Section - Form: intro line, then [CONTACT] / [LOCATION] / [SOCIAL] link rows. */
+/** [CONTACT] / [LOCATION] / [SOCIAL] link rows: three centred columns from 810px, stacked and centred below. */
 export function ContactDetails() {
   return (
-    <div className="flex w-full flex-col gap-10">
-      <p className="vs-body text-vs-fg min-[1440px]:w-[600px]">{CONTACT_PAGE.intro}</p>
+    <div className="mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-10 text-center min-[810px]:grid-cols-3">
       {CONTACT_PAGE.groups.map((group) => (
-        <div key={group.label} className="flex flex-col gap-5">
+        <div key={group.label} className="flex flex-col items-center gap-5">
           <h2 className="vs-h5 text-vs-muted">{group.label}</h2>
-          <div className="flex flex-wrap items-center gap-y-1">
+          <div className="flex flex-wrap items-center justify-center gap-y-1">
             {group.links.map((link, i) => (
               <Fragment key={link.label}>
                 {i > 0 && group.separator ? (
