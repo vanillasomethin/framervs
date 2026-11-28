@@ -84,7 +84,7 @@ const AmenitiesStep = ({
       <div className="mb-2">
         <h3 className="text-lg font-medium mb-2">Premium Amenities</h3>
         <p className="text-sm text-muted-foreground">
-          Optional lifestyle additions priced as lump-sum installations (not per sqft). Select any that apply —
+          Optional lifestyle additions priced as lump-sum installations (not per sqft). Select any that apply. The
           figures shown are for a ~2,500 sqft reference project and are adjusted for your project's actual size and city.
         </p>
       </div>

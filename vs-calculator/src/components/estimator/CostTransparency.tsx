@@ -60,13 +60,13 @@ const CostTransparency = ({ estimate }: CostTransparencyProps) => {
 
   let verdict: { text: string; color: string };
   if (perSqft < band.low) {
-    verdict = { text: "Below the typical market range — a lean, budget-conscious spec.", color: "text-blue-700" };
+    verdict = { text: "Below the typical market range, a lean, budget-conscious spec.", color: "text-vs-dark" };
   } else if (perSqft <= band.typical) {
-    verdict = { text: "In the value end of the market range for this project type.", color: "text-green-700" };
+    verdict = { text: "In the value end of the market range for this project type.", color: "text-vs-dark" };
   } else if (perSqft <= band.high) {
-    verdict = { text: "In the premium end of the typical market range.", color: "text-amber-700" };
+    verdict = { text: "In the premium end of the typical market range.", color: "text-vs-dark" };
   } else {
-    verdict = { text: "Above the typical range — a high-spec / luxury configuration.", color: "text-vs" };
+    verdict = { text: "Above the typical range, a high-spec / luxury configuration.", color: "text-vs" };
   }
 
   return (
@@ -78,7 +78,7 @@ const CostTransparency = ({ estimate }: CostTransparencyProps) => {
           <h3 className="text-base font-semibold text-vs-dark">What's driving your cost</h3>
         </div>
         <p className="text-xs text-muted-foreground mb-4">
-          Ranked by share of the total. The biggest levers are at the top — adjust those first to move the number.
+          Ranked by share of the total. The biggest levers are at the top, adjust those first to move the number.
         </p>
 
         <div className="space-y-3">
@@ -126,7 +126,7 @@ const CostTransparency = ({ estimate }: CostTransparencyProps) => {
         </div>
 
         {/* Band track */}
-        <div className="relative h-3 rounded-full bg-gradient-to-r from-blue-200 via-green-200 to-amber-200 mb-2">
+        <div className="relative h-3 rounded-full bg-gradient-to-r from-vs/10 to-vs/40 mb-2">
           <motion.div
             className="absolute -top-1 size-5 rounded-full bg-vs border-2 border-white shadow-md"
             initial={{ left: 0 }}

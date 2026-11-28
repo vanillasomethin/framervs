@@ -1,31 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600&family=Poppins:ital,wght@100;200;300;400;500;600;700;800;900&family=Lobster+Two:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Russo+One&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Raleway:900&display=swap');
-
-@font-face {
-  font-family: 'The Seasons Light';
-  src: url('/estimator/fonts/the-seasons-light.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Halimun';
-  src: url('/estimator/fonts/halimun.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  src: url("https://www.axis-praxis.org/fonts/webfonts/MetaVariableDemo-Set.woff2")
-    format("woff2");
-  font-family: "Meta";
-  font-style: normal;
-  font-weight: normal;
-}
+/* The homepage's own fonts, served from the same site (site/public/sites/vanillasomethin/fonts) */
+@font-face { font-family: "Space Grotesk"; src: url("/sites/vanillasomethin/fonts/space-grotesk-latin-var.woff2") format("woff2"); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/sites/vanillasomethin/fonts/inter-300.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/sites/vanillasomethin/fonts/inter-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/sites/vanillasomethin/fonts/inter-500.woff2") format("woff2"); font-weight: 500 700; font-display: swap; }
+@font-face { font-family: "The Seasons Bold"; src: url("/sites/vanillasomethin/fonts/the-seasons-bold.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Halimun Regular"; src: url("/sites/vanillasomethin/fonts/halimun-regular.woff2") format("woff2"); font-display: swap; }
 
 @tailwind base;
 @tailwind components;
@@ -33,7 +12,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 36 19% 93%; /* the site's cream, #f0ede8 */
     --foreground: 353 81% 30%;  /* Updated to match vs color */
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -115,9 +94,12 @@
     border-color: hsl(var(--border));
   }
   body {
-    @apply bg-[#f0ede8] text-vs font-space-grotesk;
+    @apply bg-[#f0ede8] text-vs-dark font-inter;
     font-feature-settings: "rlig" 1, "calt" 1;
-    cursor: none;
+  }
+  /* Headings in Space Grotesk, body copy in Inter, as on the homepage */
+  h1, h2, h3, h4 {
+    @apply font-space-grotesk;
   }
 }
 

@@ -17,15 +17,15 @@ interface TreeMapItem {
 
 // Enhanced color scheme
 const COLORS = [
-  "#8889DD", "#8DC77B", "#E2CF45", "#F89C74", "#E79796", 
-  "#B085F5", "#71C2CC", "#F8C12D", "#A5D297"
+  "#380100", "#7A1E1F", "#A8605C", "#C99592", "#D8BFBC",
+  "#5C1A1B", "#8E3B3A", "#B77C78", "#E6D5D2"
 ];
 
 const COLOR_CATEGORIES = {
-  "Construction": "#8889DD",
-  "Core Components": "#8DC77B",
-  "Finishes": "#E2CF45",
-  "Interiors": "#F89C74"
+  "Construction": "#380100",
+  "Core Components": "#7A1E1F",
+  "Finishes": "#A8605C",
+  "Interiors": "#C99592"
 };
 
 const CostTreeMap = ({ estimate, showLabels = false }: CostTreeMapProps) => {
@@ -285,7 +285,7 @@ const CostTreeMap = ({ estimate, showLabels = false }: CostTreeMapProps) => {
               data={data}
               dataKey="size"
               stroke="#fff"
-              fill="#8884d8"
+              fill="#7A1E1F"
               content={<CustomizedContent showLabels={showLabels} />}
             >
               <Tooltip content={<CustomTooltip />} />

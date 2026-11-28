@@ -1003,10 +1003,10 @@ export default function ArchitectFee() {
               </div>
 
               {/* COA Compliance */}
-              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="mt-6 p-4 bg-vs/5 border border-vs/15 rounded-lg">
                 <div className="flex gap-3">
-                  <AlertCircle className="size-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm text-blue-800">
+                  <AlertCircle className="size-5 text-vs flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-vs-dark">
                     <p className="font-medium mb-1">COA Compliant</p>
                     <p>Pricing follows Council of Architecture guidelines and industry standards.</p>
                   </div>

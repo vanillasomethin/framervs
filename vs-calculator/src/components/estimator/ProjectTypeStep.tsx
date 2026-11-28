@@ -173,13 +173,13 @@ const ProjectTypeStep = ({
 
   const projectModeOptions: { id: ProjectMode; title: string; description: string; icon: React.ReactNode }[] = [
     { id: "new", title: "New Construction", description: "Ground-up build on a fresh or cleared site", icon: <Hammer className="size-5" /> },
-    { id: "renovation", title: "Renovation / Remodel", description: "Reworking an existing structure — saves the shell, adds demolition", icon: <Wrench className="size-5" /> },
+    { id: "renovation", title: "Renovation / Remodel", description: "Reworking an existing structure, saves the shell, adds demolition", icon: <Wrench className="size-5" /> },
   ];
 
   const foundationOptions: { id: FoundationType; title: string; description: string; icon: React.ReactNode }[] = [
     { id: "normal", title: "Normal Soil", description: "Firm ground, standard bearing capacity", icon: <Layers className="size-5" /> },
-    { id: "rocky", title: "Rocky Terrain", description: "Hard excavation but stable — no piling", icon: <Mountain className="size-5" /> },
-    { id: "blackcotton", title: "Black Cotton Soil", description: "Expansive soil — needs replacement / piling", icon: <Layers className="size-5" /> },
+    { id: "rocky", title: "Rocky Terrain", description: "Hard excavation but stable, no piling", icon: <Mountain className="size-5" /> },
+    { id: "blackcotton", title: "Black Cotton Soil", description: "Expansive soil, needs replacement / piling", icon: <Layers className="size-5" /> },
     { id: "sloped", title: "Sloped / Hilly Site", description: "Stepped foundation + retaining walls", icon: <TriangleRight className="size-5" /> },
   ];
 
@@ -782,7 +782,7 @@ const ProjectTypeStep = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.2 }}
-              className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800 max-w-3xl mx-auto"
+              className="mt-4 p-3 bg-vs/5 border border-vs/15 rounded-lg text-xs text-vs-dark max-w-3xl mx-auto"
             >
               {selectedAreaInputType === "plot" && (
                 <>
@@ -810,7 +810,7 @@ const ProjectTypeStep = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.2 }}
-              className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 max-w-2xl mx-auto"
+              className="mt-4 p-4 bg-vs/5 border border-vs/15 rounded-lg text-sm text-vs-dark max-w-2xl mx-auto"
             >
               <p className="font-medium mb-1">Note about FSI (Floor Space Index):</p>
               <p>

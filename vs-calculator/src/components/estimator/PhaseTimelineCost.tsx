@@ -113,7 +113,7 @@ const PhaseTimelineCost = ({ estimate }: PhaseTimelineCostProps) => {
     duration: estimate.timeline.phases.planning,
     cost: estimate.phaseBreakdown.planning,
     percentage: (estimate.phaseBreakdown.planning / estimate.totalCost) * 100,
-    color: "#FFE4E1", // Lightest red/misty rose - start of gradient
+    color: "#F2E8E6", // Lightest red/misty rose - start of gradient
     startMonth: currentMonth,
     endMonth: currentMonth + estimate.timeline.phases.planning - 1
   });
@@ -126,13 +126,13 @@ const PhaseTimelineCost = ({ estimate }: PhaseTimelineCostProps) => {
 
     // Define construction sub-phases with their percentages
     const constructionPhaseData = [
-      { name: "Excavation & Earthwork", timePercent: 0.10, costPercent: 0.08, color: "#FFC0CB" },
-      { name: "Foundation & Footing", timePercent: 0.15, costPercent: 0.20, color: "#FFB6C1" },
-      { name: "Structural Work (RCC)", timePercent: 0.30, costPercent: 0.35, color: "#FFA07A" },
-      { name: "Roof Slab & Walls", timePercent: 0.15, costPercent: 0.20, color: "#FA8072" },
-      { name: "Plastering & Masonry", timePercent: 0.12, costPercent: 0.08, color: "#F08080" },
-      { name: "Doors & Windows (Main Door, Windows & Glazing Systems)", timePercent: 0.10, costPercent: 0.05, color: "#E97777" },
-      { name: "MEP Rough-in", timePercent: 0.08, costPercent: 0.04, color: "#DC143C" }
+      { name: "Excavation & Earthwork", timePercent: 0.10, costPercent: 0.08, color: "#E6D5D2" },
+      { name: "Foundation & Footing", timePercent: 0.15, costPercent: 0.20, color: "#D8BFBC" },
+      { name: "Structural Work (RCC)", timePercent: 0.30, costPercent: 0.35, color: "#C99592" },
+      { name: "Roof Slab & Walls", timePercent: 0.15, costPercent: 0.20, color: "#B77C78" },
+      { name: "Plastering & Masonry", timePercent: 0.12, costPercent: 0.08, color: "#A8605C" },
+      { name: "Doors & Windows (Main Door, Windows & Glazing Systems)", timePercent: 0.10, costPercent: 0.05, color: "#A8605C" },
+      { name: "MEP Rough-in", timePercent: 0.08, costPercent: 0.04, color: "#7A1E1F" }
     ];
 
     // Distribute months properly to ensure they sum to constructionMonths
@@ -165,12 +165,12 @@ const PhaseTimelineCost = ({ estimate }: PhaseTimelineCostProps) => {
 
   // Define interiors sub-phases with their percentages
   const interiorsPhaseData = [
-    { name: "Flooring & Tiling", timePercent: 0.25, costPercent: 0.20, color: "#E9967A" },
-    { name: "MEP Installation", timePercent: 0.25, costPercent: 0.25, color: "#DC143C" },
-    { name: "Carpentry & Fixtures", timePercent: 0.20, costPercent: 0.22, color: "#CD5C5C" },
-    { name: "Doors & Windows", timePercent: 0.15, costPercent: 0.15, color: "#B22222" },
+    { name: "Flooring & Tiling", timePercent: 0.25, costPercent: 0.20, color: "#C99592" },
+    { name: "MEP Installation", timePercent: 0.25, costPercent: 0.25, color: "#7A1E1F" },
+    { name: "Carpentry & Fixtures", timePercent: 0.20, costPercent: 0.22, color: "#7A1E1F" },
+    { name: "Doors & Windows", timePercent: 0.15, costPercent: 0.15, color: "#5C1A1B" },
     { name: "Painting & Finishes", timePercent: 0.10, costPercent: 0.10, color: "#A52A2A" },
-    { name: "Final Inspection & Handover", timePercent: 0.05, costPercent: 0.08, color: "#8B0000" }
+    { name: "Final Inspection & Handover", timePercent: 0.05, costPercent: 0.08, color: "#380100" }
   ];
 
   // Distribute months properly to ensure they sum to interiorsMonths
@@ -240,17 +240,17 @@ const PhaseTimelineCost = ({ estimate }: PhaseTimelineCostProps) => {
   return (
     <div className="space-y-3">
       {/* Overall duration banner */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 text-center">
-        <p className="text-xs text-yellow-800">
+      <div className="bg-vs/5 border border-vs/15 rounded-lg p-2 text-center">
+        <p className="text-xs text-vs-dark">
           <span className="font-semibold">Overall duration:</span> {totalDuration} Months ({Math.round(totalDuration * 30)} Days)
         </p>
         {isInteriorOnly && (
-          <p className="text-[10px] text-yellow-700 mt-1">
+          <p className="text-[10px] text-vs-dark mt-1">
             Interior-only project (no construction work)
           </p>
         )}
         {isLandscapeOnly && (
-          <p className="text-[10px] text-yellow-700 mt-1">
+          <p className="text-[10px] text-vs-dark mt-1">
             Landscape-only project
           </p>
         )}
@@ -305,36 +305,36 @@ const PhaseTimelineCost = ({ estimate }: PhaseTimelineCostProps) => {
       {/* Cost distribution summary */}
       <div className="grid grid-cols-2 gap-2 mt-4">
         {hasConstruction && (
-          <div className="bg-red-50 p-2 rounded-lg border border-red-100">
-            <p className="text-[10px] text-red-700 mb-0.5">Construction Phase</p>
-            <p className="text-sm font-bold text-red-900">
+          <div className="bg-vs/5 p-2 rounded-lg border border-vs/15">
+            <p className="text-[10px] text-vs-dark mb-0.5">Construction Phase</p>
+            <p className="text-sm font-bold text-vs-dark">
               {formatCurrency(estimate.phaseBreakdown.construction)}
             </p>
-            <p className="text-[10px] text-red-600">
+            <p className="text-[10px] text-vs">
               {((estimate.phaseBreakdown.construction / estimate.totalCost) * 100).toFixed(0)}% of total
             </p>
           </div>
         )}
 
         {estimate.phaseBreakdown.interiors > 0 && (
-          <div className="bg-orange-50 p-2 rounded-lg border border-orange-100">
-            <p className="text-[10px] text-orange-700 mb-0.5">Finishes & Interiors</p>
-            <p className="text-sm font-bold text-orange-900">
+          <div className="bg-vs/5 p-2 rounded-lg border border-vs/15">
+            <p className="text-[10px] text-vs-dark mb-0.5">Finishes & Interiors</p>
+            <p className="text-sm font-bold text-vs-dark">
               {formatCurrency(estimate.phaseBreakdown.interiors)}
             </p>
-            <p className="text-[10px] text-orange-600">
+            <p className="text-[10px] text-vs">
               {((estimate.phaseBreakdown.interiors / estimate.totalCost) * 100).toFixed(0)}% of total
             </p>
           </div>
         )}
 
         {hasLandscape && (
-          <div className="bg-green-50 p-2 rounded-lg border border-green-100">
-            <p className="text-[10px] text-green-700 mb-0.5">Landscape Phase</p>
-            <p className="text-sm font-bold text-green-900">
+          <div className="bg-vs/5 p-2 rounded-lg border border-vs/15">
+            <p className="text-[10px] text-vs-dark mb-0.5">Landscape Phase</p>
+            <p className="text-sm font-bold text-vs-dark">
               {formatCurrency(estimate.phaseBreakdown.landscape)}
             </p>
-            <p className="text-[10px] text-green-600">
+            <p className="text-[10px] text-vs">
               {((estimate.phaseBreakdown.landscape / estimate.totalCost) * 100).toFixed(0)}% of total
             </p>
           </div>

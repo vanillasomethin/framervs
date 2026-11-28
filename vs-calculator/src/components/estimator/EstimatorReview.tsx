@@ -112,7 +112,7 @@ const EstimatorReview = ({ estimate }: { estimate: ProjectEstimate }) => {
             onClick={() => setRating(n)}
             className="p-1"
           >
-            <Star size={30} className={n <= shown ? "fill-amber-400 text-amber-400" : "text-gray-300"} />
+            <Star size={30} className={n <= shown ? "fill-vs text-vs" : "text-gray-300"} />
           </button>
         ))}
       </div>
@@ -127,7 +127,7 @@ const EstimatorReview = ({ estimate }: { estimate: ProjectEstimate }) => {
           />
           {/* Hidden from people; bots fill it in */}
           <input type="text" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
+          {error ? <p className="text-sm text-vs">{error}</p> : null}
           <div className="text-center">
             <button
               onClick={submit}

@@ -52,7 +52,7 @@ const FAQSection = () => {
       className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm"
     >
       <div className="flex items-start gap-2 mb-6">
-        <HelpCircle className="size-6 text-green-600 mt-0.5 flex-shrink-0" />
+        <HelpCircle className="size-6 text-vs mt-0.5 flex-shrink-0" />
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-1">Frequently Asked Questions</h3>
           <p className="text-sm text-gray-600">
@@ -73,7 +73,7 @@ const FAQSection = () => {
                 className="w-full flex items-start justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
               >
                 <div className="flex items-start gap-3 flex-1">
-                  <span className="flex-shrink-0 size-6 flex items-center justify-center rounded-full bg-green-100 text-green-700 text-xs font-bold mt-0.5">
+                  <span className="flex-shrink-0 size-6 flex items-center justify-center rounded-full bg-vs/5 text-vs-dark text-xs font-bold mt-0.5">
                     Q{index + 1}
                   </span>
                   <span className="font-semibold text-gray-900 pr-4">{faq.question}</span>
@@ -109,7 +109,7 @@ const FAQSection = () => {
       {/* Help Footer */}
       <div className="mt-6 p-4 bg-vs/5 rounded-lg border border-vs/10">
         <p className="text-sm text-gray-700">
-          <span className="font-semibold text-green-800">Still have questions?</span>{" "}
+          <span className="font-semibold text-vs-dark">Still have questions?</span>{" "}
           Our construction experts are here to help. Schedule a free consultation to discuss your specific project requirements and get personalized advice.
         </p>
       </div>

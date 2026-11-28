@@ -127,7 +127,7 @@ const EnhancedCostChart = ({ data, totalCost }: EnhancedCostChartProps) => {
             cy="50%"
             innerRadius={60}
             outerRadius={80}
-            fill="#8884d8"
+            fill="#7A1E1F"
             paddingAngle={4}
             dataKey="value"
             onMouseEnter={(_, index) => setActiveIndex(index)}

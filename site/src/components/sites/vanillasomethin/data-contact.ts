@@ -35,10 +35,10 @@ export const CONTACT_PAGE = {
     /** Netlify form name; the hidden detection form in the page lists every field below. */
     name: "contact",
     /** Every field the guided form can send (Netlify drops fields its detection form lacks). */
-    fieldNames: ["intent", "location", "stage", "timeline", "budget", "message", "name", "email", "phone"],
-    submit: "SEND",
-    sending: "SENDING...",
-    success: "We have your details and will get back to you within a working day.",
+    fieldNames: ["intent", "location", "stage", "timeline", "budget", "message", "name"],
+    submit: "SEND ON WHATSAPP",
+    sending: "OPENING WHATSAPP...",
+    success: "WhatsApp should have opened with your message. Press send there and we will reply within a working day.",
     error: "Something went wrong and your message was not sent. Please try again, or email hello@vanillasometh.in.",
   },
 } as const;

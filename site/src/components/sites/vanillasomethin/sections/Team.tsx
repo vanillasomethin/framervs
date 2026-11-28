@@ -12,9 +12,9 @@ const [hisham, zeba] = TEAM.slides;
  * PNG arrows. Assets fetched from the live page (see report; not yet in asset-map.md).
  */
 const MOBILE_SLIDES: TeamSlide[] = [
-  { ...hisham, image: `${IMG}/team-mobile-1-hisham.jpg`, objectPosition: "50% 0%" },
-  { ...zeba, image: `${IMG}/team-mobile-2-zeba.png`, objectPosition: "50% 0%" },
-  { ...hisham, image: `${IMG}/team-mobile-1-hisham.jpg`, objectPosition: "50% 0%" },
+  { ...hisham, image: `${IMG}/team-mobile-1-hisham.webp`, objectPosition: "50% 0%" },
+  { ...zeba, image: `${IMG}/team-mobile-2-zeba.webp`, objectPosition: "50% 0%" },
+  { ...hisham, image: `${IMG}/team-mobile-1-hisham.webp`, objectPosition: "50% 0%" },
 ];
 
 /**
@@ -46,7 +46,7 @@ export function Team() {
           slideWidth={340}
           height={505}
           imageSize={120}
-          arrows={{ back: `${IMG}/arrow-back-mobile.png`, next: `${IMG}/arrow-next-mobile.png` }}
+          arrows={{ back: `${IMG}/arrow-back-mobile.webp`, next: `${IMG}/arrow-next-mobile.webp` }}
         />
       </Reveal>
     </section>

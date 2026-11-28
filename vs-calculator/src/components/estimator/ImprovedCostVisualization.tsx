@@ -16,11 +16,11 @@ const ImprovedCostVisualization = ({ estimate }: ImprovedCostVisualizationProps)
   };
 
   const COLORS = {
-    construction: '#8B0000', // Dark red
-    core: '#B22222',        // Firebrick red
-    finishes: '#CD5C5C',    // Indian red
-    interiors: '#F08080',   // Light coral
-    fees: '#C9A9A9'         // Muted rose
+    construction: '#380100', // Dark red
+    core: '#5C1A1B',        // Firebrick red
+    finishes: '#7A1E1F',    // Indian red
+    interiors: '#A8605C',   // Light coral
+    fees: '#D8BFBC'         // Muted rose
   };
 
   const categoryData = [

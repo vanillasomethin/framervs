@@ -3,13 +3,11 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { CONTACT_PAGE } from "../data-contact";
-import { activeQuestions, type Answers, type Question } from "./questions";
+import { activeQuestions, whatsappText, whatsappUrl, type Answers, type Question } from "./questions";
 
 type Status = "idle" | "sending" | "success" | "error";
 
 const FORM = CONTACT_PAGE.form;
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE = /^[+\d][\d\s()-]{6,}$/;
 
 const fieldClass =
   "w-full rounded-none border-0 border-b border-vs-fg bg-transparent p-3 font-inter text-[16px] leading-[1.5] font-normal text-vs-fg outline-none placeholder:text-vs-muted focus:border-vs-inverse";
@@ -50,7 +48,8 @@ function OutlineButton({ children, disabled, onClick, type = "button" }: { child
 /**
  * Right column of Section - Form: a guided conversation, one question at a time.
  * Tapping an option moves on by itself; typed answers move on with Next or Enter.
- * Everything is posted once at the end to Netlify Forms ("/", urlencoded, form-name=contact).
+ * The last step opens WhatsApp to the studio with every answer filled in, and keeps a copy
+ * in Netlify Forms ("/", urlencoded, form-name=contact).
  */
 export function ContactForm() {
   const [answers, setAnswers] = useState<Answers>({});
@@ -77,32 +76,22 @@ export function ContactForm() {
   const set = (id: string, value: string) => setAnswers((a) => ({ ...a, [id]: value }));
 
   const valid = (question: Question, a: Answers): string => {
-    if (question.kind === "contact") {
-      const email = (a.email || "").trim();
-      const phone = (a.phone || "").trim();
-      if (!email && !phone) return "Please add an email or a phone number.";
-      if (email && !EMAIL.test(email)) return "That email address doesn't look right.";
-      if (phone && !PHONE.test(phone)) return "That phone number doesn't look right.";
-      return "";
-    }
-    if (!question.optional && !(a[question.id] || "").trim()) return question.kind === "choice" ? "Please pick one." : "Please fill this in.";
+    if (question.kind !== "whatsapp" && !question.optional && !(a[question.id] || "").trim()) return question.kind === "choice" ? "Please pick one." : "Please fill this in.";
     return "";
   };
 
-  async function send(a: Answers) {
+  // WhatsApp must open inside the click (a popup opened after an await is blocked);
+  // a copy goes to Netlify Forms in the background so the studio keeps a record.
+  function send(a: Answers) {
+    // If a blocker stops it, the thank-you screen has a plain link to WhatsApp.
+    window.open(whatsappUrl(a), "_blank", "noopener,noreferrer");
     const body = new URLSearchParams({ "form-name": FORM.name, "bot-field": bot.current?.value || "" });
     for (const n of FORM.fieldNames) {
       const v = (a[n] || "").trim();
       if (v) body.append(n, v);
     }
-    setStatus("sending");
-    try {
-      const res = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body.toString() });
-      if (!res.ok) throw new Error(String(res.status));
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
+    void fetch("/", { method: "POST", keepalive: true, headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body.toString() }).catch(() => {});
+    setStatus("success");
   }
 
   const next = (a: Answers = answers) => {
@@ -112,7 +101,7 @@ export function ContactForm() {
     // Re-read the question list: the first answer decides which questions follow
     const list = activeQuestions(a);
     const at = list.findIndex((x) => x.id === q.id);
-    if (at >= list.length - 1) void send(a);
+    if (at >= list.length - 1) send(a);
     else setIndex(at + 1);
   };
 
@@ -130,9 +119,12 @@ export function ContactForm() {
   if (status === "success") {
     return (
       <div className="flex w-full flex-col gap-5" role="status" aria-live="polite">
-        <span className="vs-label text-vs-muted">[SENT]</span>
+        <span className="vs-label text-vs-muted">[ALMOST DONE]</span>
         <p className="vs-h5 text-vs-fg">Thank you{answers.name ? `, ${answers.name.trim().split(/\s+/)[0]}` : ""}.</p>
         <p className="vs-body text-vs-fg">{FORM.success}</p>
+        <a href={whatsappUrl(answers)} target="_blank" rel="noopener noreferrer" className="vs-label text-vs-fg underline underline-offset-4">
+          WhatsApp didn&apos;t open? Tap here
+        </a>
       </div>
     );
   }
@@ -196,30 +188,8 @@ export function ContactForm() {
                 );
               })}
             </div>
-          ) : q.kind === "contact" ? (
-            <div className="flex flex-col gap-6">
-              <input
-                ref={field}
-                type="email"
-                inputMode="email"
-                autoComplete="email"
-                aria-label="Email"
-                placeholder="Email"
-                value={answers.email || ""}
-                onChange={(e) => set("email", e.target.value)}
-                className={`${fieldClass} h-12`}
-              />
-              <input
-                type="tel"
-                inputMode="tel"
-                autoComplete="tel"
-                aria-label="Phone or WhatsApp"
-                placeholder="Phone or WhatsApp"
-                value={answers.phone || ""}
-                onChange={(e) => set("phone", e.target.value)}
-                className={`${fieldClass} h-12`}
-              />
-            </div>
+          ) : q.kind === "whatsapp" ? (
+            <pre className="vs-body whitespace-pre-wrap rounded-[8px] border border-vs-fg/30 p-4 font-inter text-[15px] text-vs-fg">{whatsappText(answers)}</pre>
           ) : q.kind === "textarea" ? (
             <textarea
               ref={field}

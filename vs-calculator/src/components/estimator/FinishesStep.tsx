@@ -54,7 +54,7 @@ const FinishesStep = ({
       title: "Waterproofing & Damp Protection",
       icon: <Umbrella className="size-6" />,
       value: waterproofing,
-      description: "Terrace, bathroom, balcony and basement waterproofing — membrane/crystalline/PU systems guarding against seepage, leakage and dampness. A critical, often-overlooked line item in Indian construction",
+      description: "Terrace, bathroom, balcony and basement waterproofing, membrane/crystalline/PU systems guarding against seepage, leakage and dampness. A critical, often-overlooked line item in Indian construction",
     },
     {
       key: "lighting",
