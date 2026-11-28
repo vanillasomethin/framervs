@@ -12,7 +12,9 @@ type CounterProps = { end: number; suffix: string; label: string; text: string }
 export function Counter({ end, suffix, label, text }: CounterProps) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.5 });
-  const [value, setValue] = useState(0);
+  // Keep the real metric in server-rendered HTML; the parent stays hidden until the
+  // existing entrance animation runs, then the count-up still starts at zero.
+  const [value, setValue] = useState(end);
 
   useEffect(() => {
     if (!inView) return;
