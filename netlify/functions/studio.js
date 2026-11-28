@@ -14,7 +14,7 @@ const { getStudioStore, readDoc, mutate } = require("./lib/store");
 
 // briefs are written only by the public onboarding form (onboard.js),
 // reviews only by the estimator rating form (estimator-review.js)
-const WRITABLE = ["clients", "projects", "tasks", "logs", "snags", "milestones", "activity", "leads", "docs", "expenses", "leaves", "holidays", "incidents"];
+const WRITABLE = ["clients", "projects", "tasks", "logs", "snags", "milestones", "activity", "leads", "docs", "proposals", "expenses", "leaves", "holidays", "incidents"];
 const COLLECTIONS = [...WRITABLE, "briefs", "reviews"];
 const MAX_ITEMS = 5000;
 const MAX_ITEM_BYTES = 24 * 1024;

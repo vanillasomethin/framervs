@@ -6,6 +6,7 @@ import { $, $$, uid, app, toast } from "../core.js";
 import { data, put, del, note, today, addDays, member, team, meName, meId, CLIENT_SOURCES, PROJECT_TYPES } from "./data.js";
 import { icon, esc, avatar, pill, fmtDate, timeAgo, optionsHTML, openDrawer, openMenu, emptyState, mount } from "./ui.js";
 import { inr } from "./finance.js";
+import { proposalFromLead } from "./proposals.js";
 
 export const LEAD_STAGES = [
   { id: "new", label: "New", tone: "mute" },
@@ -232,6 +233,7 @@ export const renderCrm = (view) => {
       return openMenu(m, [
         ...LEAD_STAGES.filter((s) => s.id !== lead.stage).map((s) => ({ label: `Move to ${s.label}`, onClick: () => { setStage(lead, s.id); app.render(); } })),
         "-",
+        { label: "Create proposal", onClick: () => proposalFromLead(lead) },
         { label: lead.clientId ? "Open client" : "Create client from lead", onClick: () => leadToClient(lead) },
       ]);
     }

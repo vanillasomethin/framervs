@@ -18,6 +18,7 @@ import { renderWebsite } from "./studio/website.js";
 import { renderOrders } from "./studio/orders.js";
 import { renderBilling } from "./studio/billing.js";
 import { renderCrm } from "./studio/crm.js";
+import { renderProposals } from "./studio/proposals.js";
 import { renderHr } from "./studio/hr.js";
 import { renderOps } from "./studio/ops.js";
 import { animateAdminView, initAdminMotion } from "./motion.js";
@@ -614,6 +615,7 @@ const render = ({ keepScroll = false } = {}) => {
   else if (section === "orders") renderOrders(view);
   else if (section === "billing") renderBilling(view);
   else if (section === "crm") renderCrm(view);
+  else if (section === "proposals") renderProposals(view);
   else if (section === "people") renderHr(view);
   else if (section === "incidents") renderOps(view);
   else if (section === "settings") renderSettings(view);

@@ -180,6 +180,20 @@ if (!/^Sitemap:\s*https:\/\/www\.vanillasometh\.in\/sitemap\.xml\s*$/m.test(robo
 if (/^Disallow:\s*\/\s*$/m.test(robots)) errors.push("robots.txt: site-wide Disallow");
 for (const p of ["/admin/", "/onboard/"]) if (!robots.includes(`Disallow: ${p}`)) errors.push(`robots.txt: should disallow ${p}`);
 
+// Template placeholder copy must never return: check the built pages and the
+// site source (site/src holds the project data the pages are generated from).
+const { FORBIDDEN } = await import("./seo/copy-guards.mjs");
+const siteSrc = path.resolve(process.cwd(), "site/src");
+const walkSrc = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => (d.isDirectory() ? walkSrc(path.join(dir, d.name)) : /\.(tsx?|jsx?|json|mdx?)$/.test(d.name) ? [path.join(dir, d.name)] : [])) : []);
+for (const file of [...allPages.map((f) => path.join(root, f)), ...walkSrc(siteSrc)]) {
+  const text = fs.readFileSync(file, "utf8").toLowerCase();
+  for (const phrase of FORBIDDEN) if (text.includes(phrase)) errors.push(`${path.relative(process.cwd(), file)}: template placeholder copy "${phrase}"`);
+}
+
+// The Home Project Clarity Consultation is free (owner decision, November 2026).
+const PAID_CONSULTATION = /consultation fee|consultation is paid|paid first-step consultation|paid consultation/i;
+for (const file of [...allPages, "llms.txt"]) if (PAID_CONSULTATION.test(read(file))) errors.push(`${file}: describes the Clarity Consultation as paid; it is free`);
+
 console.log(`SEO audit: ${errors.length} error(s), ${warnings.length} warning(s)`);
 for (const warning of warnings) console.warn(`WARN  ${warning}`);
 for (const error of errors) console.error(`ERROR ${error}`);
