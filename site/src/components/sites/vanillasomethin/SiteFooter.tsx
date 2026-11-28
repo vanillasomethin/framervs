@@ -26,7 +26,7 @@ export function SiteFooter() {
                         {row.separator}
                       </span>
                     ) : null}
-                    <RollLink href={link.href} external className={i > 0 && !row.separator ? "pl-1" : undefined}>
+                    <RollLink href={link.href} external={link.href.startsWith("http")} className={i > 0 && !row.separator ? "pl-1" : undefined}>
                       {link.label}
                     </RollLink>
                   </Fragment>
