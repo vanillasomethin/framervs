@@ -208,6 +208,7 @@ export const FOOTER = {
         { label: "MANGALORE, INDIA |", href: "https://maps.app.goo.gl/W2b5YT7XH658UqPa9" },
         { label: "RIYADH,SAUDI ARABIA", href: "https://maps.app.goo.gl/W2b5YT7XH658UqPa9" },
         { label: "MANGALORE STUDIO", href: "/locations/mangalore/" },
+        { label: "KASARAGOD PROJECT ENQUIRIES", href: "/locations/kasaragod/" },
       ],
       separator: null,
     },
